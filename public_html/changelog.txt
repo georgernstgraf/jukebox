@@ -1,0 +1,379 @@
+$Id: changelog.txt 2575 2017-11-09 14:59:43Z georg $
+
+------------------------------------------------------------------------
+r2566 | georg | 2017-11-06 10:16:05 +0100 (Mon, 06 Nov 2017) | 1 line
+Changed paths:
+   D /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/fgo.py
+   R /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/.htaccess (from /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/.htotto:2565)
+   D /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/.htotto
+   D /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/fget.py
+   R /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/get.py (from /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/fget.py:2565)
+   R /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/go.py (from /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/fgo.py:2565)
+   R /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/index.html (from /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/indotto.html:2565)
+   D /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/indotto.html
+
+sers
+------------------------------------------------------------------------
+r2565 | georg | 2017-11-06 10:12:10 +0100 (Mon, 06 Nov 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/.htaccess
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/fgo.py
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/fget.py
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache24/Includes/05_vhosts.conf
+
+flughafen.wien
+------------------------------------------------------------------------
+r2564 | georg | 2017-10-31 16:45:05 +0100 (Tue, 31 Oct 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/fget.py
+
+partial partial
+------------------------------------------------------------------------
+r2563 | georg | 2017-10-31 11:01:55 +0100 (Tue, 31 Oct 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/.vimrc
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/fgo.py
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/fget.py
+
+fgo sehr super
+------------------------------------------------------------------------
+r2562 | georg | 2017-10-29 21:57:07 +0100 (Sun, 29 Oct 2017) | 1 line
+Changed paths:
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/.htotto
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/fgo.py
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/.htotto
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/fget.py
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/indotto.html
+   D /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache22
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache24/Includes/05_vhosts.conf
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache24/httpd.conf
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/root
+
+sers
+------------------------------------------------------------------------
+r2560 | georg | 2017-10-26 01:53:50 +0200 (Thu, 26 Oct 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/.passdig
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/go.py
+
+zippen fertig
+------------------------------------------------------------------------
+r2559 | georg | 2017-10-26 01:36:04 +0200 (Thu, 26 Oct 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/go.py
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/index.html
+
+zippen fertig
+------------------------------------------------------------------------
+r2558 | georg | 2017-10-25 13:37:38 +0200 (Wed, 25 Oct 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/get.py
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/go.py
+   D /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/playlist.pls
+
+sers
+------------------------------------------------------------------------
+r2557 | georg | 2017-10-25 11:44:29 +0200 (Wed, 25 Oct 2017) | 1 line
+Changed paths:
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/.passdig
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/.vimrc
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/bin/filldb.py
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/.htaccess
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/.htaccess
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/get.py
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/go.py
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/index.html
+   D /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/index.php
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/georg
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/suck
+
+sers
+------------------------------------------------------------------------
+r2555 | georg | 2017-10-24 13:28:15 +0200 (Tue, 24 Oct 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/get.py
+
+getter fertig
+------------------------------------------------------------------------
+r2554 | georg | 2017-10-23 13:12:51 +0200 (Mon, 23 Oct 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/get.py
+
+sers
+------------------------------------------------------------------------
+r2549 | georg | 2017-10-19 12:13:42 +0200 (Thu, 19 Oct 2017) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/etc/fstab
+   M /EDV/Deployed/murl.graf.priv.at/etc/group
+   M /EDV/Deployed/murl.graf.priv.at/etc/master.passwd
+   M /EDV/Deployed/murl.graf.priv.at/etc/passwd
+   A /EDV/Deployed/murl.graf.priv.at/etc/services
+   M /EDV/Deployed/murl.graf.priv.at/home/georg/.procmailrc
+   D /EDV/Deployed/murl.graf.priv.at/home/suck/fertige_mp3s
+   D /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/.urxnmp3accessnix
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/.htaccess
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/get/get.py
+   M /EDV/Deployed/murl.graf.priv.at/root/bin/up2date.sh
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache24/Includes/05_vhosts.conf
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/root
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/suck
+
+getter klappt
+------------------------------------------------------------------------
+r2341 | georg | 2016-09-01 14:34:28 +0200 (Thu, 01 Sep 2016) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/etc/group
+   M /EDV/Deployed/murl.graf.priv.at/etc/master.passwd
+   M /EDV/Deployed/murl.graf.priv.at/etc/passwd
+   M /EDV/Deployed/murl.graf.priv.at/home/georg/.muttrc
+   M /EDV/Deployed/murl.graf.priv.at/home/georg/.procmailrc
+   D /EDV/Deployed/murl.graf.priv.at/home/jira
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/.urxnmp3accessnix
+   M /EDV/Deployed/murl.graf.priv.at/root/bin/backup.sh
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache24/Includes/05_vhosts.conf
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache24/extra/httpd-ssl.conf
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache24/mime.types
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/icinga/objects/localhost.cfg
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/php.conf
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/georg
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/root
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/suck
+
+sers
+------------------------------------------------------------------------
+r1560 | georg | 2012-08-21 16:53:56 +0200 (Tue, 21 Aug 2012) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/etc/mail/murl.graf.priv.at.mc
+   D /EDV/Deployed/murl.graf.priv.at/etc/mail/schurli.wu-wien.ac.at.mc
+   M /EDV/Deployed/murl.graf.priv.at/home/georg/.muttrc
+   M /EDV/Deployed/murl.graf.priv.at/home/georg/.procmailrc
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/index.php
+   M /EDV/Deployed/murl.graf.priv.at/root/bin/backup.sh
+   M /EDV/Deployed/murl.graf.priv.at/root/bin/davlocations.py
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/php/extensions.ini
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/php.conf
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/www/squirrelmail/config/config.php
+
+
+------------------------------------------------------------------------
+r1385 | georg | 2012-02-23 23:03:51 +0100 (Thu, 23 Feb 2012) | 1 line
+Changed paths:
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/and.php
+   M /EDV/Deployed/murl.graf.priv.at/var/db/ntpd.drift
+
+GV-285
+------------------------------------------------------------------------
+r1384 | georg | 2012-02-23 21:59:35 +0100 (Thu, 23 Feb 2012) | 1 line
+Changed paths:
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/fertige_mp3s
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/fertige_mp3s/.urxnmp3accessnix
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/index.php
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/playlist.pls
+   M /EDV/Deployed/murl.graf.priv.at/var/db/ntpd.drift
+
+m
+------------------------------------------------------------------------
+r1383 | georg | 2012-02-23 13:43:37 +0100 (Thu, 23 Feb 2012) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/playlist.pls
+
+
+------------------------------------------------------------------------
+r1336 | georg | 2012-01-30 21:04:52 +0100 (Mon, 30 Jan 2012) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/etc/master.passwd
+   M /EDV/Deployed/murl.graf.priv.at/etc/passwd
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/download.zip
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/graf
+   M /EDV/Deployed/murl.graf.priv.at/var/db/ntpd.drift
+
+sers
+------------------------------------------------------------------------
+r1331 | georg | 2012-01-29 13:54:03 +0100 (Sun, 29 Jan 2012) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at/etc/master.passwd
+   M /EDV/Deployed/murl.graf.priv.at/etc/resolv.conf
+   M /EDV/Deployed/murl.graf.priv.at/etc/ttys
+   M /EDV/Deployed/murl.graf.priv.at/home/georg/.muttrc
+   M /EDV/Deployed/murl.graf.priv.at/home/georg/.procmailrc
+   M /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/.urxnmp3accessnix
+   M /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache22/httpd.conf
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/graf
+   M /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/root
+   M /EDV/Deployed/murl.graf.priv.at/var/db/ntpd.drift
+
+GV-255 commit von restln
+------------------------------------------------------------------------
+r1303 | georg | 2012-01-11 21:44:35 +0100 (Wed, 11 Jan 2012) | 1 line
+Changed paths:
+   M /EDV/Deployed/murl.graf.priv.at
+   A /EDV/Deployed/murl.graf.priv.at/etc
+   A /EDV/Deployed/murl.graf.priv.at/etc/fstab
+   A /EDV/Deployed/murl.graf.priv.at/etc/ftpusers
+   A /EDV/Deployed/murl.graf.priv.at/etc/group
+   A /EDV/Deployed/murl.graf.priv.at/etc/inetd.conf
+   A /EDV/Deployed/murl.graf.priv.at/etc/mail
+   A /EDV/Deployed/murl.graf.priv.at/etc/mail/aliases
+   A /EDV/Deployed/murl.graf.priv.at/etc/mail/local-host-names
+   A /EDV/Deployed/murl.graf.priv.at/etc/mail/schurli.wu-wien.ac.at.mc
+   A /EDV/Deployed/murl.graf.priv.at/etc/make.conf
+   A /EDV/Deployed/murl.graf.priv.at/etc/master.passwd
+   A /EDV/Deployed/murl.graf.priv.at/etc/newsyslog.conf
+   A /EDV/Deployed/murl.graf.priv.at/etc/ntp.conf
+   A /EDV/Deployed/murl.graf.priv.at/etc/passwd
+   A /EDV/Deployed/murl.graf.priv.at/etc/rc.conf
+   A /EDV/Deployed/murl.graf.priv.at/etc/resolv.conf
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh/ssh_config
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh/ssh_host_dsa_key
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh/ssh_host_dsa_key.pub
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh/ssh_host_key
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh/ssh_host_key.pub
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh/ssh_host_rsa_key
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh/ssh_host_rsa_key.pub
+   A /EDV/Deployed/murl.graf.priv.at/etc/ssh/sshd_config
+   A /EDV/Deployed/murl.graf.priv.at/etc/syslog.conf
+   A /EDV/Deployed/murl.graf.priv.at/etc/ttys
+   A /EDV/Deployed/murl.graf.priv.at/home
+   A /EDV/Deployed/murl.graf.priv.at/home/georg
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.gnupg
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.gnupg/gpg-agent.conf
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.gnupg/gpg.conf
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.gnupg/private-keys-v1.d
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.gnupg/pubring.gpg
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.gnupg/secring.gpg
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.gnupg/trustdb.gpg
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.muttrc
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.procmailrc
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.python
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.spambayesrc
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/.vimrc
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/oldbin
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/oldbin/addfrom
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/oldbin/az
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/oldbin/retrainmail.sh
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/service
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/service/wumi
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/service/wumi/blacklist.py
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/service/wumi/cfg.py
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/service/wumi/run
+   A /EDV/Deployed/murl.graf.priv.at/home/georg/service/wumi/wumi.py
+   A /EDV/Deployed/murl.graf.priv.at/home/georg_public_html
+   A /EDV/Deployed/murl.graf.priv.at/home/georg_public_html/georg
+   A /EDV/Deployed/murl.graf.priv.at/home/georg_public_html/georg/gallery
+   A /EDV/Deployed/murl.graf.priv.at/home/georg_public_html/georg/gallery/index.html
+   A /EDV/Deployed/murl.graf.priv.at/home/georg_public_html/georg/gallery/showit.php
+   A /EDV/Deployed/murl.graf.priv.at/home/georg_public_html/index.html
+   A /EDV/Deployed/murl.graf.priv.at/home/graf
+   A /EDV/Deployed/murl.graf.priv.at/home/graf/.vimrc
+   A /EDV/Deployed/murl.graf.priv.at/home/graf/bin
+   A /EDV/Deployed/murl.graf.priv.at/home/graf/bin/viennapaint
+   A /EDV/Deployed/murl.graf.priv.at/home/jira
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.1-standalone
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.1-standalone/bin
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.1-standalone/bin/setenv.sh
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone/atlassian-jira
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone/atlassian-jira/WEB-INF
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone/atlassian-jira/WEB-INF/classes
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone/atlassian-jira/WEB-INF/classes/jira-application.properties
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone/bin
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone/bin/setenv.sh
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone/conf
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-4.4.3-standalone/conf/server.xml
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-enterprise-4.2-standalone
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-enterprise-4.2-standalone/atlassian-jira
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-enterprise-4.2-standalone/atlassian-jira/WEB-INF
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-enterprise-4.2-standalone/atlassian-jira/WEB-INF/classes
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-enterprise-4.2-standalone/atlassian-jira/WEB-INF/classes/entityengine.xml
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-enterprise-4.2-standalone/atlassian-jira/WEB-INF/classes/jira-application.properties
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-enterprise-4.2-standalone/conf
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/atlassian-jira-enterprise-4.2-standalone/conf/server.xml
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/bin
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/bin/restart.sh
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/bin/shutdown
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/bin/startup
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/data
+   A /EDV/Deployed/murl.graf.priv.at/home/jira/data/dbconfig.xml
+   A /EDV/Deployed/murl.graf.priv.at/home/otto
+   A /EDV/Deployed/murl.graf.priv.at/home/otto/.ssh
+   A /EDV/Deployed/murl.graf.priv.at/home/otto/.ssh/authorized_keys
+   A /EDV/Deployed/murl.graf.priv.at/home/suck
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/bin
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/bin/hide
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/.urxnmp3accessnix
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/download.py
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/download.zip
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/index.php
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/playlist.pls
+   A /EDV/Deployed/murl.graf.priv.at/home/suck/public_html/upload.html
+   A /EDV/Deployed/murl.graf.priv.at/root
+   A /EDV/Deployed/murl.graf.priv.at/root/bin
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/backup.sh
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/buildworld
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/checkports.py
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/checkports.sh
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/freebsd-upgrade.howto.txt
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/mailstats.sh
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/myportupgrade
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/portlist
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/si
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/sl
+   A /EDV/Deployed/murl.graf.priv.at/root/bin/wipespamdirs.py
+   A /EDV/Deployed/murl.graf.priv.at/root/etc
+   A /EDV/Deployed/murl.graf.priv.at/root/portssup
+   A /EDV/Deployed/murl.graf.priv.at/root/schurli.PEM
+   A /EDV/Deployed/murl.graf.priv.at/usr
+   A /EDV/Deployed/murl.graf.priv.at/usr/local
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache22
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache22/Includes
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache22/Includes/no-accf.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache22/extra
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache22/extra/httpd-ssl.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/apache22/httpd.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/clamav-milter.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/clamd.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/imapd
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/imapd-ssl
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/imapd-ssl.dist
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/imapd.cnf.dist
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/imapd.dist
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/pop3d
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/pop3d-ssl
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/pop3d-ssl.dist
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/pop3d.cnf.dist
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/pop3d.dist
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/quotawarnmsg.example
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/shared
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/courier-imap/shared.tmp
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/freshclam.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/icinga
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/icinga/objects
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/mail
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/mail/greylist.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/mail/spamassassin
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/php
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/php/extensions.ini
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/php.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/etc/pkgtools.conf
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/www
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/www/squirrelmail
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/www/squirrelmail/config
+   A /EDV/Deployed/murl.graf.priv.at/usr/local/www/squirrelmail/config/config.php
+   A /EDV/Deployed/murl.graf.priv.at/var
+   A /EDV/Deployed/murl.graf.priv.at/var/cron
+   A /EDV/Deployed/murl.graf.priv.at/var/cron/tabs
+   A /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/georg
+   A /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/graf
+   A /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/jira
+   A /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/root
+   A /EDV/Deployed/murl.graf.priv.at/var/cron/tabs/suck
+   A /EDV/Deployed/murl.graf.priv.at/var/db
+   A /EDV/Deployed/murl.graf.priv.at/var/db/ntpd.drift
+
+GV-255 
+------------------------------------------------------------------------

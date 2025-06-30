@@ -1,0 +1,9 @@
+Options -Indexes +ExecCGI
+AddDefaultCharset utf-8
+# AddHandler fcgid-script .py
+DirectoryIndex index.html
+AuthType Digest
+AuthName "mp3@graf.priv.at"
+AuthDigestProvider file
+AuthUserFile /home/suck/.passdig
+Require valid-user

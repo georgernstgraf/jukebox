@@ -1,0 +1,41 @@
+body {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1.5;
+  /* white-space: pre; */ 
+  background-color: #222;
+  color: #ccc;
+  font-family: verdana;
+  padding: 7px;
+}
+
+li {
+  text-align: left;
+}
+
+h3 {
+  color: #ccc;
+}
+
+form {
+  color: #ccc;
+  border-color: #f00;
+  white-space: normal;
+  line-height: 3;
+}
+
+a {
+  color: #77f;
+}
+
+a.visited {
+  color: #f77;
+}
+
+input {
+  color: #ccc;
+  background-color: #433;
+  border-color: #ccc;
+}
