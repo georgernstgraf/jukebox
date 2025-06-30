@@ -1,3 +1,4 @@
 **/node_modules/
 **/.env
-**/src/*.js
+**/dist/*.js
+music.db
