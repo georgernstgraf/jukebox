@@ -1,38 +1,33 @@
-import { prisma } from "./prismaClient";
+import { prisma } from "./prisma.js";
 export class Batch {
     batchSize: number;
     currentBatch: Set<string>;
+    pendingTracks: Set<string>;
     constructor(batchSize: number = 1000) {
         this.batchSize = batchSize;
         this.currentBatch = new Set<string>();
+        this.pendingTracks = new Set<string>();
     }
 
-    async *insert(track: string): AsyncGenerator<void> {
-        const newTracks = new Set<string>();
-        while (track) {
-            newTracks.add(track);
-            if (newTracks.size >= this.batchSize) {
-                console.log(`Inserting batch of ${newTracks.size} tracks...`);
-                await this.createTracksBatch(newTracks);
-                newTracks.clear();
-            }
-            yield;
+    async insert(track: string): Promise<void> {
+        this.pendingTracks.add(track);
+        if (this.pendingTracks.size >= this.batchSize) {
+            console.log(
+                `Inserting batch of ${this.pendingTracks.size} tracks...`,
+            );
+            await this.createTracksBatch();
+            this.pendingTracks.clear();
         }
-        if (newTracks.size > 0) {
-            console.log(`Inserting final batch of ${newTracks.size} tracks...`);
-            await this.createTracksBatch(newTracks);
-        }
-        return;
     }
-    async createTracksBatch(newTracks: Set<string>): Promise<void> {
+    async createTracksBatch(): Promise<void> {
         const existing = new Set((await prisma.track.findMany({
             where: {
                 path: {
-                    in: Array.from(newTracks),
+                    in: Array.from(this.pendingTracks),
                 },
             },
         })).map((track) => track.path));
-        const insertTracks = newTracks.difference(existing);
+        const insertTracks = this.pendingTracks.difference(existing);
         if (insertTracks.size === 0) {
             return;
         }

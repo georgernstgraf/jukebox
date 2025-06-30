@@ -1,7 +1,7 @@
 import { createReadStream, writeFileSync } from "fs";
 import { createInterface, Interface } from "readline";
-import { prisma } from "./prismaClient";
-import { Batch } from "./batch";
+import { prisma } from "./prisma";
+import { Batch } from "./Batch.js";
 
 const BATCHSIZE = 1000;
 
