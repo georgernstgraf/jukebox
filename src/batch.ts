@@ -1,25 +1,26 @@
 import { prisma } from "./prisma.js";
 export class Batch {
-    batchSize: number;
-    currentBatch: Set<string>;
+    maxBatchSize: number;
+    insertedSofar: number = 0;
+    receivedSofar: number = 0;
     pendingTracks: Set<string>;
+
     constructor(batchSize: number = 1000) {
-        this.batchSize = batchSize;
-        this.currentBatch = new Set<string>();
+        this.maxBatchSize = batchSize;
         this.pendingTracks = new Set<string>();
+        this.insertedSofar = 0;
+        this.receivedSofar = 0;
     }
 
     async insert(track: string): Promise<void> {
+        this.receivedSofar++;
         this.pendingTracks.add(track);
-        if (this.pendingTracks.size >= this.batchSize) {
-            console.log(
-                `Inserting batch of ${this.pendingTracks.size} tracks...`,
-            );
-            await this.createTracksBatch();
-            this.pendingTracks.clear();
+        if (this.pendingTracks.size >= this.maxBatchSize) {
+            await this.commitPending();
         }
     }
-    async createTracksBatch(): Promise<void> {
+    async commitPending(): Promise<void> {
+        process.stdout.write(".");
         const existing = new Set((await prisma.track.findMany({
             where: {
                 path: {
@@ -27,13 +28,17 @@ export class Batch {
                 },
             },
         })).map((track) => track.path));
-        const insertTracks = this.pendingTracks.difference(existing);
-        if (insertTracks.size === 0) {
+        this.pendingTracks = this.pendingTracks.difference(existing);
+        if (this.pendingTracks.size === 0) {
             return;
         }
-        console.log(`Inserting ${insertTracks.size} new tracks...`);
         await prisma.track.createMany({
-            data: Array.from(insertTracks).map((path) => ({ path })),
+            data: Array.from(this.pendingTracks).map((path) => ({ path })),
         });
+        this.insertedSofar += this.pendingTracks.size;
+        console.log(
+            `Inserted a Batch of ${this.pendingTracks.size}. Total RECV/INS: ${this.receivedSofar}/${this.insertedSofar}.`,
+        );
+        this.pendingTracks.clear();
     }
 }

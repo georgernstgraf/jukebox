@@ -5,7 +5,7 @@
   "main": "app.ts",
   "type": "module",
   "scripts": {
-    "dev": "npx tsc && node dist/seed.js prisma/allfiles.txt"
+    "seed": "npx tsc && node dist/seed.js prisma/allfiles.txt"
   },
   "repository": {
     "type": "git",
