@@ -13,6 +13,7 @@ model Track {
   verifiedAt DateTime?
   isMedia    Boolean?
   ext        String?
+  mimeType   String?
   sizeBytes  Int?
   sha256     String?
 
