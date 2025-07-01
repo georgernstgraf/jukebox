@@ -12,7 +12,7 @@ export interface ITrackRepository {
 }
 
 export class PrismaTrackRepository implements ITrackRepository {
-    async findById(id: string) {
+    async findById(id: string): Promise<Track | null> {
         return prisma.track.findUnique({ where: { id } });
     }
     async findUnverifiedIds(take: number = 108): Promise<string[]> {
