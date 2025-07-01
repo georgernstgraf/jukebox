@@ -5,7 +5,8 @@
   "main": "app.ts",
   "type": "module",
   "scripts": {
-    "seed": "npx tsc && node dist/seed.js prisma/allfiles.txt"
+    "seed": "npx tsc && node dist/seed.js prisma/allfiles.txt",
+    "seedmac": "npx tsc && node dist/seed.js prisma/allfiles_mac.txt"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "dependencies": {
     "@prisma/client": "^6.10.1",
     "@types/node": "^24.0.7",
+    "file-type": "^21.0.0",
     "hono": "^4.8.3",
     "prisma": "^6.10.1",
     "typescript": "^5.8.3"

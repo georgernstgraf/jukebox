@@ -8,11 +8,13 @@ datasource db {
 }
 
 model Track {
-  id        String  @id @default(uuid())
-  path      String  @unique
-  ext       String?
-  sizeBytes Int?
-  sha256    String?
+  id         String    @id @default(uuid())
+  path       String    @unique
+  verifiedAt DateTime?
+  isMedia    Boolean?
+  ext        String?
+  sizeBytes  Int?
+  sha256     String?
 
   artist  String?
   album   String?

@@ -1,0 +1,99 @@
+/Users/tom/Music/Music/Media.localized/.Media Preferences.plist
+/Users/tom/Music/Music/Media.localized/.DS_Store
+/Users/tom/Music/Music/Media.localized/.localized/id.strings
+/Users/tom/Music/Music/Media.localized/.localized/es.strings
+/Users/tom/Music/Music/Media.localized/.localized/no.strings
+/Users/tom/Music/Music/Media.localized/.localized/zh_TW.strings
+/Users/tom/Music/Music/Media.localized/.localized/fi.strings
+/Users/tom/Music/Music/Media.localized/.localized/ru.strings
+/Users/tom/Music/Music/Media.localized/.localized/en.strings
+/Users/tom/Music/Music/Media.localized/.localized/es_419.strings
+/Users/tom/Music/Music/Media.localized/.localized/he.strings
+/Users/tom/Music/Music/Media.localized/.localized/uk.strings
+/Users/tom/Music/Music/Media.localized/.localized/fr_CA.strings
+/Users/tom/Music/Music/Media.localized/.localized/nl.strings
+/Users/tom/Music/Music/Media.localized/.localized/de.strings
+/Users/tom/Music/Music/Media.localized/.localized/ja.strings
+/Users/tom/Music/Music/Media.localized/.localized/sk.strings
+/Users/tom/Music/Music/Media.localized/.localized/hr.strings
+/Users/tom/Music/Music/Media.localized/.localized/el.strings
+/Users/tom/Music/Music/Media.localized/.localized/th.strings
+/Users/tom/Music/Music/Media.localized/.localized/zh_CN.strings
+/Users/tom/Music/Music/Media.localized/.localized/cs.strings
+/Users/tom/Music/Music/Media.localized/.localized/sv.strings
+/Users/tom/Music/Music/Media.localized/.localized/pl.strings
+/Users/tom/Music/Music/Media.localized/.localized/zh_HK.strings
+/Users/tom/Music/Music/Media.localized/.localized/en_GB.strings
+/Users/tom/Music/Music/Media.localized/.localized/en_AU.strings
+/Users/tom/Music/Music/Media.localized/.localized/da.strings
+/Users/tom/Music/Music/Media.localized/.localized/fr.strings
+/Users/tom/Music/Music/Media.localized/.localized/ro.strings
+/Users/tom/Music/Music/Media.localized/.localized/pt.strings
+/Users/tom/Music/Music/Media.localized/.localized/pt_PT.strings
+/Users/tom/Music/Music/Media.localized/.localized/ms.strings
+/Users/tom/Music/Music/Media.localized/.localized/ko.strings
+/Users/tom/Music/Music/Media.localized/.localized/hu.strings
+/Users/tom/Music/Music/Media.localized/.localized/hi.strings
+/Users/tom/Music/Music/Media.localized/.localized/tr.strings
+/Users/tom/Music/Music/Media.localized/.localized/vi.strings
+/Users/tom/Music/Music/Media.localized/.localized/ca.strings
+/Users/tom/Music/Music/Media.localized/.localized/ar.strings
+/Users/tom/Music/Music/Media.localized/.localized/it.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.DS_Store
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/id.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/es.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/no.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/zh_TW.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/fi.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/ru.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/en.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/es_419.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/he.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/uk.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/fr_CA.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/nl.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/de.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/ja.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/sk.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/hr.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/el.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/th.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/zh_CN.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/cs.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/sv.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/pl.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/zh_HK.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/en_GB.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/en_AU.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/da.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/fr.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/ro.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/pt.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/pt_PT.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/ms.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/ko.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/hu.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/hi.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/tr.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/vi.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/ca.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/ar.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/.localized/it.strings
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/Grover Washington, Jr./Winelight (1980)/05 Just The Two Of Us.mp3
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/Grover Washington, Jr./Winelight (1980)/06 Make Me A Memory (Sad Samba).mp3
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/Grover Washington, Jr./Winelight (1980)/02 Let It Flow (For _Dr. J._).mp3
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/Grover Washington, Jr./Winelight (1980)/urxn.png
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/Grover Washington, Jr./Winelight (1980)/01 Winelight.mp3
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/Grover Washington, Jr./Winelight (1980)/Folder.jpg
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/Grover Washington, Jr./Winelight (1980)/03 In The Name Of Love.mp3
+/Users/tom/Music/Music/Media.localized/Automatically Add to Music.localized/Grover Washington, Jr./Winelight (1980)/04 Take Me There.mp3
+/Users/tom/Music/Music/.DS_Store
+/Users/tom/Music/Music/Music Library.musiclibrary/Application.musicdb
+/Users/tom/Music/Music/Music Library.musiclibrary/Extras.itdb
+/Users/tom/Music/Music/Music Library.musiclibrary/sentinel
+/Users/tom/Music/Music/Music Library.musiclibrary/Library.musicdb
+/Users/tom/Music/Music/Music Library.musiclibrary/Genius.itdb
+/Users/tom/Music/Music/Music Library.musiclibrary/Library Preferences.musicdb
+/Users/tom/Music/Music/Music Library.musiclibrary/Preferences.plist
+/Users/tom/Music/.DS_Store
+/Users/tom/Music/.localized
