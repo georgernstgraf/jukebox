@@ -1,15 +1,18 @@
-import { prisma } from "./prisma.js";
-export class Batch {
+import { TrackService, trackService } from "../service/track.service.js";
+
+export class TrackBatch {
     maxBatchSize: number;
     insertedSofar: number = 0;
     receivedSofar: number = 0;
     pendingTracks: Set<string>;
+    service: TrackService;
 
     constructor(batchSize: number = 1000) {
         this.maxBatchSize = batchSize;
         this.pendingTracks = new Set<string>();
         this.insertedSofar = 0;
         this.receivedSofar = 0;
+        this.service = trackService;
     }
 
     async insert(track: string): Promise<void> {
@@ -21,21 +24,9 @@ export class Batch {
     }
     async commitPending(): Promise<void> {
         process.stdout.write(".");
-        const existing = new Set((await prisma.track.findMany({
-            where: {
-                path: {
-                    in: Array.from(this.pendingTracks),
-                },
-            },
-        })).map((track) => track.path));
-        this.pendingTracks = this.pendingTracks.difference(existing);
-        if (this.pendingTracks.size === 0) {
-            return;
-        }
-        await prisma.track.createMany({
-            data: Array.from(this.pendingTracks).map((path) => ({ path })),
-        });
-        this.insertedSofar += this.pendingTracks.size;
+        this.insertedSofar += await trackService.safeAddMultiplePaths(
+            this.pendingTracks,
+        );
         console.log(
             `Inserted a Batch of ${this.pendingTracks.size}. Total RECV/INS: ${this.receivedSofar}/${this.insertedSofar}.`,
         );
