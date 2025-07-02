@@ -25,6 +25,7 @@
     "file-type": "^21.0.0",
     "hono": "^4.8.3",
     "prisma": "^6.10.1",
+    "taglib-wasm": "^0.5.4",
     "typescript": "^5.8.3"
   }
 }
