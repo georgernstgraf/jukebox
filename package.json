@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "seed": "npx tsc && node dist/seed.js prisma/allfiles.txt",
-    "seedmac": "npx tsc && node dist/seed.js prisma/allfiles_mac.txt"
+    "seedmac": "npx tsc && node dist/seed.js prisma/allfiles_mac.txt",
+    "seedprod": "npx tsc && node dist/seed.js /home/suck/public_html/allfiles.txt"
   },
   "repository": {
     "type": "git",
