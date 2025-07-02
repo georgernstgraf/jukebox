@@ -1,6 +1,6 @@
 import type { ITrackRepository } from "../repo/track.repo";
 import { trackRepo } from "../repo/track.repo.js";
-import { fileExists, fileMimeType, fileSha256, fileSize } from "../helpers";
+import { fileExists, fileMimeType, fileSha256, fileSize } from "../helpers.js";
 const MEDIA = ["audio", "video", "image"];
 export class TrackService {
     constructor(private readonly repo: ITrackRepository) {

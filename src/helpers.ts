@@ -26,7 +26,7 @@ export async function fileSha256(path: string): Promise<string> {
 
 export async function fileMimeType(
     path: string,
-): Promise<{ ext: string; mime: string } | null> {
+): Promise<{ ext: string; mimeType: string } | null> {
     const mime = await ft.fileTypeFromFile(path);
-    return mime ? { ext: mime.ext, mime: mime.mime } : null;
+    return mime ? { ext: mime.ext, mimeType: mime.mime } : null;
 }

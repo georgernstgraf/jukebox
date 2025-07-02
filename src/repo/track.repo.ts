@@ -8,6 +8,7 @@ export interface ITrackRepository {
     create(
         path: string,
     ): Promise<Track>;
+    update(track: Track): Promise<Track>;
     delete(id: string): Promise<void>;
 }
 
