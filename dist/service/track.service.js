@@ -1,6 +1,7 @@
 import { trackRepo } from "../repo/track.repo.js";
-import { fileExists, fileMimeType, fileSha256, fileSize } from "../helpers.js";
+import { fileExists, fileMimeType, fileSha256, fileStat, fileTags, } from "../helpers.js";
 const MEDIA = ["audio", "video", "image"];
+const VERIFY_MS = 1000 * 60 * 60 * 24 * 365; // 1 year
 export class TrackService {
     repo;
     constructor(repo) {
@@ -21,7 +22,7 @@ export class TrackService {
         while (true) {
             const unverifiedIds = await trackRepo.findUnverifiedIds();
             if (unverifiedIds.length === 0) {
-                console.log("No unverified tracks in the database.");
+                console.log("verifyAllTracks(): No unverified tracks left in the database.");
                 break;
             }
             for (const id of unverifiedIds) {
@@ -35,31 +36,45 @@ export class TrackService {
         if (!track) {
             throw new Error(`Track with id ${id} not found`);
         }
-        /* --- id and path are always set ---
-          ☑ verifiedAt DateTime?
-          isMedia    Boolean?
-          ext        String?
-          mimetype   String?
-          ☑ sizeBytes  Int?
-          ☑ sha256     String?
-          artist  String?
-          album   String?
-          title   String?
-          year    String?
-          trackNo String?
-        */
-        if (!fileExists(track.path)) {
+        // id and path are set
+        const artistAlbumTrack = track.path.split("/").slice(-3).join("/");
+        // File is gone: delete it and return
+        if (!await fileExists(track.path)) {
             await this.deleteTrack(track.id);
+            console.info(`File ${track.path} does not exist, deleted from database.`);
             return;
         }
-        // we can access it ..
-        track.sizeBytes = await fileSize(track.path);
+        // check file mod time and size
+        const trackStat = await fileStat(track.path);
+        // if our verification came after the file was modified, skip it
+        if (track.verifiedAt && (track.verifiedAt.getTime() > trackStat.mtimeMs)) {
+            return;
+        }
+        track.sizeBytes = trackStat.size;
         track.sha256 = await fileSha256(track.path);
         track.verifiedAt = new Date();
-        Object.assign(track, await fileMimeType(track.path));
-        track.isMedia = MEDIA.includes(track.mimeType?.split("/")[0] ?? "");
+        Object.assign(track, await fileMimeType(track.path)); // ext and mimeType
+        let _logtags = "not audio";
+        // if audio file, care for tags
+        if (track.mimeType?.startsWith("audio/")) {
+            _logtags = "audio: ";
+            const tags = await fileTags(track.path);
+            if (tags) {
+                track.artist = tags.common?.artist ?? null;
+                track.album = tags.common?.album ?? null;
+                track.title = tags.common?.title ?? null;
+                track.year = tags.common?.year ?? null;
+                track.trackNo = tags.common?.track?.no ?? null;
+                _logtags += "tagged";
+            }
+            else {
+                _logtags += "untagged";
+                console.warn(`tagtool --fix "${track.path}"`);
+            }
+        }
         // Pass track to the repository for saving
         await this.repo.update(track);
+        console.info(`File ${artistAlbumTrack} (${_logtags}) verified and updated in the database.`);
     }
     async deleteTrack(id) {
         await this.repo.delete(id);

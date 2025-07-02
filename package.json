@@ -24,8 +24,8 @@
     "@types/node": "^24.0.7",
     "file-type": "^21.0.0",
     "hono": "^4.8.3",
+    "music-metadata": "^11.6.0",
     "prisma": "^6.10.1",
-    "taglib-wasm": "^0.5.4",
     "typescript": "^5.8.3"
   }
 }

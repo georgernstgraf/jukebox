@@ -11,7 +11,6 @@ model Track {
   id         String    @id @default(uuid())
   path       String    @unique
   verifiedAt DateTime?
-  isMedia    Boolean?
   ext        String?
   mimeType   String?
   sizeBytes  Int?
@@ -20,8 +19,12 @@ model Track {
   artist  String?
   album   String?
   title   String?
-  year    String?
-  trackNo String?
+  year    Int?
+  trackNo Int?
+
+  @@index([artist])
+  @@index([mimeType])
+  @@index([album])
 }
 
 model User {
