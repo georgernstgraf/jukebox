@@ -9,6 +9,9 @@
     "seedmac": "npx tsc && node dist/seed.js prisma/allfiles_mac.txt",
     "seedprod": "npx tsc && node dist/seed.js /home/suck/public_html/allfiles.txt"
   },
+  "prisma": {
+    "seed": "npm run seed"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/georgernstgraf/jukebox.git"
