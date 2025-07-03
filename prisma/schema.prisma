@@ -1,37 +1,38 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
 model Track {
-  id         String    @id @default(uuid())
-  path       String    @unique
-  verifiedAt DateTime?
-  ext        String?
-  mimeType   String?
-  sizeBytes  Int?
-  sha256     String?
+    id         String    @id @default(uuid())
+    path       String    @unique
+    verifiedAt DateTime?
+    ext        String?
+    mimeType   String?
+    sizeBytes  Int?
+    sha256     String?
 
-  artist  String?
-  album   String?
-  title   String?
-  year    Int?
-  trackNo Int?
+    artist  String?
+    album   String?
+    title   String?
+    year    Int?
+    trackNo Int?
 
-  @@index([artist])
-  @@index([mimeType])
-  @@index([album])
+    @@index([artist])
+    @@index([mimeType])
+    @@index([album])
+    @@index([sha256])
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id        String   @id @default(uuid())
+    name      String
+    email     String   @unique
+    password  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
