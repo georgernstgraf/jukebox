@@ -23,12 +23,11 @@ export class TrackBatch {
         }
     }
     async commitPending(): Promise<void> {
-        process.stdout.write(".");
         this.insertedSofar += await trackService.safeAddMultiplePaths(
             this.pendingTracks,
         );
         console.log(
-            `Inserted a Batch of ${this.pendingTracks.size}. Total RECV/INS: ${this.receivedSofar}/${this.insertedSofar}.`,
+            `Received a Batch (${this.pendingTracks.size} pcs). Total RECV/INS: ${this.receivedSofar}/${this.insertedSofar}.`,
         );
         this.pendingTracks.clear();
     }

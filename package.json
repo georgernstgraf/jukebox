@@ -1,35 +1,36 @@
 {
-  "name": "jukebox",
-  "version": "1.0.0",
-  "description": "wu mp3 collection",
-  "main": "app.ts",
-  "type": "module",
-  "scripts": {
-    "seed": "npx tsc && node dist/seed.js prisma/allfiles.txt",
-    "seedmac": "npx tsc && node dist/seed.js prisma/allfiles_mac.txt",
-    "seedprod": "npx tsc && node dist/seed.js /home/suck/public_html/allfiles.txt"
-  },
-  "prisma": {
-    "seed": "npm run seed"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/georgernstgraf/jukebox.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/georgernstgraf/jukebox/issues"
-  },
-  "homepage": "https://github.com/georgernstgraf/jukebox#readme",
-  "dependencies": {
-    "@prisma/client": "^6.10.1",
-    "@types/node": "^24.0.7",
-    "file-type": "^21.0.0",
-    "hono": "^4.8.3",
-    "music-metadata": "^11.6.0",
-    "prisma": "^6.10.1",
-    "typescript": "^5.8.3"
-  }
+    "name": "jukebox",
+    "version": "1.0.0",
+    "description": "wu mp3 collection",
+    "main": "app.ts",
+    "type": "module",
+    "scripts": {
+        "seed": "npx tsc && node dist/seed.js prisma/allfiles.txt",
+        "seedmac": "npx tsc && node dist/seed.js prisma/allfiles_mac.txt",
+        "seedprod": "npx tsc && node dist/seed.js /home/suck/public_html/allfiles.txt"
+    },
+    "prisma": {
+        "seed": "npm run seed"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/georgernstgraf/jukebox.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/georgernstgraf/jukebox/issues"
+    },
+    "homepage": "https://github.com/georgernstgraf/jukebox#readme",
+    "dependencies": {
+        "@prisma/client": "^6.10.1",
+        "@types/node": "^24.0.7",
+        "authenticate-pam": "^1.0.5",
+        "file-type": "^21.0.0",
+        "hono": "^4.8.3",
+        "music-metadata": "^11.6.0",
+        "prisma": "^6.10.1",
+        "typescript": "^5.8.3"
+    }
 }
