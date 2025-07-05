@@ -1,5 +1,6 @@
 **/node_modules/
 **/.env
 **/dist/
+**/_no_git/
 music.db
 music.db-journal
