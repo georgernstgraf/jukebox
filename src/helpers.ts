@@ -14,8 +14,7 @@ export async function fileExists(path: string): Promise<boolean> {
 }
 
 export async function fileStat(path: string): Promise<Stats> {
-    const stats = await stat(path);
-    return stats;
+    return await stat(path);
 }
 
 export async function fileSha256(path: string): Promise<string> {
