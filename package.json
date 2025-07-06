@@ -5,9 +5,9 @@
     "main": "app.ts",
     "type": "module",
     "scripts": {
-        "seed": "npx tsc && node dist/seed.js prisma/allfiles.txt",
-        "seedmac": "npx tsc && node dist/seed.js prisma/allfiles_mac.txt",
-        "seedprod": "npx tsc && node dist/seed.js /home/suck/public_html/allfiles.txt"
+        "seed": "npx tsc && node --env-file=.env dist/seed.js prisma/allfiles.txt",
+        "seedmac": "npx tsc && node --env-file=.env dist/seed.js prisma/allfiles_mac.txt",
+        "seedprod": "npx tsc && node --env-file=.env dist/seed.js /home/suck/public_html/allfiles.txt"
     },
     "prisma": {
         "seed": "npm run seed"

@@ -1,15 +1,13 @@
 import type { ITrackRepository } from "../repo/track.repo";
 import { trackRepo } from "../repo/track.repo.js";
 import {
-    fileExists,
     fileMimeType,
     fileSha256,
     fileStat,
     fileTags,
+    getBuffer,
 } from "../helpers.js";
 import { stat } from "fs";
-const MEDIA = ["audio", "video", "image"];
-const VERIFY_MS = 1000 * 60 * 60 * 24 * 365; // 1 year
 export class TrackService {
     constructor(private readonly repo: ITrackRepository) {
     }
@@ -45,32 +43,55 @@ export class TrackService {
     }
     // make the db record as complete as possible
     async verifyTrack(id: string) {
-        const track = await this.repo.findById(id);
+        const track = await this.repo.getById(id);
+
+        // will not really happen. Throw here because it will be an alert
+        // for something very corrupt
         if (!track) {
             throw new Error(`Track with id ${id} not found`);
         }
-        // id and path are set
-        const artistAlbumTrack = track.path.split("/").slice(-3).join("/");
-        // File is gone: delete it and return
-        if (!await fileExists(track.path)) {
-            await this.deleteTrack(track.id);
+
+        // File is gone: delete for db it and return
+        const buffer = await getBuffer(track.path);
+        if (!buffer) {
+            await this.repo.delete(track.id);
             console.info(
-                `File ${track.path} does not exist, deleted from database.`,
+                `${track.path} cannot get content, deleted from database.`,
             );
             return;
         }
-        // check file mod time and size
-        const trackStat = await fileStat(track.path);
+
+        // minmal state here: id and path are set (but mostly a lot more)
+
+        const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
+        if (!trackStat.isFile()) {
+            console.warn(
+                `Found a non-file (${track.path}). deleting it. REBUILD YOUR INFILE!!!`,
+            );
+            return await this.repo.delete(track.id);
+        }
         // if our verification came after the file was modified, skip it
-        if (
-            track.verifiedAt && (track.verifiedAt.getTime() > trackStat.mtimeMs)
-        ) {
-            return;
+        const validVerificationExists = track.verifiedAt &&
+            (track.verifiedAt.getTime() > trackStat.mtimeMs);
+
+        let needSave = false;
+        if (validVerificationExists) {
+            // see if all the stat.* members are already there
+            if (track.inode !== trackStat.ino) {
+                track.inode = trackStat.ino;
+                needSave = true;
+            }
+            if (track.sizeBytes !== trackStat.size) {
+                track.sizeBytes = trackStat.size;
+                needSave = true;
+            }
+            return needSave ? await this.repo.update(track) : undefined;
         }
         track.sizeBytes = trackStat.size;
-        track.sha256 = await fileSha256(track.path);
+        track.inode = trackStat.ino;
+        track.sha256 = await fileSha256(buffer);
         track.verifiedAt = new Date();
-        Object.assign(track, await fileMimeType(track.path)); // ext and mimeType
+        Object.assign(track, await fileMimeType(track.path)); // ext/mimeType
         let _logtags = "not audio";
         // if audio file, care for tags
         if (track.mimeType?.startsWith("audio/")) {
@@ -90,8 +111,9 @@ export class TrackService {
         }
         // Pass track to the repository for saving
         await this.repo.update(track);
+        const shortName = track.path.split("/").slice(-3).join("/");
         console.info(
-            `File ${artistAlbumTrack} (${_logtags}) verified and updated in the database.`,
+            `File ${shortName} (${_logtags}) verified and updated in the database.`,
         );
     }
     async deleteTrack(id: string) {

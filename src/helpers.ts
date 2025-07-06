@@ -4,12 +4,12 @@ import { createHash } from "crypto";
 import * as ft from "file-type";
 import * as mmt from "music-metadata";
 
-export async function fileExists(path: string): Promise<boolean> {
+export async function getBuffer(path: string): Promise<Buffer | undefined> {
     try {
-        await access(path, constants.F_OK);
-        return true;
+        await access(path, constants.F_OK | constants.O_RDONLY);
+        return await readFile(path);
     } catch {
-        return false;
+        return;
     }
 }
 
@@ -17,9 +17,8 @@ export async function fileStat(path: string): Promise<Stats> {
     return await stat(path);
 }
 
-export async function fileSha256(path: string): Promise<string> {
+export async function fileSha256(fileBuffer: Buffer): Promise<string> {
     const hash = createHash("sha256");
-    const fileBuffer = await readFile(path);
     hash.update(fileBuffer);
     return hash.digest("hex");
 }

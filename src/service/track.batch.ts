@@ -7,7 +7,7 @@ export class TrackBatch {
     pendingTracks: Set<string>;
     service: TrackService;
 
-    constructor(batchSize: number = 1000) {
+    constructor(batchSize: number = 1024) {
         this.maxBatchSize = batchSize;
         this.pendingTracks = new Set<string>();
         this.insertedSofar = 0;
@@ -23,11 +23,12 @@ export class TrackBatch {
         }
     }
     async commitPending(): Promise<void> {
-        this.insertedSofar += await trackService.safeAddMultiplePaths(
+        const addedNow = await trackService.safeAddMultiplePaths(
             this.pendingTracks,
         );
+        this.insertedSofar += addedNow;
         console.log(
-            `Received a Batch (${this.pendingTracks.size} pcs). Total RECV/INS: ${this.receivedSofar}/${this.insertedSofar}.`,
+            `Commited a Batch (added ${addedNow} of ${this.pendingTracks.size} pcs). Total RECV/INS: ${this.receivedSofar}/${this.insertedSofar}.`,
         );
         this.pendingTracks.clear();
     }

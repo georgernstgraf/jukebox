@@ -3,7 +3,7 @@ import { prisma } from "../prisma.js";
 
 export interface ITrackRepository {
     // CRUD is done here
-    findById(id: string): Promise<Track | null>;
+    getById(id: string): Promise<Track | null>;
     findUnverifiedIds(take?: number): Promise<string[]>;
     create(
         path: string,
@@ -13,7 +13,7 @@ export interface ITrackRepository {
 }
 
 export class PrismaTrackRepository implements ITrackRepository {
-    async findById(id: string): Promise<Track | null> {
+    async getById(id: string): Promise<Track | null> {
         return prisma.track.findUnique({ where: { id } });
     }
     async findUnverifiedIds(take: number = 108): Promise<string[]> {

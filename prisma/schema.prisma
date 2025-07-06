@@ -11,10 +11,13 @@ model Track {
     id         String    @id @default(uuid())
     path       String    @unique
     verifiedAt DateTime?
-    ext        String?
-    mimeType   String?
-    sizeBytes  Int?
-    sha256     String?
+
+    ext      String?
+    mimeType String?
+    sha256   String?
+
+    sizeBytes Int?
+    inode     Int?
 
     artist  String?
     album   String?
@@ -26,6 +29,7 @@ model Track {
     @@index([mimeType])
     @@index([album])
     @@index([sha256])
+    @@index([verifiedAt])
 }
 
 model User {
