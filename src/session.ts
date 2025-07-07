@@ -1,10 +1,8 @@
 import { Context, Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { v4 as uuidv4 } from "uuid";
-//import { Client as MemcachedClient } from "memjs";
-import memjsModule from "memjs";
-// const memjs = require("memjs").Client;
-const mc = memjsModule.Client.create();
+import { Client } from "memjs";
+const mc = Client.create("localhost:11211");
 const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME ||
     "hono_session_id";
 const SESSION_EXPIRATION_SECONDS =
@@ -43,6 +41,7 @@ async function mcSet(
                     console.error(`Error saving ${key} to Memcached:`, err);
                     reject(err);
                 } else {
+                    console.log(`SUCCESS saving ${key} to Memcached:`, err);
                     resolve();
                 }
             },
@@ -85,35 +84,34 @@ export class Session {
                 sessionId,
             );
             if (!session) {
+                console.log("had to create new session, know sess id");
                 session = new Session(sessionId);
                 session.sessionNeedsSave = true;
             } else {
-                session = new Session();
-                session.sessionNeedsSave = true;
-                session.cookieNeedsSend = true;
+                console.log("found a session in mc");
             }
-
-            c.set("session", session);
-
-            await next();
-
-            // ------- AFTER REQ --------
-            if (session.sessionNeedsSave) {
-                await mcSet(
-                    session.sessionId,
-                    JSON.stringify(session),
-                );
-                console.log(
-                    `Session saved: ${session.sessionId} with payload: ${
-                        JSON.stringify(session)
-                    }`,
-                );
-            }
-            if (session.cookieNeedsSend) {
-                setCookie(c, Session.SESSION_COOKIE_NAME, session.sessionId, {
-                    maxAge: Session.SESSION_EXPIRATION_SECONDS,
-                });
-            }
+        } else {
+            session = new Session();
+            session.sessionNeedsSave = true;
+        }
+        c.set("session", session);
+        await next();
+        // ------- AFTER REQ --------
+        if (session.sessionNeedsSave) {
+            await mcSet(
+                session.sessionId,
+                JSON.stringify(session),
+            );
+            console.log(
+                `Session saved: ${session.sessionId} with payload: ${
+                    JSON.stringify(session)
+                }`,
+            );
+        }
+        if (session.cookieNeedsSend) {
+            setCookie(c, Session.SESSION_COOKIE_NAME, session.sessionId, {
+                maxAge: Session.SESSION_EXPIRATION_SECONDS,
+            });
         }
     }
     setUsername(username: string): void {

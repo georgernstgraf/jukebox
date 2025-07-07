@@ -7,10 +7,10 @@ const app = new Hono();
 app.use((c, next) => Session.middleware(c, next));
 
 app.get("/", (c: Context) => {
-    const session = c.get("session");
+    const session: Session = c.get("session");
     const s = JSON.stringify(session);
     session.setUsername("georg");
-    return c.text(`Session: ${s}`);
+    return c.text(`Session as got from store: ${s}`);
 });
 
 //app.get("/logout", async (c) => {
