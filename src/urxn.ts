@@ -25,7 +25,7 @@ async function mcSet(key: string, value: string): Promise<void> {
             key,
             value,
             {},
-            function (err: Error | null, success: boolean | null) {
+            function (err, success) {
                 if (err) {
                     return reject(err);
                 } else {

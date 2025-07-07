@@ -21,8 +21,14 @@ app.get("/", (c: Context) => {
 //    }
 //    return c.text("Logged out successfully!");
 //});
-
-// export default app;
+// Error handling
+app.onError((err, c) => {
+    console.error(`${err}`);
+    return c.json({
+        message: err.message,
+        error: process.env.NODE_ENV === "production" ? {} : err,
+    }, 500);
+});
 // now start the server:
 serve({
     fetch: app.fetch, // Hono apps expose a fetch method for compatibility

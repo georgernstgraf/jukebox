@@ -9,19 +9,23 @@ const SESSION_EXPIRATION_SECONDS =
     Number(process.env.SESSION_EXPIRATION_SECONDS) || 60 * 60 * 24 * 120; // 120 days
 
 async function mcGet(
-    key: string,
-): Promise<Session | null> {
+    what: string,
+): Promise<Session> {
     return new Promise((resolve, reject) => {
-        mc.get(key, (err, value) => {
-            if (err) {
-                console.error(`Error retrieving ${key} from Memcached:`, err);
-                reject(err);
+        console.log(`mcGet ${what}`);
+        mc.get(what, (err, value) => {
+            if (value) {
+                console.log(`mcGet ${value.toString("utf8")}`);
+                try {
+                    return resolve(
+                        Session.fromJSON(JSON.parse(value.toString("utf8"))),
+                    );
+                } catch (e) {
+                    return reject(e);
+                }
             } else {
-                resolve(
-                    value
-                        ? Session.fromJSON(JSON.parse(value.toString()))
-                        : null,
-                );
+                console.log(`mcGet ERR ${err}`);
+                return reject(err);
             }
         });
     });
@@ -34,15 +38,15 @@ async function mcSet(
     return new Promise((resolve, reject) => {
         mc.set(
             key,
-            value,
-            { expires: SESSION_EXPIRATION_SECONDS },
-            (err, val) => {
+            Buffer.from(value),
+            {},
+            function (err, val) {
                 if (err) {
                     console.error(`Error saving ${key} to Memcached:`, err);
-                    reject(err);
+                    return reject(err);
                 } else {
-                    console.log(`SUCCESS saving ${key} to Memcached:`, err);
-                    resolve();
+                    console.log(`SUCCESS saving ${key} to Memcached:`, val);
+                    return resolve();
                 }
             },
         );
@@ -75,20 +79,19 @@ export class Session {
             `Session middleware started: ${c.req.method} ${c.req.path}`,
         );
         let sessionId = getCookie(c, Session.SESSION_COOKIE_NAME);
-        let session: Session | null;
+        let session: Session;
         // ------- BEFORE REQ --------
         // We have sessionId OR NOT
         console.log(`Handling sessionId from cookie: ${sessionId}`);
         if (sessionId) { // from cookie
-            session = await mcGet(
-                sessionId,
-            );
-            if (!session) {
-                console.log("had to create new session, know sess id");
+            try {
+                session = await mcGet(
+                    sessionId,
+                );
+            } catch {
+                console.warn("ALERT: had to create new session, know sess id");
                 session = new Session(sessionId);
                 session.sessionNeedsSave = true;
-            } else {
-                console.log("found a session in mc");
             }
         } else {
             session = new Session();
@@ -119,8 +122,16 @@ export class Session {
         this.sessionNeedsSave = true;
     }
     static fromJSON(json: ISession): Session {
-        const session = new Session(json.sessionId);
-        return Object.assign(session, json);
+        let session: Session;
+        if (!json.sessionId) {
+            session = new Session();
+            session.sessionNeedsSave = true;
+            session.cookieNeedsSend = true;
+        } else {
+            session = new Session(json.sessionId);
+            Object.assign(session, json);
+        }
+        return session;
     }
     toJSON(): ISession {
         return {
