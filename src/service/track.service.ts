@@ -1,7 +1,7 @@
 import type { ITrackRepository } from "../repo/track.repo";
 import { trackRepo } from "../repo/track.repo.js";
 import {
-    fileMimeType,
+    bufferMimeType,
     fileSha256,
     fileStat,
     fileTags,
@@ -51,7 +51,37 @@ export class TrackService {
             throw new Error(`Track with id ${id} not found`);
         }
 
-        // File is gone: delete for db it and return
+        // stats cannot be done: bail out and delete
+        const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
+        if (!trackStat?.isFile()) {
+            console.warn(
+                `Found a non-file (${track.path}). deleting it. REBUILD YOUR INFILE!!!`,
+            );
+            return await this.repo.delete(track.id);
+        }
+
+        const validVerificationExists = track.verifiedAt &&
+            (track.verifiedAt.getTime() > trackStat.mtimeMs);
+
+        let needSave = false;
+        // see if all the stat.* members are already there
+        if (track.inode !== trackStat.ino) {
+            track.inode = trackStat.ino;
+            needSave = true;
+        }
+        if (track.sizeBytes !== trackStat.size) {
+            track.sizeBytes = trackStat.size;
+            needSave = true;
+        }
+        if (validVerificationExists) {
+            if (needSave) {
+                console.log(`Saving ${track.path} before reading it.`);
+                return await this.repo.update(track);
+            }
+            return undefined;
+        }
+        // File cannot be read: delete from db it and return
+        // VERY EXPENSIVE
         const buffer = await getBuffer(track.path);
         if (!buffer) {
             await this.repo.delete(track.id);
@@ -61,37 +91,11 @@ export class TrackService {
             return;
         }
 
-        // minmal state here: id and path are set (but mostly a lot more)
-
-        const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
-        if (!trackStat.isFile()) {
-            console.warn(
-                `Found a non-file (${track.path}). deleting it. REBUILD YOUR INFILE!!!`,
-            );
-            return await this.repo.delete(track.id);
-        }
-        // if our verification came after the file was modified, skip it
-        const validVerificationExists = track.verifiedAt &&
-            (track.verifiedAt.getTime() > trackStat.mtimeMs);
-
-        let needSave = false;
-        if (validVerificationExists) {
-            // see if all the stat.* members are already there
-            if (track.inode !== trackStat.ino) {
-                track.inode = trackStat.ino;
-                needSave = true;
-            }
-            if (track.sizeBytes !== trackStat.size) {
-                track.sizeBytes = trackStat.size;
-                needSave = true;
-            }
-            return needSave ? await this.repo.update(track) : undefined;
-        }
         track.sizeBytes = trackStat.size;
         track.inode = trackStat.ino;
         track.sha256 = await fileSha256(buffer);
         track.verifiedAt = new Date();
-        Object.assign(track, await fileMimeType(track.path)); // ext/mimeType
+        Object.assign(track, await bufferMimeType(buffer, track.path)); // ext/mimeType
         let _logtags = "not audio";
         // if audio file, care for tags
         if (track.mimeType?.startsWith("audio/")) {

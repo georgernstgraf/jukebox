@@ -13,8 +13,12 @@ export async function getBuffer(path: string): Promise<Buffer | undefined> {
     }
 }
 
-export async function fileStat(path: string): Promise<Stats> {
-    return await stat(path);
+export async function fileStat(path: string): Promise<Stats | undefined> {
+    try {
+        return await stat(path);
+    } catch {
+        return;
+    }
 }
 
 export async function fileSha256(fileBuffer: Buffer): Promise<string> {
@@ -23,12 +27,13 @@ export async function fileSha256(fileBuffer: Buffer): Promise<string> {
     return hash.digest("hex");
 }
 
-export async function fileMimeType(
+export async function bufferMimeType(
+    buffer: Buffer,
     path: string,
 ): Promise<{ ext: string; mimeType: string } | null> {
     let mime = null;
     try {
-        mime = await ft.fileTypeFromFile(path);
+        mime = await ft.fileTypeFromBuffer(buffer);
     } catch (error) {
         console.error(`Error while getting mimetype for: ${path}:`);
         console.error(error);

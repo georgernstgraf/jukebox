@@ -30,6 +30,7 @@ model Track {
     @@index([album])
     @@index([sha256])
     @@index([verifiedAt])
+    @@index([inode])
 }
 
 model User {

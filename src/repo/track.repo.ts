@@ -19,7 +19,7 @@ export class PrismaTrackRepository implements ITrackRepository {
     async findUnverifiedIds(take: number = 108): Promise<string[]> {
         return (await prisma.track.findMany({
             select: { id: true },
-            where: { verifiedAt: null },
+            where: { OR: [{ verifiedAt: null }, { inode: null }] },
             take,
         })).map((rec) => rec.id);
     }
