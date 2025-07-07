@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // Friendly name shown in the debug panel
+            "name": "Debug dist",
+            // Use the built-in Node debugger
+            "type": "node",
+            // Mode: launch (could also attach)
+            "request": "launch",
+
+            // 1️⃣ Entry point – the transpiled JS file
+            "program": "${workspaceFolder}/dist/app.js",
+
+            // 2️⃣ Tell the debugger where transpiled files live
+            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+
+            // 3️⃣ (Optional) rebuild before starting
+            "preLaunchTask": "build:tsc",
+
+            // 4️⃣ Keeps console inside VS Code
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

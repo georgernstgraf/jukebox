@@ -1,39 +1,18 @@
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
+import { serve } from "@hono/node-server";
 import { Session } from "./session.js";
 const app = new Hono();
 
-// Define a type for your session data
-interface SessionData {
-    userId?: string;
-    cart?: string[];
-    lastVisit?: number;
-    // Add any other data you want to store in the session
-}
-
-const SESSION_COOKIE_NAME = "hono_session_id";
-const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 120; // 120 days
-
 // Custom session middleware
-app.use(Session.middleware);
+app.use((c, next) => Session.middleware(c, next));
 
-// Example Usage (same as before):
-//app.get("/", (c) => {
-//    const session = c.get("session");
-//    const sessionId = c.get("sessionId");
-//
-//    if (session.userId) {
-//        return c.text(
-//            `Welcome back, User ${session.userId}! Your session ID is ${sessionId}`,
-//        );
-//    } else {
-//        // Simulate logging in and setting user ID in session
-//        session.userId = "456"; // Changed userId to distinguish from Redis example
-//        session.lastVisit = Date.now();
-//        session.cart = ["productX", "productY"];
-//        return c.text(`New session created! Your session ID is ${sessionId}`);
-//    }
-//});
-//
+app.get("/", (c: Context) => {
+    const session = c.get("session");
+    const s = JSON.stringify(session);
+    session.setUsername("georg");
+    return c.text(`Session: ${s}`);
+});
+
 //app.get("/logout", async (c) => {
 //    const sessionId = c.get("sessionId");
 //    if (sessionId) {
@@ -43,4 +22,9 @@ app.use(Session.middleware);
 //    return c.text("Logged out successfully!");
 //});
 
-export default app;
+// export default app;
+// now start the server:
+serve({
+    fetch: app.fetch, // Hono apps expose a fetch method for compatibility
+    port: 3000,
+});
