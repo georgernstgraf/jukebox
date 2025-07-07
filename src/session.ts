@@ -64,7 +64,7 @@ export class Session {
     username: string | undefined;
 
     cookieNeedsSend = false;
-    sessionNeedsSave = false;
+    needsSave = false;
 
     constructor(sessionId?: string) {
         this.sessionId = sessionId ? sessionId : uuidv4();
@@ -88,19 +88,23 @@ export class Session {
                 session = await mcGet(
                     sessionId,
                 );
-            } catch {
-                console.warn("ALERT: had to create new session, know sess id");
+            } catch (e) {
+                console.warn(
+                    `ALERT: have sid (${sessionId}) but mcGet err (${e})`,
+                );
                 session = new Session(sessionId);
-                session.sessionNeedsSave = true;
+                session.needsSave = true;
+                session.cookieNeedsSend = true;
             }
         } else {
             session = new Session();
-            session.sessionNeedsSave = true;
+            session.cookieNeedsSend = true;
+            session.needsSave = true;
         }
         c.set("session", session);
         await next();
         // ------- AFTER REQ --------
-        if (session.sessionNeedsSave) {
+        if (session.needsSave) {
             await mcSet(
                 session.sessionId,
                 JSON.stringify(session),
@@ -119,13 +123,13 @@ export class Session {
     }
     setUsername(username: string): void {
         this.username = username;
-        this.sessionNeedsSave = true;
+        this.needsSave = true;
     }
     static fromJSON(json: ISession): Session {
         let session: Session;
         if (!json.sessionId) {
             session = new Session();
-            session.sessionNeedsSave = true;
+            session.needsSave = true;
             session.cookieNeedsSend = true;
         } else {
             session = new Session(json.sessionId);

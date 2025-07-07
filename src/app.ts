@@ -9,7 +9,9 @@ app.use((c, next) => Session.middleware(c, next));
 app.get("/", (c: Context) => {
     const session: Session = c.get("session");
     const s = JSON.stringify(session);
-    session.setUsername("georg");
+    if (!session.username) {
+        session.setUsername("georg");
+    }
     return c.text(`Session as got from store: ${s}`);
 });
 
