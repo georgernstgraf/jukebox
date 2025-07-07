@@ -59,8 +59,8 @@ async function userLoop(): Promise<void> {
                     try {
                         const value = await mcGet(words[0]);
                         console.log(`${words[0]}: ${value}`);
-                    } catch (err) {
-                        console.error(`Error getting ${words[0]}:`, err);
+                    } catch (err) { // this guy is always null
+                        console.error(`${words[0]} not in memcached:`, err);
                     }
                     break;
                 case 2: // set
