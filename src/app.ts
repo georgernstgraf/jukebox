@@ -1,6 +1,7 @@
 import { Context, Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { Session } from "./session.js";
+import { render } from "./hbs.js";
 const app = new Hono();
 
 // Custom session middleware
