@@ -1,96 +1,59 @@
 import { Context, Hono } from "hono";
-import { getCookie, setCookie } from "hono/cookie";
+import { setSignedCookie, getSignedCookie, deleteCookie } from "hono/cookie";
 import { v4 as uuidv4 } from "uuid";
 import { Client } from "memjs";
-const mc = Client.create("localhost:11211");
-const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME ||
-    "hono_session_id";
-const SESSION_EXPIRATION_SECONDS =
-    Number(process.env.SESSION_EXPIRATION_SECONDS) || 60 * 60 * 24 * 120; // 120 days
 
-async function mcGet(
-    what: string,
-): Promise<Session> {
-    return new Promise((resolve, reject) => {
-        console.log(`mcGet ${what}`);
-        mc.get(what, (err, value) => {
-            if (value) {
-                console.log(`mcGet ${value.toString("utf8")}`);
-                try {
-                    return resolve(
-                        Session.fromJSON(JSON.parse(value.toString("utf8"))),
-                    );
-                } catch (e) {
-                    return reject(e);
-                }
-            } else {
-                console.log(`mcGet ERR ${err}`);
-                return reject(err);
-            }
-        });
-    });
-}
+import { cookieOpts } from "./cookieopts.js";
+import { SESSION_COOKIE_NAME, SESSION_EXPIRATION_SECONDS, COOKIE_SECRET } from "./env.js";
 
-async function mcSet(
-    key: string,
-    value: string,
-): Promise<void> {
-    return new Promise((resolve, reject) => {
-        mc.set(
-            key,
-            Buffer.from(value),
-            {},
-            function (err, val) {
-                if (err) {
-                    console.error(`Error saving ${key} to Memcached:`, err);
-                    return reject(err);
-                } else {
-                    console.log(`SUCCESS saving ${key} to Memcached:`, val);
-                    return resolve();
-                }
-            },
-        );
-    });
-}
+const memjs = Client.create("localhost:11211");
+
 export interface ISession {
-    sessionId: string;
     username?: string;
 }
+
 export class Session {
-    static SESSION_COOKIE_NAME = SESSION_COOKIE_NAME;
-    static SESSION_EXPIRATION_SECONDS = SESSION_EXPIRATION_SECONDS;
 
     sessionId: string;
-    username: string | undefined;
+    #username: string = "";
 
     cookieNeedsSend = false;
     needsSave = false;
 
     constructor(sessionId?: string) {
-        this.sessionId = sessionId ? sessionId : uuidv4();
+        if (!sessionId) {
+            sessionId = uuidv4();
+            this.cookieNeedsSend = true;
+            this.needsSave = true;
+        }
+        this.sessionId = sessionId;
     }
 
-    // job is putting a session object on the context
+    // 1. put a session object on the context to use
+    // 2. call next()  (here the session gets used)
+    // 3. a) resend cookie if required
+    // 3. b) save the session if modified to store
     static async middleware(
         c: Context,
         next: () => Promise<void>,
     ): Promise<void> {
+        let session: Session;
         console.log(
             `Session middleware started: ${c.req.method} ${c.req.path}`,
         );
-        let sessionId = getCookie(c, Session.SESSION_COOKIE_NAME);
-        let session: Session;
+        let sessionId = await getSignedCookie(c, COOKIE_SECRET, SESSION_COOKIE_NAME);
         // ------- BEFORE REQ --------
         // We have sessionId OR NOT
         console.log(`Handling sessionId from cookie: ${sessionId}`);
         if (sessionId) { // from cookie
             try {
-                session = await mcGet(
+                session = await Session.load(
                     sessionId,
                 );
             } catch (e) {
                 console.warn(
-                    `ALERT: have sid (${sessionId}) but mcGet err (${e})`,
+                    `ALERT: have sid (${sessionId}) but load
+            Session err (${e})`,
                 );
                 session = new Session(sessionId);
                 session.needsSave = true;
@@ -105,42 +68,102 @@ export class Session {
         await next();
         // ------- AFTER REQ --------
         if (session.needsSave) {
-            await mcSet(
+            await session.save(
                 session.sessionId,
                 JSON.stringify(session),
             );
             console.log(
-                `Session saved: ${session.sessionId} with payload: ${
-                    JSON.stringify(session)
+                `Session saved: ${session.sessionId} with payload: ${JSON.stringify(session)
                 }`,
             );
         }
         if (session.cookieNeedsSend) {
-            setCookie(c, Session.SESSION_COOKIE_NAME, session.sessionId, {
-                maxAge: Session.SESSION_EXPIRATION_SECONDS,
-            });
+            await setSignedCookie(c, SESSION_COOKIE_NAME, session.sessionId, COOKIE_SECRET, cookieOpts);
         }
     }
-    setUsername(username: string): void {
-        this.username = username;
+
+    get username(): string {
+        return this.#username;
+    }
+
+    set username(username: string) {
+        this.#username = username;
         this.needsSave = true;
     }
-    static fromJSON(json: ISession): Session {
-        let session: Session;
-        if (!json.sessionId) {
-            session = new Session();
-            session.needsSave = true;
-            session.cookieNeedsSend = true;
-        } else {
-            session = new Session(json.sessionId);
-            Object.assign(session, json);
-        }
+
+    static async load(
+        id: string,
+    ): Promise<Session> {
+        return new Promise((resolve, reject) => {
+            console.log(`loadSession ${id}`);
+            memjs.get(id, (err, value) => {
+                if (value) {
+                    console.log(`loadSession got '${value.toString("utf8")}'.`);
+                    try {
+                        return resolve(
+                            Session.fromJSON(
+                                JSON.parse(value.toString("utf8")), id
+                            ),
+                        );
+                    } catch (e) {
+                        return reject(e);
+                    }
+                } else {
+                    console.log(`loadSession ERR ${err}`);
+                    return reject(err);
+                }
+            });
+        });
+    }
+
+    async save(
+        key: string,
+        value: string,
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            memjs.set(
+                key,
+                Buffer.from(value),
+                {},
+                function (err, val) {
+                    if (err) {
+                        console.error(`Error saving ${key} to Memcached:`, err);
+                        return reject(err);
+                    } else {
+                        console.log(`SUCCESS saving ${key} to Memcached:`, val);
+                        return resolve();
+                    }
+                },
+            );
+        });
+    }
+
+    async destroy(  // TODO check and use this .. "Log out"
+        sessionId: string,
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            memjs.delete(sessionId, (err, val) => {
+                if (err) {
+                    console.error(`Error deleting session ${sessionId}:`, err);
+                    return reject(err);
+                } else {
+                    console.log(`SUCCESS deleting session ${sessionId}:`, val);
+                    return resolve();
+                }
+            });
+        });
+    }
+
+    static fromJSON(json: ISession, id: string): Session {
+        const session = new Session(id);
+        Object.assign(session, json);
+        session.needsSave = false;
         return session;
     }
+
     toJSON(): ISession {
         return {
-            sessionId: this.sessionId,
-            username: this.username,
+            username: this.#username,
         };
     }
 }
