@@ -41,23 +41,20 @@ export class Session {
         console.log(
             `Session middleware started: ${c.req.method} ${c.req.path}`,
         );
-        let sessionId = await getSignedCookie(c, COOKIE_SECRET, SESSION_COOKIE_NAME);
+        let sessionIdFromCookie = await getSignedCookie(c, COOKIE_SECRET, SESSION_COOKIE_NAME);
         // ------- BEFORE REQ --------
         // We have sessionId OR NOT
-        console.log(`Handling sessionId from cookie: ${sessionId}`);
-        if (sessionId) { // from cookie
+        console.log(`Handling sessionId from cookie: ${sessionIdFromCookie}`);
+        if (sessionIdFromCookie) { // from cookie
             try {
                 session = await Session.load(
-                    sessionId,
+                    sessionIdFromCookie,
                 );
             } catch (e) {
-                console.warn(
-                    `ALERT: have sid (${sessionId}) but load
-            Session err (${e})`,
-                );
-                session = new Session(sessionId);
+                console.info(`have sid (${sessionIdFromCookie}) gone from store (${e})`);
+                session = new Session(sessionIdFromCookie);
                 session.needsSave = true;
-                session.cookieNeedsSend = true;
+                session.cookieNeedsSend = false;
             }
         } else {
             session = new Session();
@@ -139,15 +136,15 @@ export class Session {
     }
 
     async destroy(  // TODO check and use this .. "Log out"
-        sessionId: string,
     ): Promise<void> {
         return new Promise((resolve, reject) => {
-            memjs.delete(sessionId, (err, val) => {
+            memjs.delete(this.sessionId, (err, val) => {
+                this.needsSave = false;
                 if (err) {
-                    console.error(`Error deleting session ${sessionId}:`, err);
+                    console.error(`Error deleting session ${this.sessionId}:`, err);
                     return reject(err);
                 } else {
-                    console.log(`SUCCESS deleting session ${sessionId}:`, val);
+                    console.log(`SUCCESS deleting session ${this.sessionId}:`, val);
                     return resolve();
                 }
             });

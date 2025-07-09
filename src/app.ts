@@ -3,11 +3,15 @@ import { serve } from "@hono/node-server";
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Session } from "./session.js";
 import { render } from "./hbs.js";
+import { testsaslauthd } from "./testsaslauthd.js";
+import { compress } from 'hono/compress';
+
 const app = new Hono();
 
 // Custom session middleware
-app.use((c, next) => Session.middleware(c, next));
 
+app.use((c, next) => Session.middleware(c, next));
+app.use("*", compress());
 app.get("/", (c: Context) => {
     const session: Session = c.get("session");
     return c.html(render("index", {
@@ -17,9 +21,26 @@ app.get("/", (c: Context) => {
 
 app.use('/*', serveStatic({ root: './static' }));
 
-// Example route
-app.get('/', (c) => c.text('Hello from Hono!'));
-
+app.post("/login", async (c: Context) => {
+    const session: Session = c.get("session");
+    const { username, password } = await c.req.parseBody();
+    if (typeof username !== "string" || typeof password !== "string") {
+        return c.status(400);
+    }
+    if (await testsaslauthd(username, password)) {
+        session.username = username; // Set the username in the session
+        return c.html(render("body", {
+            session: session.toJSON(),
+        }));
+    }
+});
+app.post("/logout", async (c: Context) => {
+    const session: Session = c.get("session");
+    await session.destroy(); // Destroy the session
+    return c.html(render("body", {
+        session: {}
+    }));
+});
 export default app;
 //app.get("/logout", async (c) => {
 //    const sessionId = c.get("sessionId");

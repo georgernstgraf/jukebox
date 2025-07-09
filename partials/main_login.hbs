@@ -1,0 +1,16 @@
+<form method="post"
+      action="/login"
+      hx-post="/login"
+      hx-target="body"> {{! header needs also be replaced }}
+    <h2>Log in</h2>
+    <input type="text"
+           name="username"
+           placeholder="Username"
+           autocomplete="username">
+    <input type="password"
+           name="password"
+           placeholder="Password"
+           autocomplete="current-password">
+    <input type="submit"
+           value="Log in">
+</form>

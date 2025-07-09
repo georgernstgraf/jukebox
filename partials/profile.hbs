@@ -1,7 +1,7 @@
-<div class="profile">
-    {{#if session.username}}
-    <button type="button">{{session.username}} - log out</button>
-    {{else}}
-    <button type="button">Guest - log in</button>
-    {{/if}}
-</div>
+{{#if session.username}}
+<button type="button"
+        hx-post="logout"
+        hx-target="body">log out {{session.username}}</button>
+{{else}}
+<p>You are not logged in.</p>
+{{/if}}
