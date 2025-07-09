@@ -1,14 +1,11 @@
-import { compile, Template } from 'handlebars';
+import handlebars from 'handlebars';
 import { readFileSync } from 'fs';
 import * as fs from 'fs/promises';
 import * as  path from 'path';
 
 export const map = new Map();
-export function render(templateName: string, context: object) {
-    //  const templatePath = `./templates/${templateName}.hbs`;
-    //  const templateSource = readFileSync(templatePath, 'utf-8');
-    //  const template = compile(templateSource);
-    //return template(context);
+export function render(templateName: string, context: object): string {
+    return map.get(templateName)(context,);
 }
 
 async function listHBSFilesRecursive(dir: string): Promise<string[]> {
@@ -29,12 +26,13 @@ async function loadTemplates() {
     const templatesDir = './partials';
     const hbsFiles = await listHBSFilesRecursive(templatesDir);
     for (const file of hbsFiles) {
-        const templateName = file.replace(`${templatesDir}/`, '').replace('.hbs', '');
+        const templateName = file.replace(`${templatesDir.substring(2,)}/`, '').replace('.hbs', '');
         const templateSource = readFileSync(file, 'utf-8');
-        const template: Template = compile(templateSource);
+        const template = handlebars.compile(templateSource);
         map.set(templateName, template);
+        handlebars.registerPartial(templateName, template);
     }
 }
 loadTemplates()
-    .then(() => console.log('Templates loaded successfully'))
+    .then(() => console.log('Templates loaded successfully', map))
     .catch(err => { console.error('Error loading templates:', err); process.exit(1); });

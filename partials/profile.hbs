@@ -1,0 +1,7 @@
+<div class="profile">
+    {{#if session.username}}
+    <button type="button">{{session.username}} - log out</button>
+    {{else}}
+    <button type="button">Guest - log in</button>
+    {{/if}}
+</div>

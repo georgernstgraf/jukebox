@@ -1,5 +1,6 @@
 import { Context, Hono } from "hono";
 import { serve } from "@hono/node-server";
+import { serveStatic } from '@hono/node-server/serve-static';
 import { Session } from "./session.js";
 import { render } from "./hbs.js";
 const app = new Hono();
@@ -9,13 +10,17 @@ app.use((c, next) => Session.middleware(c, next));
 
 app.get("/", (c: Context) => {
     const session: Session = c.get("session");
-    const s = JSON.stringify(session);
-    if (!session.username) {
-        session.username = "georg";
-    }
-    return c.text(`Session as got from store: ${s}`);
+    return c.html(render("index", {
+        session: session.toJSON(),
+    }));
 });
 
+app.use('/*', serveStatic({ root: './static' }));
+
+// Example route
+app.get('/', (c) => c.text('Hello from Hono!'));
+
+export default app;
 //app.get("/logout", async (c) => {
 //    const sessionId = c.get("sessionId");
 //    if (sessionId) {
