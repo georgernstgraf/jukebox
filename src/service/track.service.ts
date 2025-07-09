@@ -18,18 +18,21 @@ export class TrackService {
 
     async safeAddMultiplePaths(paths: Set<string>): Promise<number> {
         const existing = new Set(
-            (await trackRepo.findByPaths(paths)).map((track) => track.path),
+            (await this.repo.findByPaths(paths)).map((track) => track.path),
         );
         const pendingTracks = paths.difference(existing);
         if (pendingTracks.size === 0) {
             return 0;
         }
-        return await trackRepo.createPaths(pendingTracks);
+        return await this.repo.createPaths(pendingTracks);
     }
 
+    async setAllInodesNull() {
+        return await this.repo.setAllInodesNull();
+    }
     async verifyAllTracks() {
         while (true) {
-            const unverifiedIds = await trackRepo.findUnverifiedIds();
+            const unverifiedIds = await this.repo.findUnverifiedIds();
             if (unverifiedIds.length === 0) {
                 console.log(
                     "verifyAllTracks(): No unverified tracks left in the database.",
@@ -43,6 +46,7 @@ export class TrackService {
     }
     // make the db record as complete as possible
     async verifyTrack(id: string) {
+        // verifiedAt OR inode can be null
         const track = await this.repo.getById(id);
 
         // will not really happen. Throw here because it will be an alert
@@ -60,7 +64,7 @@ export class TrackService {
             return await this.repo.delete(track.id);
         }
 
-        const validVerificationExists = track.verifiedAt &&
+        const verificationIsNewerThanFile = track.verifiedAt &&
             (track.verifiedAt.getTime() > trackStat.mtimeMs);
 
         let needSave = false;
@@ -73,20 +77,22 @@ export class TrackService {
             track.sizeBytes = trackStat.size;
             needSave = true;
         }
-        if (validVerificationExists) {
+        if (verificationIsNewerThanFile) {  // we only get here if inode was unset
             if (needSave) {
-                console.log(`Saving ${track.path} before reading it.`);
+                console.log(`Saving (${track.path.substring(track.path.length - 54)}): only inode and size`);
                 return await this.repo.update(track);
             }
             return undefined;
         }
+        // STATE of affairs here: the verification is NULL OR file changed on disk
         // File cannot be read: delete from db it and return
         // VERY EXPENSIVE
+        console.log(`Starting hard work for (${track.path.substring(track.path.length - 54)})`);
         const buffer = await getBuffer(track.path);
         if (!buffer) {
             await this.repo.delete(track.id);
             console.info(
-                `${track.path} cannot get content, deleted from database.`,
+                `${track.path} cannot get buffer, deleted from database.`,
             );
             return;
         }
@@ -97,7 +103,7 @@ export class TrackService {
         track.verifiedAt = new Date();
         Object.assign(track, await bufferMimeType(buffer, track.path)); // ext/mimeType
         let _logtags = "not audio";
-        // if audio file, care for tags
+        // care for tags only if audio file
         if (track.mimeType?.startsWith("audio/")) {
             _logtags = "audio: ";
             const tags = await fileTags(track.path);
@@ -122,6 +128,9 @@ export class TrackService {
     }
     async deleteTrack(id: string) {
         await this.repo.delete(id);
+    }
+    async getAllPaths() {
+        return await this.repo.getAllPaths();
     }
 }
 export const trackService = new TrackService(trackRepo);

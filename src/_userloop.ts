@@ -1,3 +1,5 @@
+import { map } from "./hbs.js";
+
 import readline from "readline";
 const rl = readline.createInterface({
     input: process.stdin,
@@ -43,13 +45,14 @@ async function userLoop(): Promise<void> {
         }
     });
 }
-userLoop()
-    .then(() => {
-        rl.close();
-        console.log("loop done");
-        process.exit();
-    })
-    .catch((err) => console.error(err))
-    .finally(() => {
-        console.log("finally");
-    });
+
+//userLoop()
+//    .then(() => {
+//        rl.close();
+//        console.log("loop done");
+//        process.exit();
+//    })
+//    .catch((err) => console.error(err))
+//    .finally(() => {
+//        console.log("finally");
+//    });

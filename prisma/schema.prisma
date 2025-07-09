@@ -10,7 +10,7 @@ datasource db {
 model Track {
     id         String    @id @default(uuid())
     path       String    @unique
-    verifiedAt DateTime?
+    verifiedAt DateTime? // this is set when the hard work was done
 
     ext      String?
     mimeType String?
