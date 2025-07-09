@@ -24,6 +24,7 @@ app.use('/*', serveStatic({ root: './static' }));
 app.post("/login", async (c: Context) => {
     const session: Session = c.get("session");
     const { username, password } = await c.req.parseBody();
+    let error = "";
     if (typeof username !== "string" || typeof password !== "string") {
         return c.status(400);
     }
@@ -33,6 +34,9 @@ app.post("/login", async (c: Context) => {
             session: session.toJSON(),
         }));
     }
+    return c.html(render("body", {
+        error: "Invalid username or password."
+    }));
 });
 app.post("/logout", async (c: Context) => {
     const session: Session = c.get("session");

@@ -1,8 +1,11 @@
+<h2>Log in</h2>
+{{#if error}}
+<p class="error">{{error}}</p>
+{{/if}}
 <form method="post"
       action="/login"
       hx-post="/login"
       hx-target="body"> {{! header needs also be replaced }}
-    <h2>Log in</h2>
     <input type="text"
            name="username"
            placeholder="Username"
