@@ -6,6 +6,7 @@ import { render } from "./hbs.js";
 import { testsaslauthd } from "./testsaslauthd.js";
 import { compress } from 'hono/compress';
 import { config } from "./env.js";
+import { trackService } from "./service/track.service.js";
 
 let app = new Hono();
 
@@ -13,11 +14,16 @@ let app = new Hono();
 
 app.use((c, next) => Session.middleware(c, next));
 app.use("*", compress());
-app.get("/", (c: Context) => {  // index
+app.get("/", async (c: Context) => {  // index
     const session: Session = c.get("session");
+    let stats = null;
+    if (session.isAdmin()) {
+        stats = await trackService.trackStats();
+    }
     return c.html(render("index", {
         session: session.renderJSON(),
-        config
+        config,
+        ...(stats && { stats })
     }));
 });
 
@@ -31,8 +37,13 @@ app.post("/login", async (c: Context) => {  // login
     }
     if (await testsaslauthd(username, password)) {
         session.login(username);
+        let stats = null;
+        if (session.isAdmin()) {
+            stats = await trackService.trackStats();
+        }
         return c.html(render("body", {
-            session: session.renderJSON(), config
+            session: session.renderJSON(), config,
+            ...(stats && { stats })
         }));
     }
     return c.html(render("body", {
@@ -75,5 +86,7 @@ if (config.mountpoint) {
 }
 serve({
     fetch: startApp.fetch, // Hono apps expose a fetch method for compatibility
-    port: 3000,
+    port: config.port,
+    hostname: config.host,
 });
+console.log(`Server running at http://${config.host}:${config.port}${config.mountpoint}`);

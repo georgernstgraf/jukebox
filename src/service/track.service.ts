@@ -7,9 +7,24 @@ import {
     fileTags,
     getBuffer,
 } from "../helpers.js";
-import { stat } from "fs";
+
+export type trackStats = {
+    total: number;
+    audio: number;
+    unverified: number;
+};
+
 export class TrackService {
     constructor(private readonly repo: ITrackRepository) {
+    }
+
+    async trackStats(): Promise<trackStats> {
+        const [total, audio, unverified] = await Promise.all([
+            this.repo.count(),
+            this.repo.countAudio(),
+            this.repo.countUnverified(),
+        ]);
+        return { total, audio, unverified };
     }
 
     async getUnverified(take: number = 108) {
@@ -18,7 +33,7 @@ export class TrackService {
 
     async safeAddMultiplePaths(paths: Set<string>): Promise<number> {
         const existing = new Set(
-            (await this.repo.findByPaths(paths)).map((track) => track.path),
+            (await this.repo.pathsFromSet(paths)).map((track) => track.path),
         );
         const pendingTracks = paths.difference(existing);
         if (pendingTracks.size === 0) {

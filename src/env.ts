@@ -6,4 +6,6 @@ export const COOKIE_SECRET = process.env.COOKIE_SECRET || "c00k13_s3eCrEt";
 export const APP_MOUNTPOINT = process.env.APP_MOUNTPOINT || "";
 export const config = {
     mountpoint: process.env.APP_MOUNTPOINT || "",
+    host: process.env.APP_HOST || "localhost",
+    port: Number(process.env.APP_PORT) || 3000,
 };

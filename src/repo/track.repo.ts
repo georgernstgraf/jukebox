@@ -10,13 +10,30 @@ export interface ITrackRepository {
     ): Promise<Track>;
     update(track: Track): Promise<Track>;
     delete(id: string): Promise<void>;
-    findByPaths(paths: Set<string>): Promise<Track[]>;
+    pathsFromSet(paths: Set<string>): Promise<Track[]>;
     createPaths(paths: Set<string>): Promise<number>;
     setAllInodesNull(): Promise<void>;
     getAllPaths(): Promise<string[]>;
+    count(): Promise<number>;
+    countAudio(): Promise<number>;
+    countUnverified(): Promise<number>;
 }
 
 export class PrismaTrackRepository implements ITrackRepository {
+    async create(path: string) {
+        return prisma.track.create({
+            data: { path },
+        });
+    }
+    async update(track: Track) {
+        return await prisma.track.update({
+            where: { id: track.id },
+            data: track,
+        });
+    }
+    async delete(id: string) {
+        await prisma.track.delete({ where: { id } });
+    }
     async getById(id: string): Promise<Track | null> {
         return prisma.track.findUnique({ where: { id } });
     }
@@ -27,7 +44,7 @@ export class PrismaTrackRepository implements ITrackRepository {
             take,
         })).map((rec) => rec.id);
     }
-    async findByPaths(paths: Set<string>) {
+    async pathsFromSet(paths: Set<string>) {
         return await prisma.track.findMany({
             where: {
                 path: {
@@ -53,20 +70,22 @@ export class PrismaTrackRepository implements ITrackRepository {
         });
         return result.count; // Return the number of inserted records
     }
-
-    async create(path: string) {
-        return prisma.track.create({
-            data: { path },
+    async count(): Promise<number> {
+        return await prisma.track.count();
+    }
+    async countAudio(): Promise<number> {
+        return await prisma.track.count({
+            where: {
+                mimeType: { startsWith: "audio/" },
+            },
         });
     }
-    async update(track: Track) {
-        return await prisma.track.update({
-            where: { id: track.id },
-            data: track,
+    async countUnverified(): Promise<number> {
+        return await prisma.track.count({
+            where: {
+                OR: [{ verifiedAt: null }, { inode: null }],
+            },
         });
-    }
-    async delete(id: string) {
-        await prisma.track.delete({ where: { id } });
     }
 }
 export const trackRepo = new PrismaTrackRepository();

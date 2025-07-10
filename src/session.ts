@@ -127,7 +127,9 @@ export class Session {
         }
         this.#username = username;
     }
-
+    isAdmin(): boolean {
+        return this.#isAdmin;
+    }
     login(username: string): void {
         this.username = username;
         this.gotLogin = true;
