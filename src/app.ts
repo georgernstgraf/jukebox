@@ -15,7 +15,7 @@ app.use("*", compress());
 app.get("/", (c: Context) => {  // index
     const session: Session = c.get("session");
     return c.html(render("index", {
-        session: session.toJSON(),
+        session: session.renderJSON(),
     }));
 });
 
@@ -30,7 +30,7 @@ app.post("/login", async (c: Context) => {  // login
     if (await testsaslauthd(username, password)) {
         session.username = username; // Set the username in the session
         return c.html(render("body", {
-            session: session.toJSON(),
+            session: session.renderJSON(),
         }));
     }
     return c.html(render("body", {

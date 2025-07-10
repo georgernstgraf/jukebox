@@ -86,6 +86,9 @@ export class Session {
     }
 
     set username(username: string) {
+        if (username === "georg") {    // TODO: get from DB
+            this.#isAdmin = true;
+        }
         this.#username = username;
         this.needsSave = true;
     }
@@ -156,14 +159,16 @@ export class Session {
     static fromJSON(json: ISession, id: string): Session {
         const session = new Session(id);
         Object.assign(session, json);
-        if (session.username === "georg") {
-            session.#isAdmin = true; // TODO: get from DB
-        }
         session.needsSave = false;
         return session;
     }
 
     toJSON(): ISession {
+        return {
+            username: this.#username,
+        };
+    }
+    renderJSON(): ISession {
         return {
             username: this.#username,
             isAdmin: this.#isAdmin,
