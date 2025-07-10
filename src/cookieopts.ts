@@ -1,6 +1,7 @@
-import { SESSION_EXPIRATION_SECONDS, APP_MOUNTPOINT } from "./env.js";
+import { config } from "./env.js";
 export const cookieOpts = {
-    maxAge: SESSION_EXPIRATION_SECONDS,
+    maxAge: config.SESSION_EXPIRATION_SECONDS,
     httpOnly: true,
-    ...(APP_MOUNTPOINT && { path: APP_MOUNTPOINT })
+    ...(config.mountpoint && { path: config.mountpoint }),
+    secure: config.production,
 };

@@ -8,4 +8,8 @@ export const config = {
     mountpoint: process.env.APP_MOUNTPOINT || "",
     host: process.env.APP_HOST || "localhost",
     port: Number(process.env.APP_PORT) || 3000,
+    production: process.env.MODE?.toLowerCase() === "production",
+    SESSION_COOKIE_NAME,
+    SESSION_EXPIRATION_SECONDS,
+    COOKIE_SECRET,
 };
