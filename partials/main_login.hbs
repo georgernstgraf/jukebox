@@ -1,7 +1,4 @@
 <h2>Log in</h2>
-{{#if error}}
-<p class="error">{{error}}</p>
-{{/if}}
 <form method="post"
       action="/login"
       hx-post="/login"
@@ -17,3 +14,6 @@
     <input type="submit"
            value="Log in">
 </form>
+{{#if error}}
+<p class="error">{{error}}</p>
+{{/if}}
