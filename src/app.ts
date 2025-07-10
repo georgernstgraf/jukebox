@@ -30,7 +30,7 @@ app.post("/login", async (c: Context) => {  // login
         return c.status(400);
     }
     if (await testsaslauthd(username, password)) {
-        session.username = username; // Set the username in the session
+        session.login(username);
         return c.html(render("body", {
             session: session.renderJSON(), config
         }));
@@ -42,7 +42,7 @@ app.post("/login", async (c: Context) => {  // login
 });
 app.post("/logout", async (c: Context) => { // logout TODO rm cookie
     const session: Session = c.get("session");
-    await session.destroy(); // Destroy the session
+    session.logout(); // Destroy the session
     return c.html(render("body", {
         session: {},
         config
