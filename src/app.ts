@@ -12,16 +12,15 @@ const app = new Hono();
 
 app.use((c, next) => Session.middleware(c, next));
 app.use("*", compress());
-app.get("/", (c: Context) => {
+app.get("/", (c: Context) => {  // index
     const session: Session = c.get("session");
     return c.html(render("index", {
         session: session.toJSON(),
     }));
 });
 
-app.use('/*', serveStatic({ root: './static' }));
-
-app.post("/login", async (c: Context) => {
+// Authentication
+app.post("/login", async (c: Context) => {  // login
     const session: Session = c.get("session");
     const { username, password } = await c.req.parseBody();
     let error = "";
@@ -38,23 +37,16 @@ app.post("/login", async (c: Context) => {
         error: "Invalid username or password."
     }));
 });
-app.post("/logout", async (c: Context) => {
+app.post("/logout", async (c: Context) => { // logout TODO rm cookie
     const session: Session = c.get("session");
     await session.destroy(); // Destroy the session
     return c.html(render("body", {
         session: {}
     }));
 });
-export default app;
-//app.get("/logout", async (c) => {
-//    const sessionId = c.get("sessionId");
-//    if (sessionId) {
-//        await mc.delete(sessionId); // Delete session from Memcached
-//        setCookie(c, SESSION_COOKIE_NAME, "", { maxAge: 0, path: "/" }); // Clear cookie
-//    }
-//    return c.text("Logged out successfully!");
-//});
-// Error handling
+
+app.use('/*', serveStatic({ root: './static' })); // Static files
+
 app.onError((err, c) => {
     console.error(`${err}`);
     return c.json({

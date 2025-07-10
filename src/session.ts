@@ -10,12 +10,14 @@ const memjs = Client.create("localhost:11211");
 
 export interface ISession {
     username?: string;
+    isAdmin?: boolean;
 }
 
 export class Session {
 
     sessionId: string;
     #username: string = "";
+    #isAdmin: boolean = false; // TODO: get from DB
 
     cookieNeedsSend = false;
     needsSave = false;
@@ -154,6 +156,9 @@ export class Session {
     static fromJSON(json: ISession, id: string): Session {
         const session = new Session(id);
         Object.assign(session, json);
+        if (session.username === "georg") {
+            session.#isAdmin = true; // TODO: get from DB
+        }
         session.needsSave = false;
         return session;
     }
@@ -161,6 +166,7 @@ export class Session {
     toJSON(): ISession {
         return {
             username: this.#username,
+            isAdmin: this.#isAdmin,
         };
     }
 }

@@ -1,4 +1,24 @@
-<form method="POST"
+{{#if session.isAdmin}}
+<h1>Willkommen, Admin {{session.username}}!</h1>
+{{else}}
+<h1>Willkommen {{session.username}}</h1>
+<p>Musik zu suchen.</p>
+{{/if}}
+
+{{! <form method="POST"
+      accept-charset="UTF-8"
+      action="login">
+    Benutzername: <input NAME="username"
+           TYPE="text"
+           placeholder="Benutzername"><br>
+    Passwort: <input NAME="password"
+           TYPE="password"
+           placeholder="Passwort"><br>
+    <input NAME="Mode"
+           TYPE="submit"
+           VALUE="Anmelden">
+
+{{! <form method="POST"
       accept-charset="UTF-8"
       action="search/search.py">
     Suche: <input NAME="Regex"
@@ -35,3 +55,4 @@
     <a href="https://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck">Regulären Ausdrücken</a>
     auszukennen.<br />🤓
 </section>
+}}
