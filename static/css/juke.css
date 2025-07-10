@@ -48,6 +48,11 @@ input {
     border-color: #ccc;
 }
 
+.error {
+    color: #f00;
+    font-weight: bold;
+}
+
 #spinner {
     display: none;
     position: fixed;
