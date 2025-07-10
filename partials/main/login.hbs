@@ -1,7 +1,7 @@
 <h2>Log in</h2>
 <form method="post"
       action="/login"
-      hx-post="/login"
+      hx-post="{{config.mountpoint}}/login"
       hx-target="body"> {{! header needs also be replaced }}
     <input type="text"
            name="username"

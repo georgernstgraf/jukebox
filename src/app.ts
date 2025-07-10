@@ -5,8 +5,9 @@ import { Session } from "./session.js";
 import { render } from "./hbs.js";
 import { testsaslauthd } from "./testsaslauthd.js";
 import { compress } from 'hono/compress';
+import { config } from "./env.js";
 
-const app = new Hono();
+let app = new Hono();
 
 // Custom session middleware
 
@@ -16,6 +17,7 @@ app.get("/", (c: Context) => {  // index
     const session: Session = c.get("session");
     return c.html(render("index", {
         session: session.renderJSON(),
+        config
     }));
 });
 
@@ -30,22 +32,29 @@ app.post("/login", async (c: Context) => {  // login
     if (await testsaslauthd(username, password)) {
         session.username = username; // Set the username in the session
         return c.html(render("body", {
-            session: session.renderJSON(),
+            session: session.renderJSON(), config
         }));
     }
     return c.html(render("body", {
-        error: "Invalid username or password."
+        error: "Invalid username or password.",
+        config
     }));
 });
 app.post("/logout", async (c: Context) => { // logout TODO rm cookie
     const session: Session = c.get("session");
     await session.destroy(); // Destroy the session
     return c.html(render("body", {
-        session: {}
+        session: {},
+        config
     }));
 });
 
-app.use('/*', serveStatic({ root: './static' })); // Static files
+// Serve static files relative to the mountpoint
+app.use("*", serveStatic({
+    root: './static', rewriteRequestPath: (path) => {
+        return path.substring(config.mountpoint.length);
+    }
+}));
 
 app.onError((err, c) => {
     console.error(`${err}`);
@@ -54,8 +63,17 @@ app.onError((err, c) => {
         error: process.env.NODE_ENV === "production" ? {} : err,
     }, 500);
 });
+
 // now start the server:
+let startApp;
+if (config.mountpoint) {
+    const rootApp = new Hono();
+    rootApp.route(config.mountpoint, app);
+    startApp = rootApp;
+} else {
+    startApp = app;
+}
 serve({
-    fetch: app.fetch, // Hono apps expose a fetch method for compatibility
+    fetch: startApp.fetch, // Hono apps expose a fetch method for compatibility
     port: 3000,
 });

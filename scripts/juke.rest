@@ -1,1 +1,4 @@
-GET http://localhost:3000/
+GET http://localhost:3000/jukebox
+
+###
+GET http://localhost:3000/jukebox/js/script.js

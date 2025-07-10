@@ -1,6 +1,6 @@
 {{#if session.username}}
 <button type="button"
-        hx-post="logout"
+        hx-post="{{config.mountpoint}}/logout"
         hx-target="body">log out {{session.username}}</button>
 {{else}}
 <p>You are not logged in.</p>
