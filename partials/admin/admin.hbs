@@ -1,14 +1,18 @@
-<h2>My admin Box</h2>
-<div class="d-flex">
-    <ul>
-        <li>{{stats.total}} files in Database</li>
-        <li>{{stats.audio}} Audio Files</li>
-        <li>{{stats.unverified}} Unverified Files</li>
-        <li>Long Task is {{#if appinfo.longrunning}} running {{else}} <em>not</em> running {{/if}}</li>
-    </ul>
-    <ul>
-        <li><button>click me</button></li>
-        <li><button>click you</button></li>
-        <li><button>click her</button></li>
-    </ul>
+<div class="admin">
+    <h2>My admin Box</h2>
+    <div class="d-flex">
+        <ul>
+            <li>{{stats.total}} files in Database</li>
+            <li>{{stats.audio}} Audio Files</li>
+            <li>{{stats.unverified}} Unverified Files</li>
+            <li>Verification Task is {{#if appinfo.longrunning}}{{else}}<em>not</em> {{/if}}running.</li>
+        </ul>
+        <ul>
+            <li><button>{{#if appinfo.longrunning}}cancel {{else}}start {{/if}} Verification</button></li>
+            <li><button hx-get="{{config.mountpoint}}/p/admin/admin"
+                        hx-target=".admin"
+                        hx-swap="outerHTML">refresh</button></li>
+            <li><button>click here</button></li>
+        </ul>
+    </div>
 </div>

@@ -7,6 +7,7 @@ import { testsaslauthd } from "./testsaslauthd.js";
 import { compress } from 'hono/compress';
 import { config } from "./env.js";
 import { trackService } from "./service/track.service.js";
+import { enforceAdmin } from "./helpers.js";
 
 let app = new Hono();
 
@@ -60,6 +61,15 @@ app.post("/logout", async (c: Context) => { // logout TODO rm cookie
     }));
 });
 
+app.get("/p/admin/admin", enforceAdmin, async (c: Context) => { // admin page
+    const session: Session = c.get("session");
+    const stats = await trackService.trackStats();
+    return c.html(render("admin/admin", {
+        session: session.renderJSON(),
+        config,
+        stats
+    }));
+});
 // Serve static files relative to the mountpoint
 app.use("*", serveStatic({
     root: './static', rewriteRequestPath: (path) => {

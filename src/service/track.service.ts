@@ -97,7 +97,7 @@ export class TrackService {
                 console.log(`Saving (${track.path.substring(track.path.length - 54)}): only inode and size`);
                 return await this.repo.update(track);
             }
-            return undefined;
+            return;
         }
         // STATE of affairs here: the verification is NULL OR file changed on disk
         // File cannot be read: delete from db it and return

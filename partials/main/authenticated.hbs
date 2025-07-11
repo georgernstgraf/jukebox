@@ -1,8 +1,6 @@
 {{#if session.isAdmin}}
 <h2>Willkommen, Admin {{session.username}}!</h2>
-<div class="admin">
-    {{> admin/admin }}
-</div>
+{{> admin/admin }}
 {{else}}
 <h2>Willkommen {{session.username}}!</h2>
 {{/if}}

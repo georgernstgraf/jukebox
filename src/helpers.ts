@@ -1,6 +1,7 @@
 import { access, readFile, stat } from "fs/promises";
 import { constants, Stats } from "fs";
 import { createHash } from "crypto";
+import { Context, Next } from "hono";
 import * as ft from "file-type";
 import * as mmt from "music-metadata";
 
@@ -30,7 +31,7 @@ export async function fileSha256(fileBuffer: Buffer): Promise<string> {
 export async function bufferMimeType(
     buffer: Buffer,
     path: string,
-): Promise<{ ext: string; mimeType: string } | null> {
+): Promise<{ ext: string; mimeType: string; } | null> {
     let mime = null;
     try {
         mime = await ft.fileTypeFromBuffer(buffer);
@@ -48,4 +49,11 @@ export async function fileTags(
     } catch (error) {
         return null;
     }
+}
+
+export async function enforceAdmin(c: Context, next: Next) {
+    if (!c.get("session").isAdmin()) {
+        return c.text('Forbidden', 403);
+    }
+    await next();
 }
