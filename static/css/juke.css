@@ -53,6 +53,10 @@ input {
     font-weight: bold;
 }
 
+.d-flex {
+    display: flex;
+}
+
 #spinner {
     display: none;
     position: fixed;

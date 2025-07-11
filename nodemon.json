@@ -1,0 +1,8 @@
+{
+    "watch": [
+        "src",
+        "partials"
+    ],
+    "ext": "ts,hbs",
+    "exec": "npx tsc && node --env-file=.env dist/app.js"
+}

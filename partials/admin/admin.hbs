@@ -1,6 +1,14 @@
 <h2>My admin Box</h2>
-<ul>
-    <li>{{stats.total}} files in Database</li>
-    <li>{{stats.audio}} Audio Files</li>
-    <li>{{stats.unverified}} Unverified Files</li>
-</ul>
+<div class="d-flex">
+    <ul>
+        <li>{{stats.total}} files in Database</li>
+        <li>{{stats.audio}} Audio Files</li>
+        <li>{{stats.unverified}} Unverified Files</li>
+        <li>Long Task is {{#if appinfo.longrunning}} running {{else}} <em>not</em> running {{/if}}</li>
+    </ul>
+    <ul>
+        <li><button>click me</button></li>
+        <li><button>click you</button></li>
+        <li><button>click her</button></li>
+    </ul>
+</div>
