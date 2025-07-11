@@ -1,8 +1,10 @@
 import net from "node:net";
-import { resolve } from "node:path";
+import { config } from "./env.js";
 
 export async function testsaslauthd(username: string, password: string) {
     return new Promise<boolean>((res, rej) => {
+        if (config.saslauthdLieTrue) return true;
+
         const service = "imap";
 
         function lenPrefixedBuffer(str: string) {
@@ -25,7 +27,7 @@ export async function testsaslauthd(username: string, password: string) {
         let rv = false;
 
         const socket = net.createConnection(
-            { path: "/var/run/saslauthd/mux" },
+            { path: config.saslauthdMux },
             () => socket.write(request),
         );
 

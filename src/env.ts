@@ -12,4 +12,6 @@ export const config = {
     SESSION_COOKIE_NAME,
     SESSION_EXPIRATION_SECONDS,
     COOKIE_SECRET,
+    saslauthdMux: process.env.SASLAUTHD_MUX || "/var/run/saslauthd/mux",
+    saslauthdLieTrue: process.env.SASLAUTHD_LIETRUE === "yes" || false,
 };
