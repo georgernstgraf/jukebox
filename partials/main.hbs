@@ -1,5 +1,7 @@
-{{#if session.username}}
-{{> main/authenticated}}
-{{else}}
-{{> main/login}}
-{{/if}}
+<main>
+    {{#if session.username}}
+    {{> main/authenticated}}
+    {{else}}
+    {{> main/login}}
+    {{/if}}
+</main>
