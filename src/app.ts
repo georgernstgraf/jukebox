@@ -108,7 +108,8 @@ app.onError((err, c) => {
     console.error(`${err}`);
     return c.html(render("error", {
         message: err.message,
-        error: process.env.NODE_ENV === "production" ? {} : err,
+        //error: JSON.stringify(process.env.NODE_ENV === "production" ? undefined : err),
+        error: JSON.stringify(err, null, 2),
     }), 500);
 });
 
