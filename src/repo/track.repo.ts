@@ -69,14 +69,18 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
             },
         });
     }
-    async searchTracks(artist: string, album: string): Promise<Track[]> {
-        const where: any = {};
+    async searchTracks(artist: string, album: string, path: string): Promise<Track[]> {
+        let where: any = {};
         if (artist) {
             where.artist = { contains: artist };
         }
         if (album) {
             where.album = { contains: album };
         }
+        if (path) {  // ugly
+            where = { path: { contains: path } };
+        }
+        console.log("trackrepo searchTracks() where:", where);
         return await prisma.track.findMany({
             where,
             orderBy: { path: "asc" },

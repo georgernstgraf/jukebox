@@ -19,16 +19,43 @@ searchResults--}}
                    placeholder="Enter album name"
                    value="{{search.album}}">
         </label>
+        <label>Path:
+            <input type="text"
+                   name="path"
+                   placeholder="search for path (expensive)"
+                   value="{{search.path}}">
+        </label>
         <button type="submit">Search</button>
     </form>
+    <p>Path overrules Artist / Album and is <strong>expensive</strong></p>
     {{#if searchResults}}
     <div class="search-results">
         <h3>Search Results</h3>
-        <ul>
-            {{#each searchResults as |track|}}
-            <li>{{track.artist}} - {{track.album}} - {{track.title}}</li>
-            {{/each}}
-        </ul>
+        <h4>Table: </h4>
+        <table>
+            <thead>
+                <tr>
+                    <th class="fixed-width-col-sm">Artist</th>
+                    <th class="fixed-width-col-sm">Album</th>
+                    <th class="fixed-width-col-sm">Title</th>
+                    <th class="fixed-width-col-lg">Path</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each searchResults as |track|}}
+                <tr>
+                    <td class="fixed-width-col-sm">{{track.artist}}</td>
+                    <td class="fixed-width-col-sm">{{track.album}}</td>
+                    <td class="fixed-width-col-sm">{{track.title}}</td>
+                    <td class="fixed-width-col-lg">
+                        <a href="{{config.mountpoint}}/play/{{track.id}}">
+                            {{track.path}}
+                        </a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
     {{else}}
     <p>No results found.</p>

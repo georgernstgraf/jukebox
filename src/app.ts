@@ -78,13 +78,14 @@ app.post("/logout", async (c: Context) => { // logout TODO rm cookie
 
 app.post("/search/artistalbum", async (c: Context) => {  // search
     const session: Session = c.get("session");
-    const { artist, album } = await c.req.parseBody();
-    const searchResults = await trackService.searchTracks(artist as string, album as string);
+    const { artist, album, path } = await c.req.parseBody();
+    const searchResults = await trackService.searchTracks(artist as string, album as string, path as string);
     return c.html(render("search/artistalbum", {
         config,
         search: {
             artist: artist as string,
             album: album as string,
+            path: path as string
         },
         searchResults
     }));

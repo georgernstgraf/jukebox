@@ -41,6 +41,12 @@ a {
     color: #77f;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
 a.visited {
     color: #f77;
 }
@@ -83,6 +89,20 @@ input {
 .d-flex {
     display: flex;
     justify-content: space-evenly;
+}
+
+.fixed-width-col-sm {
+    width: 15%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fixed-width-col-lg {
+    width: 45%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #spinner {

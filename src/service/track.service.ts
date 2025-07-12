@@ -155,11 +155,11 @@ export class TrackService {
     async getAllPaths() {
         return await this.repo.getAllPaths();
     }
-    async searchTracks(artist: string, album: string) {
-        if (!artist && !album) {
+    async searchTracks(artist: string, album: string, path: string) {
+        if (!artist && !album && !path) {
             return [];
         }
-        return await this.repo.searchTracks(artist, album);
+        return await this.repo.searchTracks(artist, album, path);
     }
 }
 export const trackService = new TrackService(trackRepo);
