@@ -18,8 +18,10 @@
                         hx-swap="outerHTML">
                     refresh
                 </button></li>
-            <li><button>
-                    not implem
+            <li><button hx-get="{{config.mountpoint}}/notexistend"
+                        hx-target=".admin"
+                        hx-swap="outerHTML">
+                    Error Button
                 </button></li>
         </ul>
         <ul>

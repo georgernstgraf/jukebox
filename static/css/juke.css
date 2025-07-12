@@ -61,6 +61,23 @@ input {
     font-weight: bold;
 }
 
+.toast {
+    transition-property: opacity;
+    transition-duration: 3s;
+    transition-timing-function: ease-out;
+    opacity: 1;
+    background: #ccc;
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.fade-out {
+    opacity: 0;
+}
+
 .d-flex {
     display: flex;
     justify-content: space-evenly;

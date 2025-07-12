@@ -16,6 +16,16 @@ let app = new Hono();
 
 app.use((c, next) => Session.middleware(c, next));
 app.use("*", compress());
+
+app.onError((err, c) => {
+    console.error(`app.onError: ${err}`);
+    return c.html(render("error", {
+        message: err.message,
+        //error: JSON.stringify(process.env.NODE_ENV === "production" ? undefined : err),
+        error: JSON.stringify(err, null, 2),
+    }), 500);
+});
+
 app.get("/", async (c: Context) => {  // index
     const session: Session = c.get("session");
     let stats = null;
@@ -97,6 +107,10 @@ app.get("/p/admin/cancelverify", enforceAdmin, async (c: Context) => { // cancel
     }));
 });
 
+app.get("/notexistend", async (c: Context) => {
+    throw new Error("This is a test error for the notFound handler.");
+});
+
 // Serve static files relative to the mountpoint
 app.use("*", serveStatic({
     root: './static', rewriteRequestPath: (path) => {
@@ -104,21 +118,21 @@ app.use("*", serveStatic({
     }
 }));
 
-app.onError((err, c) => {
-    console.error(`${err}`);
+function notFoundHandler(c: Context) {
+    console.error(`Error: app.notFound: ${c.req.path}`);
     return c.html(render("error", {
-        message: err.message,
-        //error: JSON.stringify(process.env.NODE_ENV === "production" ? undefined : err),
-        error: JSON.stringify(err, null, 2),
-    }), 500);
-});
+        message: `Not Found: ${c.req.path}`,
+    }), 404);
+}
+app.notFound(notFoundHandler);
 
-// now start the server:
+// define parent startapp if mountpoint is set
 let startApp;
 if (config.mountpoint) {
     const rootApp = new Hono();
-    rootApp.route(config.mountpoint, app);
     startApp = rootApp;
+    startApp.route(config.mountpoint, app);
+    startApp.notFound(notFoundHandler);
 } else {
     startApp = app;
 }
