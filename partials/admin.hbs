@@ -8,7 +8,7 @@
             <li>Verification Task is {{#if verify.isRunning}}{{else}}<em>not</em> {{/if}}running.</li>
         </ul>
         <ul>
-            <li><button hx-get="{{config.mountpoint}}/p/admin/startrefresh"
+            <li><button hx-get="{{config.mountpoint}}{{#if verify.isRunning}}/p/admin/cancelverify{{else}}/p/admin/startverify{{/if}}"
                         hx-target=".admin"
                         hx-swap="outerHTML">
                     {{#if verify.isRunning}}cancel {{else}}start {{/if}} Verification

@@ -74,7 +74,7 @@ app.get("/p/admin", enforceAdmin, async (c: Context) => { // admin page
         verify: verify.getState()
     }));
 });
-app.get("/p/admin/startrefresh", enforceAdmin, async (c: Context) => { // start refresh
+app.get("/p/admin/startverify", enforceAdmin, async (c: Context) => { // start verify
     verify.start();
     const session: Session = c.get("session");
     const stats = await trackService.trackStats();
@@ -85,6 +85,18 @@ app.get("/p/admin/startrefresh", enforceAdmin, async (c: Context) => { // start 
         verify: verify.getState()
     }));
 });
+app.get("/p/admin/cancelverify", enforceAdmin, async (c: Context) => { // cancel verify
+    verify.cancel();
+    const session: Session = c.get("session");
+    const stats = await trackService.trackStats();
+    return c.html(render("admin", {
+        session: session.renderJSON(),
+        config,
+        stats,
+        verify: verify.getState()
+    }));
+});
+
 // Serve static files relative to the mountpoint
 app.use("*", serveStatic({
     root: './static', rewriteRequestPath: (path) => {
