@@ -109,10 +109,6 @@ app.get("/p/admin/cancelverify", enforceAdmin, async (c: Context) => { // cancel
     }));
 });
 
-app.get("/notexistend", async (c: Context) => {
-    throw new Error("This is a test error for the notFound handler.");
-});
-
 // Serve static files relative to the mountpoint
 app.use("*", serveStatic({
     root: './static', rewriteRequestPath: (path) => {
