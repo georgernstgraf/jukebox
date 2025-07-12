@@ -106,10 +106,10 @@ app.use("*", serveStatic({
 
 app.onError((err, c) => {
     console.error(`${err}`);
-    return c.json({
+    return c.html(render("error", {
         message: err.message,
         error: process.env.NODE_ENV === "production" ? {} : err,
-    }, 500);
+    }), 500);
 });
 
 // now start the server:
