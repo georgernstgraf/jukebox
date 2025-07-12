@@ -63,15 +63,17 @@ input {
 
 .toast {
     transition-property: opacity;
-    transition-duration: 3s;
-    transition-timing-function: ease-out;
+    transition-duration: 2s;
+    transition-timing-function: ease-in-out;
     opacity: 1;
+    padding: 1em;
     background: #ccc;
     position: fixed;
     top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
+    border-radius: 1em;
 }
 
 .fade-out {

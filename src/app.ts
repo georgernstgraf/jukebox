@@ -19,10 +19,12 @@ app.use("*", compress());
 
 app.onError((err, c) => {
     console.error(`app.onError: ${err}`);
+    let errJson: string | undefined = JSON.stringify(err, null, 2);
+    errJson = errJson == '{}' ? undefined : errJson;
     return c.html(render("error", {
         message: err.message,
         //error: JSON.stringify(process.env.NODE_ENV === "production" ? undefined : err),
-        error: JSON.stringify(err, null, 2),
+        error: errJson,
     }), 500);
 });
 

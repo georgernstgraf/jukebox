@@ -6,8 +6,7 @@ document.body.addEventListener('htmx:afterRequest', function (evt) {
     console.log('htmx:afterRequest', evt);
     document.getElementById('spinner').style.display = 'none';
 });
-function showToast(message, type = 'info') {
-    const duration = 3000; // also in css transition
+function showToast(message, type = 'info', duration = 3000) {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.innerHTML = message;
@@ -17,7 +16,7 @@ function showToast(message, type = 'info') {
         toast.classList.add('fade-out');
         toast.addEventListener('transitionend', () => {
             document.body.removeChild(toast);
-        });
+        }, { once: true });
     }, duration);
 }
 
@@ -31,6 +30,6 @@ document.body.addEventListener('htmx:responseError', function (event) {
 
 // Optional: Handle network errors (e.g., server offline, DNS issues)
 document.body.addEventListener('htmx:sendError', function (event) {
-    console.error('Georg Send Error:', event);
+    console.error('Georg htmx:sendError: TODO toast some event details', event);
     showToast('Network error: Could not reach the server.', 'error');
 });
