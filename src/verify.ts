@@ -60,6 +60,9 @@ class Verify {
         }
         this.controller.abort();
         this.controller = null;
+        this.state.isRunning = false;
+        this.state.cancelled = true;
+        this.state.completed = false;
     }
 }
 export const verify = new Verify();
