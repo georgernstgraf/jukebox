@@ -13,8 +13,8 @@ const BATCHSIZE = _batchsize;
 
 async function main(filePath: string): Promise<void> {
     await processListingFile(filePath);
-    await trackService.setAllInodesNull();
-    await trackService.verifyAllTracks();
+    //await trackService.setAllInodesNull();
+    //await trackService.verifyAllTracks();
 }
 
 async function processListingFile(filePath: string): Promise<void> {

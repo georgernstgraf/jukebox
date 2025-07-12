@@ -1,3 +1,4 @@
+import { EventEmitter } from "events";
 import type { ITrackRepository } from "../repo/track.repo";
 import { trackRepo } from "../repo/track.repo.js";
 import {
@@ -45,7 +46,7 @@ export class TrackService {
     async setAllInodesNull() {
         return await this.repo.setAllInodesNull();
     }
-    async verifyAllTracks() {
+    async verifyAllTracks(signal: AbortSignal, emitter: EventEmitter) {
         while (true) {
             const unverifiedIds = await this.repo.findUnverifiedIds();
             if (unverifiedIds.length === 0) {
@@ -55,9 +56,15 @@ export class TrackService {
                 break;
             }
             for (const id of unverifiedIds) {
+                if (signal.aborted) {
+                    emitter.emit('cancelled');
+                    return;
+                }
                 await this.verifyTrack(id);
+                emitter.emit('progress', 1);
             }
         }
+        emitter.emit('completed');
     }
     // make the db record as complete as possible
     async verifyTrack(id: string) {

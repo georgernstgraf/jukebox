@@ -8,6 +8,7 @@ import { compress } from 'hono/compress';
 import { config } from "./env.js";
 import { trackService } from "./service/track.service.js";
 import { enforceAdmin } from "./helpers.js";
+import { verify } from "./verify.js";
 
 let app = new Hono();
 
@@ -24,7 +25,8 @@ app.get("/", async (c: Context) => {  // index
     return c.html(render("index", {
         session: session.renderJSON(),
         config,
-        ...(stats && { stats })
+        ...(stats && { stats }),
+        verify: verify.getState()
     }));
 });
 
@@ -44,7 +46,8 @@ app.post("/login", async (c: Context) => {  // login
         }
         return c.html(render("body", {
             session: session.renderJSON(), config,
-            ...(stats && { stats })
+            ...(stats && { stats }),
+            verify: verify.getState()
         }));
     }
     return c.html(render("body", {
@@ -61,13 +64,25 @@ app.post("/logout", async (c: Context) => { // logout TODO rm cookie
     }));
 });
 
-app.get("/p/admin/admin", enforceAdmin, async (c: Context) => { // admin page
+app.get("/p/admin", enforceAdmin, async (c: Context) => { // admin page
     const session: Session = c.get("session");
     const stats = await trackService.trackStats();
-    return c.html(render("admin/admin", {
+    return c.html(render("admin", {
         session: session.renderJSON(),
         config,
-        stats
+        stats,
+        verify: verify.getState()
+    }));
+});
+app.get("/p/admin/startrefresh", enforceAdmin, async (c: Context) => { // start refresh
+    verify.start();
+    const session: Session = c.get("session");
+    const stats = await trackService.trackStats();
+    return c.html(render("admin", {
+        session: session.renderJSON(),
+        config,
+        stats,
+        verify: verify.getState()
     }));
 });
 // Serve static files relative to the mountpoint

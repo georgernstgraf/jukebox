@@ -47,6 +47,11 @@ input {
     border-color: #ccc;
 }
 
+.admin {
+    border: 1px solid lightblue;
+    border-radius: 5px;
+}
+
 .error {
     color: #f00;
     font-weight: bold;

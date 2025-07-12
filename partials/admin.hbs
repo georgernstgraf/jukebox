@@ -1,0 +1,40 @@
+<div class="admin">
+    <h2>My admin Box</h2>
+    <div class="d-flex">
+        <ul>
+            <li>{{stats.total}} files in Database</li>
+            <li>{{stats.audio}} Audio Files</li>
+            <li>{{stats.unverified}} Unverified Files</li>
+            <li>Verification Task is {{#if verify.isRunning}}{{else}}<em>not</em> {{/if}}running.</li>
+        </ul>
+        <ul>
+            <li><button hx-get="{{config.mountpoint}}/p/admin/startrefresh"
+                        hx-target=".admin"
+                        hx-swap="outerHTML">
+                    {{#if verify.isRunning}}cancel {{else}}start {{/if}} Verification
+                </button></li>
+            <li><button hx-get="{{config.mountpoint}}/p/admin"
+                        hx-target=".admin"
+                        hx-swap="outerHTML">
+                    refresh
+                </button></li>
+            <li><button>
+                    not implem
+                </button></li>
+        </ul>
+        <ul>
+            <li>
+                isRunning: {{verify.isRunning}}
+            </li>
+            <li>
+                cancelled: {{verify.cancelled}}
+            </li>
+            <li>
+                completed: {{verify.completed}}
+            </li>
+            <li>
+                doneCount: {{verify.doneCount}}
+            </li>
+        </ul>
+    </div>
+</div>
