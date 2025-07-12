@@ -155,3 +155,4 @@ serve({
     hostname: config.host,
 });
 console.log(`Server running at http://${config.host}:${config.port}${config.mountpoint}`);
+verify.start();
