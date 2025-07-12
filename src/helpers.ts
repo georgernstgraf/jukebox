@@ -28,6 +28,10 @@ export async function fileSha256(fileBuffer: Buffer): Promise<string> {
     return hash.digest("hex");
 }
 
+export async function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function bufferMimeType(
     buffer: Buffer,
     path: string,

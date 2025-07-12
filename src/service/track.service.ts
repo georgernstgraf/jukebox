@@ -1,12 +1,12 @@
 import { EventEmitter } from "events";
-import type { ITrackRepository } from "../repo/track.repo";
-import { trackRepo } from "../repo/track.repo.js";
+import { trackRepo, PrismaTrackRepository } from "../repo/track.repo.js";
 import {
     bufferMimeType,
     fileSha256,
     fileStat,
     fileTags,
     getBuffer,
+    sleep
 } from "../helpers.js";
 
 export type trackStats = {
@@ -16,7 +16,7 @@ export type trackStats = {
 };
 
 export class TrackService {
-    constructor(private readonly repo: ITrackRepository) {
+    constructor(private readonly repo: PrismaTrackRepository) {
     }
 
     async trackStats(): Promise<trackStats> {
@@ -62,6 +62,7 @@ export class TrackService {
                 }
                 await this.verifyTrack(id);
                 emitter.emit('progress', 1);
+                await sleep(21);
             }
         }
         emitter.emit('completed');
@@ -153,6 +154,12 @@ export class TrackService {
     }
     async getAllPaths() {
         return await this.repo.getAllPaths();
+    }
+    async searchTracks(artist: string, album: string) {
+        if (!artist && !album) {
+            return [];
+        }
+        return await this.repo.searchTracks(artist, album);
     }
 }
 export const trackService = new TrackService(trackRepo);

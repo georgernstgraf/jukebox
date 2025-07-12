@@ -3,7 +3,7 @@ message: err.message,
 error: JSON.stringify(process.env.NODE_ENV === "production" ? undefined : err),
 --}}
 <div class="error">
-    <p>Error: {{message}}</p>
+    <p>Error: {{{message}}}</p>
     {{#if error}}
     <p>Details:</p>
     <code>{{{error}}}</code>

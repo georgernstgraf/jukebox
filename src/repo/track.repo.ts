@@ -1,25 +1,7 @@
 import { Track } from "@prisma/client";
 import { prisma } from "../prisma.js";
 
-export interface ITrackRepository {
-    // CRUD is done here
-    getById(id: string): Promise<Track | null>;
-    findUnverifiedIds(take?: number): Promise<string[]>;
-    create(
-        path: string,
-    ): Promise<Track>;
-    update(track: Track): Promise<Track>;
-    delete(id: string): Promise<void>;
-    pathsFromSet(paths: Set<string>): Promise<Track[]>;
-    createPaths(paths: Set<string>): Promise<number>;
-    setAllInodesNull(): Promise<void>;
-    getAllPaths(): Promise<string[]>;
-    count(): Promise<number>;
-    countAudio(): Promise<number>;
-    countUnverified(): Promise<number>;
-}
-
-export class PrismaTrackRepository implements ITrackRepository {
+export class PrismaTrackRepository /* implements ITrackRepository */ {
     async create(path: string) {
         return prisma.track.create({
             data: { path },
@@ -85,6 +67,19 @@ export class PrismaTrackRepository implements ITrackRepository {
             where: {
                 OR: [{ verifiedAt: null }, { inode: null }],
             },
+        });
+    }
+    async searchTracks(artist: string, album: string): Promise<Track[]> {
+        const where: any = {};
+        if (artist) {
+            where.artist = { contains: artist };
+        }
+        if (album) {
+            where.album = { contains: album };
+        }
+        return await prisma.track.findMany({
+            where,
+            orderBy: { path: "asc" },
         });
     }
 }

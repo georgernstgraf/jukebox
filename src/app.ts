@@ -76,6 +76,20 @@ app.post("/logout", async (c: Context) => { // logout TODO rm cookie
     }));
 });
 
+app.post("/search/artistalbum", async (c: Context) => {  // search
+    const session: Session = c.get("session");
+    const { artist, album } = await c.req.parseBody();
+    const searchResults = await trackService.searchTracks(artist as string, album as string);
+    return c.html(render("search/artistalbum", {
+        config,
+        search: {
+            artist: artist as string,
+            album: album as string,
+        },
+        searchResults
+    }));
+});
+
 app.get("/p/admin", enforceAdmin, async (c: Context) => { // admin page
     const session: Session = c.get("session");
     const stats = await trackService.trackStats();

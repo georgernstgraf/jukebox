@@ -1,0 +1,36 @@
+{{!--config,
+search
+searchResults--}}
+
+<div class="search">
+    <h2>Search for Artist and Album</h2>
+    <form hx-post="{{config.mountpoint}}/search/artistalbum"
+          hx-target=".search"
+          hx-swap="outerHTML">
+        <label>Artist:
+            <input type="text"
+                   name="artist"
+                   placeholder="Enter artist name"
+                   value="{{search.artist}}">
+        </label>
+        <label>Album:
+            <input type="text"
+                   name="album"
+                   placeholder="Enter album name"
+                   value="{{search.album}}">
+        </label>
+        <button type="submit">Search</button>
+    </form>
+    {{#if searchResults}}
+    <div class="search-results">
+        <h3>Search Results</h3>
+        <ul>
+            {{#each searchResults as |track|}}
+            <li>{{track.artist}} - {{track.album}} - {{track.title}}</li>
+            {{/each}}
+        </ul>
+    </div>
+    {{else}}
+    <p>No results found.</p>
+    {{/if}}
+</div>
