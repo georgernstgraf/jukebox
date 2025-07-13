@@ -81,7 +81,6 @@ export class TrackService {
             } catch (e) {
                 emitter.emit('message', (e as Error).message);
             }
-            await sleep(21);  // give sqlite time to breathe
         }
         emitter.emit('completed');
     }
@@ -106,6 +105,7 @@ export class TrackService {
             return false;
         }
         const toAdd = onDisk.difference(inDB);
+        console.log(`To Add first few of ${toAdd.size} files: ${Array.from(toAdd).toSorted().slice(0, 7)}`);
         await this.safeAddMultiplePaths(toAdd);
         emitter.emit('message', `Found ${toAdd.size} new files to add`);
         if (signal.aborted) {
@@ -114,6 +114,7 @@ export class TrackService {
             return false;
         }
         const toDelete = inDB.difference(onDisk);
+        console.log(`To Delete first few of ${toDelete.size} files: ${Array.from(toDelete).toSorted().slice(0, 7)}`);
         const reallyDeleted = await this.repo.deletePaths(toDelete);
         emitter.emit('message', `Gave ${toDelete.size} files to delete, actually deleted ${reallyDeleted} files from the database`);
         return true;
@@ -158,6 +159,7 @@ export class TrackService {
         // Pass track to the repository for saving
         track.verifiedAt = new Date();
         await this.repo.update(track);
+        await sleep(21);  // give sqlite time to breathe
     }
 
     async deleteTrack(id: string) {
