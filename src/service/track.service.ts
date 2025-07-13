@@ -1,11 +1,13 @@
 import { EventEmitter } from "events";
+import * as assert from "assert";
 import { trackRepo, PrismaTrackRepository } from "../repo/track.repo.js";
+import { Track } from "@prisma/client";
+import * as mmd from "music-metadata";
 import {
     bufferMimeType,
     fileSha256,
     fileStat,
     fileTags,
-    getBuffer,
     sleep
 } from "../helpers.js";
 import { config } from "../env.js";
@@ -17,6 +19,14 @@ export type trackStats = {
     total: number;
     audio: number;
     unverified: number;
+};
+
+export type jukeTags = {
+    artist?: string;
+    album?: string;
+    title?: string;
+    year?: number;
+    trackNo?: number;
 };
 
 export class TrackService {
@@ -50,28 +60,28 @@ export class TrackService {
     async setAllInodesNull() {
         return await this.repo.setAllInodesNull();
     }
-    async verifyAllTracks(signal: AbortSignal, emitter: EventEmitter) {
+    async verifyAllTracks(force: boolean, signal: AbortSignal, emitter: EventEmitter) {
         if (!await this.SyncFromMusicDir(signal, emitter)) {
             emitter.emit('cancelled');
             return;
         }
-        while (true) {
-            const unverifiedIds = await this.repo.findUnverifiedIds();
-            if (unverifiedIds.length === 0) {
-                console.log(
-                    "verifyAllTracks(): No unverified tracks left in the database.",
-                );
-                break;
+        //if (!force) {
+        //    emitter.emit('completed');
+        //    return;
+        //}
+        const allIds = await this.repo.findAllIds();
+        for (const id of allIds) {
+            if (signal.aborted) {
+                emitter.emit('cancelled');
+                return;
             }
-            for (const id of unverifiedIds) {
-                if (signal.aborted) {
-                    emitter.emit('cancelled');
-                    return;
-                }
-                await this.verifyTrack(id);
+            try {
+                await this.verifyTrack(id, force);
                 emitter.emit('progress', 1);
-                await sleep(21);
+            } catch (e) {
+                emitter.emit('message', (e as Error).message);
             }
+            await sleep(21);  // give sqlite time to breathe
         }
         emitter.emit('completed');
     }
@@ -109,87 +119,47 @@ export class TrackService {
         return true;
     }
     // make the db record as complete as possible
-    async verifyTrack(id: string) {
-        // verifiedAt OR inode can be null
+    async verifyTrack(id: string, force = false) {
+        // I may throw here, it will go to emitter.message
         const track = await this.repo.getById(id);
-
-        // will not really happen. Throw here because it will be an alert
-        // for something very corrupt
         if (!track) {
             throw new Error(`Track with id ${id} not found`);
         }
-
-        // stats cannot be done: bail out and delete
-        const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
-        if (!trackStat?.isFile()) {
-            console.warn(
-                `Found a non-file (${track.path}). deleting it. REBUILD YOUR INFILE!!!`,
-            );
-            return await this.repo.delete(track.id);
+        let changedOnDisk;
+        try {
+            changedOnDisk = await TrackService.changedOnDisk_updateInoAndSize(track);
+        } catch (e) {
+            throw new Error(`Error checking if track ${track.path} changed on disk: ${(e as Error).message}`);
         }
-
-        const verificationIsNewerThanFile = track.verifiedAt &&
-            (track.verifiedAt.getTime() > trackStat.mtimeMs);
-
-        let needSave = false;
-        // see if all the stat.* members are already there
-        if (track.inode !== trackStat.ino) {
-            track.inode = trackStat.ino;
-            needSave = true;
-        }
-        if (track.sizeBytes !== trackStat.size) {
-            track.sizeBytes = trackStat.size;
-            needSave = true;
-        }
-        if (verificationIsNewerThanFile) {  // we only get here if inode was unset
-            if (needSave) {
-                console.log(`Saving (${track.path.substring(track.path.length - 54)}): only inode and size`);
-                return await this.repo.update(track);
-            }
+        if (!changedOnDisk && !force) {
             return;
         }
-        // STATE of affairs here: the verification is NULL OR file changed on disk
-        // File cannot be read: delete from db it and return
-        // VERY EXPENSIVE
+        // correct inode and size are in track
+
         const shortName = track.path.split("/").slice(-3).join("/");
-        console.log(`Starting hard work for (${shortName})`);
-        const buffer = await getBuffer(track.path);
-        if (!buffer) {
-            await this.repo.delete(track.id);
-            console.info(
-                `${shortName} cannot get buffer, deleted from database.`,
-            );
-            return;
-        }
+        console.log(`force (${force}) changed on disk (${changedOnDisk}): ${shortName})`);
 
-        track.sizeBytes = trackStat.size;
-        track.inode = trackStat.ino;
+        const buffer = await fs.readFile(track.path);
+
+        assert.equal(track.sizeBytes, buffer.length,
+            `Size mismatch (${track.path})
+                : stats: ${track.sizeBytes}, but buffer ${buffer.length}`);
+
         track.sha256 = await fileSha256(buffer);
-        track.verifiedAt = new Date();
-        Object.assign(track, await bufferMimeType(buffer, track.path)); // ext/mimeType
-        let _logtags = "not audio";
+
+        Object.assign(track, await bufferMimeType(buffer)); // ext/mimeType
+
         // care for tags only if audio file
         if (track.mimeType?.startsWith("audio/")) {
-            _logtags = "audio: ";
-            const tags = await fileTags(track.path);
-            if (tags?.common.artist && tags?.common.album) {
-                track.artist = tags.common?.artist ?? null;
-                track.album = tags.common?.album ?? null;
-                track.title = tags.common?.title ?? null;
-                track.year = tags.common?.year ?? null;
-                track.trackNo = tags.common?.track?.no ?? null;
-                _logtags += "tagged";
-            } else {
-                _logtags += "untagged";
-                console.warn(`tagtool --fix "${shortName}"`);
-            }
+            const tags = await TrackService.tagTrack(track, buffer);
+            Object.assign(track, await TrackService.tagTrack(track, buffer));
         }
+
         // Pass track to the repository for saving
+        track.verifiedAt = new Date();
         await this.repo.update(track);
-        console.info(
-            `File ${shortName} (${_logtags}) verified and updated in the database.`,
-        );
     }
+
     async deleteTrack(id: string) {
         await this.repo.delete(id);
     }
@@ -223,6 +193,41 @@ export class TrackService {
         }
         await addFiles(musicDir);
         return fileSet;
+    }
+    static async changedOnDisk_updateInoAndSize(track: Track): Promise<boolean> {         // stats cannot be done: bail out and delete
+        const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
+        if (!trackStat?.isFile()) {
+            throw new Error(
+                `Found a non-file (${track.path}). deleting it`,
+            );
+        }
+
+        if (track.verifiedAt &&
+            (track.verifiedAt.getTime() > trackStat.mtimeMs)) {  // we only get here if inode was unset
+            return false;
+        }
+
+        track.sizeBytes = trackStat.size;
+        track.inode = trackStat.ino;
+
+        return true;
+    }
+
+    static async tagTrack(track: Track, buffer: Buffer): Promise<jukeTags> {
+        // result will be Object.assign'ed to track
+        const tags = (await fileTags(buffer, {
+            ...(track.mimeType && { mimeType: track.mimeType }),
+            ...(track.sizeBytes && { size: track.sizeBytes })
+        })).common;
+
+        return {
+            ...(tags.artist && { artist: tags.artist }),
+            ...(tags.album && { album: tags.album }),
+            ...(tags.title && { title: tags.title }),
+            ...(tags.year && { year: Number(tags.year) }),
+            ...(tags.track && { trackNo: Number(tags.track) }),
+        };
+
     }
 }
 export const trackService = new TrackService(trackRepo);

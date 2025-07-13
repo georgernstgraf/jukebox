@@ -102,7 +102,8 @@ app.get("/p/admin", enforceAdmin, async (c: Context) => { // admin page
     }));
 });
 app.get("/p/admin/startverify", enforceAdmin, async (c: Context) => { // start verify
-    verify.start();
+    const force = c.req.query("force") === "true";
+    verify.start(force);
     const session: Session = c.get("session");
     const stats = await trackService.trackStats();
     return c.html(render("admin", {

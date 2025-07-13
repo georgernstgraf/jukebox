@@ -10,9 +10,27 @@
         <ul>
             <li><button hx-get="{{config.mountpoint}}{{#if verify.isRunning}}/p/admin/cancelverify{{else}}/p/admin/startverify{{/if}}"
                         hx-target=".admin"
-                        hx-swap="outerHTML">
-                    {{#if verify.isRunning}}cancel {{else}}start {{/if}} Verification
-                </button></li>
+                        hx-swap="outerHTML"
+                        hx-include="#forceVerify">
+                    {{#if verify.isRunning}}cancel
+                    {{else}}start
+                    {{/if}}
+                    Verification
+                </button>
+                {{!--#############--}}
+                {{#if verify.isRunning}}
+                {{else}}
+                <label>
+                    <input type="checkbox"
+                           id="forceVerify"
+                           name="force"
+                           value="true">
+                    Force
+                </label>
+                {{/if}}
+
+                {{!--#############--}}
+            </li>
             <li><button hx-get="{{config.mountpoint}}/p/admin"
                         hx-target=".admin"
                         hx-swap="outerHTML">

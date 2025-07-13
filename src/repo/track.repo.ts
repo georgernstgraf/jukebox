@@ -29,12 +29,16 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
         });
         return result.count;
     }
-
     async findUnverifiedIds(take = 108) {
         return (await prisma.track.findMany({
             select: { id: true },
             where: { OR: [{ verifiedAt: null }, { inode: null }] },
             take,
+        })).map((rec) => rec.id);
+    }
+    async findAllIds() {
+        return (await prisma.track.findMany({
+            select: { id: true },
         })).map((rec) => rec.id);
     }
     async pathsFromSet(paths: Set<string>) {

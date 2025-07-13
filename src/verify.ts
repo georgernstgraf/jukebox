@@ -17,7 +17,6 @@ class Verify {
             this.state.isRunning = false;
         });
         emitter.on('progress', (result) => {
-            console.log(`onProgress: ${result}`);
             this.state.doneCount += result;
         });
         emitter.on('cancelled', () => {
@@ -43,14 +42,14 @@ class Verify {
             message: '',
         };
     }
-    start() {
+    start(force = false) {
         if (this.controller) {
             console.log("Start called, Verification is already running.");
             return;
         }
         this.resetState(true);
         this.controller = new AbortController();
-        trackService.verifyAllTracks(this.controller.signal, this.emitter)
+        trackService.verifyAllTracks(force, this.controller.signal, this.emitter)
             .then(() => console.log("Verification completed successfully."))
             .catch((err) => console.log(err.message))
             .finally(() => {

@@ -3,16 +3,8 @@ import { constants, Stats } from "fs";
 import { createHash } from "crypto";
 import { Context, Next } from "hono";
 import * as ft from "file-type";
-import * as mmt from "music-metadata";
+import * as mmd from "music-metadata";
 
-export async function getBuffer(path: string): Promise<Buffer | undefined> {
-    try {
-        await access(path, constants.F_OK | constants.O_RDONLY);
-        return await readFile(path);
-    } catch {
-        return;
-    }
-}
 
 export async function fileStat(path: string): Promise<Stats | undefined> {
     try {
@@ -34,25 +26,18 @@ export async function sleep(ms: number): Promise<void> {
 
 export async function bufferMimeType(
     buffer: Buffer,
-    path: string,
-): Promise<{ ext: string; mimeType: string; } | null> {
-    let mime = null;
-    try {
-        mime = await ft.fileTypeFromBuffer(buffer);
-    } catch (error) {
-        console.error(`Error while getting mimetype for: ${path}:`);
-        console.error(error);
+): Promise<{ ext: string; mimeType: string; }> {
+    const mime = await ft.fileTypeFromBuffer(buffer);
+    if (!mime) {
+        throw new Error("Could not determine MIME type from buffer");
     }
-    return mime ? { ext: mime.ext, mimeType: mime.mime } : null;
+    return { ext: mime.ext, mimeType: mime.mime };
 }
 export async function fileTags(
-    path: string,
-): Promise<mmt.IAudioMetadata | null> {
-    try {
-        return await mmt.parseFile(path, { duration: true });
-    } catch (error) {
-        return null;
-    }
+    buffer: Buffer,
+    mimeType: mmd.IFileInfo
+): Promise<mmd.IAudioMetadata> {
+    return await mmd.parseBuffer(buffer, mimeType);
 }
 
 export async function enforceAdmin(c: Context, next: Next) {
