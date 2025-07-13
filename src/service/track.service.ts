@@ -8,6 +8,10 @@ import {
     getBuffer,
     sleep
 } from "../helpers.js";
+import { config } from "../env.js";
+import * as fs from 'fs/promises';
+import * as  path from 'path';
+
 
 export type trackStats = {
     total: number;
@@ -47,6 +51,10 @@ export class TrackService {
         return await this.repo.setAllInodesNull();
     }
     async verifyAllTracks(signal: AbortSignal, emitter: EventEmitter) {
+        if (!await this.SyncFromMusicDir(signal, emitter)) {
+            emitter.emit('cancelled');
+            return;
+        }
         while (true) {
             const unverifiedIds = await this.repo.findUnverifiedIds();
             if (unverifiedIds.length === 0) {
@@ -66,6 +74,39 @@ export class TrackService {
             }
         }
         emitter.emit('completed');
+    }
+
+    async SyncFromMusicDir(
+        signal: AbortSignal,
+        emitter: EventEmitter,
+    ): Promise<boolean> {
+        const musicDir = config.musicDir;
+        const onDisk = await TrackService.getDiskFiles(musicDir);
+        console.log(`On Disk first few of ${onDisk.size} files: ${Array.from(onDisk).toSorted().slice(0, 7)}`);
+        if (signal.aborted) {
+            emitter.emit('message', 'Sync cancelled after reading disk files');
+            emitter.emit('cancelled');
+            return false;
+        }
+        const inDB = await this.getDBFiles();
+        console.log(`In DB first few of ${inDB.size} files: ${Array.from(inDB).toSorted().slice(0, 7)}`);
+        if (signal.aborted) {
+            emitter.emit('message', 'Sync cancelled after reading DB files');
+            emitter.emit('cancelled');
+            return false;
+        }
+        const toAdd = onDisk.difference(inDB);
+        await this.safeAddMultiplePaths(toAdd);
+        emitter.emit('message', `Found ${toAdd.size} new files to add`);
+        if (signal.aborted) {
+            emitter.emit('message', 'Sync cancelled after adding new files');
+            emitter.emit('cancelled');
+            return false;
+        }
+        const toDelete = inDB.difference(onDisk);
+        const reallyDeleted = await this.repo.deletePaths(toDelete);
+        emitter.emit('message', `Gave ${toDelete.size} files to delete, actually deleted ${reallyDeleted} files from the database`);
+        return true;
     }
     // make the db record as complete as possible
     async verifyTrack(id: string) {
@@ -110,12 +151,13 @@ export class TrackService {
         // STATE of affairs here: the verification is NULL OR file changed on disk
         // File cannot be read: delete from db it and return
         // VERY EXPENSIVE
-        console.log(`Starting hard work for (${track.path.substring(track.path.length - 54)})`);
+        const shortName = track.path.split("/").slice(-3).join("/");
+        console.log(`Starting hard work for (${shortName})`);
         const buffer = await getBuffer(track.path);
         if (!buffer) {
             await this.repo.delete(track.id);
             console.info(
-                `${track.path} cannot get buffer, deleted from database.`,
+                `${shortName} cannot get buffer, deleted from database.`,
             );
             return;
         }
@@ -130,7 +172,7 @@ export class TrackService {
         if (track.mimeType?.startsWith("audio/")) {
             _logtags = "audio: ";
             const tags = await fileTags(track.path);
-            if (tags) {
+            if (tags?.common.artist && tags?.common.album) {
                 track.artist = tags.common?.artist ?? null;
                 track.album = tags.common?.album ?? null;
                 track.title = tags.common?.title ?? null;
@@ -139,12 +181,11 @@ export class TrackService {
                 _logtags += "tagged";
             } else {
                 _logtags += "untagged";
-                console.warn(`tagtool --fix "${track.path}"`);
+                console.warn(`tagtool --fix "${shortName}"`);
             }
         }
         // Pass track to the repository for saving
         await this.repo.update(track);
-        const shortName = track.path.split("/").slice(-3).join("/");
         console.info(
             `File ${shortName} (${_logtags}) verified and updated in the database.`,
         );
@@ -155,11 +196,33 @@ export class TrackService {
     async getAllPaths() {
         return await this.repo.getAllPaths();
     }
+
     async searchTracks(artist: string, album: string, path: string) {
         if (!artist && !album && !path) {
             return [];
         }
         return await this.repo.searchTracks(artist, album, path);
+    }
+
+    async getDBFiles(): Promise<Set<string>> {
+        return new Set(await this.repo.getAllPaths());
+    }
+
+    static async getDiskFiles(musicDir: string): Promise<Set<string>> {
+        const fileSet = new Set<string>();
+        async function addFiles(dir: string) {
+            const files = await fs.readdir(dir, { withFileTypes: true });
+            for (const file of files) {
+                const res = path.join(dir, file.name);
+                if (file.isDirectory()) {
+                    await addFiles(res);
+                } else if (file.isFile()) {
+                    fileSet.add(res);
+                }
+            }
+        }
+        await addFiles(musicDir);
+        return fileSet;
     }
 }
 export const trackService = new TrackService(trackRepo);

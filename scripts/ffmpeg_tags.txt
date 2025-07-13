@@ -1,0 +1,26 @@
+ffprobe -v quiet -show_entries format_tags -of default=noprint_wrappers=1 14\ Stone\ the\ Crows.mp3
+
+TAG:title=Stone the Crows
+TAG:artist=Andrew Lloyd Webber
+TAG:track=14/24
+TAG:album=Joseph and the Amazing Technicolor Dreamcoat
+TAG:disc=1/1
+TAG:date=2007
+TAG:genre=Classical
+TAG:TDOR=1991
+TAG:TMED=Digital Media
+TAG:publisher=Polydor Records
+TAG:originalyear=1991
+TAG:album_artist=Andrew Lloyd Webber
+TAG:TSO2=Lloyd Webber, Andrew
+TAG:artist-sort=Lloyd Webber, Andrew
+TAG:BARCODE=602517463523
+TAG:ARTISTS=Andrew Lloyd Webber
+TAG:MusicBrainz Album Status=official
+TAG:MusicBrainz Album Release Country=XW
+TAG:MusicBrainz Album Type=album; soundtrack
+TAG:MusicBrainz Album Id=68a4ea83-12a2-4fe6-a9a5-f40fb739c9cb
+TAG:MusicBrainz Artist Id=980ee2d8-2ee9-407b-b48e-48360fbc7437
+TAG:MusicBrainz Album Artist Id=980ee2d8-2ee9-407b-b48e-48360fbc7437
+TAG:MusicBrainz Release Group Id=ada23e97-005b-3b98-bd5d-b7212ed38f58
+TAG:MusicBrainz Release Track Id=a236d9e7-fc21-4ac9-9420-0ad99eb80b9c

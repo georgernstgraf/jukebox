@@ -15,4 +15,5 @@ export const config = {
     saslauthdMux: process.env.SASLAUTHD_MUX || "/var/run/saslauthd/mux",
     saslauthdLieTrue: process.env.SASLAUTHD_LIETRUE === "yes" || false,
     dbTimeout: process.env.DB_TIMEOUT ? process.env.DB_TIMEOUT : "21000",
+    musicDir: process.env.MUSIC_DIR || "/home/www/Music",
 };

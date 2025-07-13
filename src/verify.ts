@@ -6,7 +6,7 @@ class Verify {
     emitter: EventEmitter;
     controller: AbortController | null = null;
 
-    state: { isRunning: boolean, cancelled: boolean, doneCount: number, completed: boolean; };
+    state: { isRunning: boolean, cancelled: boolean, doneCount: number, completed: boolean; message: string; };
 
     constructor() {
         this.state = this.resetState();
@@ -24,6 +24,9 @@ class Verify {
             console.log('onCancelled: Task was cancelled!');
             this.state.cancelled = true;
         });
+        emitter.on('message', (message) => {
+            this.state.message += this.state.message ? `, ${message}` : message;
+        });
         this.emitter = emitter;
     }
 
@@ -37,6 +40,7 @@ class Verify {
             cancelled: false,
             doneCount: 0,
             completed: false,
+            message: '',
         };
     }
     start() {

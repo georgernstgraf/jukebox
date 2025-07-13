@@ -7,6 +7,9 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
             data: { path },
         });
     }
+    async getById(id: string): Promise<Track | null> {
+        return prisma.track.findUnique({ where: { id } });
+    }
     async update(track: Track) {
         return await prisma.track.update({
             where: { id: track.id },
@@ -16,9 +19,17 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
     async delete(id: string) {
         await prisma.track.delete({ where: { id } });
     }
-    async getById(id: string): Promise<Track | null> {
-        return prisma.track.findUnique({ where: { id } });
+    async deletePaths(paths: Set<string>): Promise<number> {
+        const result = await prisma.track.deleteMany({
+            where: {
+                path: {
+                    in: Array.from(paths),
+                },
+            },
+        });
+        return result.count;
     }
+
     async findUnverifiedIds(take = 108) {
         return (await prisma.track.findMany({
             select: { id: true },
