@@ -44,7 +44,11 @@ a {
 table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+    /*table-layout: fixed;*/
+}
+
+td>a:first-child {
+    text-decoration: none;
 }
 
 a.visited {

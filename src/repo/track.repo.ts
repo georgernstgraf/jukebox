@@ -10,10 +10,11 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
     async getById(id: string): Promise<Track | null> {
         return prisma.track.findUnique({ where: { id } });
     }
-    async update(track: Track) {
+    async update(track: Track): Promise<Track> {
+        const { hasId3, ...trackData } = track as any;
         return await prisma.track.update({
             where: { id: track.id },
-            data: track,
+            data: trackData,
         });
     }
     async delete(id: string) {
