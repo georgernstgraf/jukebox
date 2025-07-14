@@ -14,7 +14,118 @@ export interface ISession {
 }
 
 export class Session {
-    // see README.md
+
+    c: Context;
+    sessionId: string;
+    #username: string = "";
+    #isAdmin: boolean = false; // TODO: get from DB
+    // need those guys in the after step
+    gotLogin = false;
+    gotLogout = false;
+    needsSave = false;
+    idIsFromCookie = false;
+    loadedFromStore = false;
+
+    constructor(c: Context, sessionId?: string) {
+        if (!sessionId) {
+            sessionId = uuidv4();
+        } else {
+            this.idIsFromCookie = true;
+        }
+        this.sessionId = sessionId;
+        this.c = c;
+    }
+    get username(): string {
+        return this.#username;
+    }
+    set username(username: string) {
+        if (username === "georg") {    // TODO: get from DB
+            this.#isAdmin = true;
+        }
+        this.#username = username;
+    }
+    isAdmin(): boolean {
+        return this.#isAdmin;
+    }
+    login(username: string): void {
+        this.username = username;
+        this.gotLogin = true;
+    }
+    logout(): void {
+        this.gotLogout = true;
+    }
+    toJSON(): ISession {
+        return {
+            username: this.#username,
+        };
+    }
+    renderJSON(): ISession {
+        return {
+            username: this.#username,
+            isAdmin: this.#isAdmin,
+        };
+    }
+
+    async save(): Promise<void> {
+        const id = this.sessionId;
+        const value = JSON.stringify(this);
+        return new Promise((resolve, reject) => {
+            memjs.set(
+                id,
+                Buffer.from(value),
+                {},
+                function (err, val) {
+                    if (err) {
+                        console.error(`Error saving ${id} to Memcached:`, err);
+                        return reject(err);
+                    } else {
+                        console.log(`SUCCESS saving ${id} to Memcached:`, val);
+                        return resolve();
+                    }
+                },
+            );
+        });
+    }
+    async sendCookie() {
+        await setSignedCookie(this.c, SESSION_COOKIE_NAME, this.sessionId, COOKIE_SECRET, cookieOpts);
+    }
+    async delete(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            memjs.delete(this.sessionId, (err, val) => {
+                if (err) {
+                    console.error(`Error deleting session ${this.sessionId}:`, err);
+                    return reject(err);
+                } else {
+                    console.log(`SUCCESS deleting session ${this.sessionId}:`, val);
+                    return resolve();
+                }
+            });
+        });
+    }
+    static async load(
+        id: string, c: Context
+    ): Promise<Session> {
+        return new Promise((resolve, reject) => {
+            console.log(`loadSession ${id}`);  // id comes from cookie
+            memjs.get(id, (err, value) => {
+                if (value) {
+                    console.log(`loadSession got '${value.toString("utf8")}'.`);
+                    try {
+                        const session = new Session(c, id);
+                        Object.assign(session, JSON.parse(value.toString("utf8")));
+                        session.loadedFromStore = true;
+                        return resolve(session);
+                    } catch (e) {
+                        return reject(e);
+                    }
+                } else {
+                    console.log(`loadSession ERR ${err}`);
+                    return reject(err);
+                }
+            });
+        });
+    }
+
     static async middleware(
         c: Context,
         next: () => Promise<void>,
@@ -44,26 +155,26 @@ export class Session {
         // ------- AFTER REQ --------
         if (session.gotLogin) {
             await session.save();
+            await session.sendCookie();
             console.log(
-                `Session saved: ${session.sessionId} with payload: ${JSON.stringify(session)
+                `Session saved & cookie sent: ${session.sessionId} with payload: ${JSON.stringify(session)
                 }`,
             );
-            await session.sendCookie();
             return;
         }
         if (session.gotLogout) {
             await session.delete();
-            console.log(
-                `Session ${session.sessionId} deleted`,
-            );
             await deleteCookie(c, SESSION_COOKIE_NAME, cookieOpts);
-            console.log(`Deleting cookie ${SESSION_COOKIE_NAME}`);
+            console.log(
+                `Session and cookie deleted: ${session.sessionId}`,
+            );
             return;
         }
         if (!session.username) {
             if (session.idIsFromCookie) {
                 await deleteCookie(c, SESSION_COOKIE_NAME, cookieOpts);
-            } if (session.loadedFromStore) {
+            }
+            if (session.loadedFromStore) {
                 await session.delete();
             }
             return;
@@ -71,121 +182,5 @@ export class Session {
         if (session.needsSave) {
             await session.save();
         }
-    }
-
-    static async load(
-        id: string, c: Context
-    ): Promise<Session> {
-        return new Promise((resolve, reject) => {
-            console.log(`loadSession ${id}`);  // id comes from cookie
-            memjs.get(id, (err, value) => {
-                if (value) {
-                    console.log(`loadSession got '${value.toString("utf8")}'.`);
-                    try {
-                        const session = new Session(c, id);
-                        Object.assign(session, JSON.parse(value.toString("utf8")));
-                        session.loadedFromStore = true;
-                        return resolve(session);
-                    } catch (e) {
-                        return reject(e);
-                    }
-                } else {
-                    console.log(`loadSession ERR ${err}`);
-                    return reject(err);
-                }
-            });
-        });
-    }
-
-
-    c: Context;
-    sessionId: string;
-    #username: string = "";
-    #isAdmin: boolean = false; // TODO: get from DB
-    // need those guys in the after step
-    gotLogin = false;
-    gotLogout = false;
-    needsSave = false;
-    idIsFromCookie = false;
-    loadedFromStore = false;
-
-    constructor(c: Context, sessionId?: string) {
-        if (!sessionId) {
-            sessionId = uuidv4();
-        } else { this.idIsFromCookie = true; }
-        this.sessionId = sessionId;
-        this.c = c;
-    }
-
-    get username(): string {
-        return this.#username;
-    }
-
-    set username(username: string) {
-        if (username === "georg") {    // TODO: get from DB
-            this.#isAdmin = true;
-        }
-        this.#username = username;
-    }
-    isAdmin(): boolean {
-        return this.#isAdmin;
-    }
-    login(username: string): void {
-        this.username = username;
-        this.gotLogin = true;
-    }
-    logout(): void {
-        this.gotLogout = true;
-    }
-    async save(): Promise<void> {
-        const id = this.sessionId;
-        const value = JSON.stringify(this);
-        return new Promise((resolve, reject) => {
-            memjs.set(
-                id,
-                Buffer.from(value),
-                {},
-                function (err, val) {
-                    if (err) {
-                        console.error(`Error saving ${id} to Memcached:`, err);
-                        return reject(err);
-                    } else {
-                        console.log(`SUCCESS saving ${id} to Memcached:`, val);
-                        return resolve();
-                    }
-                },
-            );
-        });
-    }
-
-    async sendCookie() {
-        await setSignedCookie(this.c, SESSION_COOKIE_NAME, this.sessionId, COOKIE_SECRET, cookieOpts);
-    }
-
-    async delete(  // TODO check and use this .. "Log out"
-    ): Promise<void> {
-        return new Promise((resolve, reject) => {
-            memjs.delete(this.sessionId, (err, val) => {
-                if (err) {
-                    console.error(`Error deleting session ${this.sessionId}:`, err);
-                    return reject(err);
-                } else {
-                    console.log(`SUCCESS deleting session ${this.sessionId}:`, val);
-                    return resolve();
-                }
-            });
-        });
-    }
-
-    toJSON(): ISession {
-        return {
-            username: this.#username,
-        };
-    }
-    renderJSON(): ISession {
-        return {
-            username: this.#username,
-            isAdmin: this.#isAdmin,
-        };
     }
 }

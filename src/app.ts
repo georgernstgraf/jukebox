@@ -7,8 +7,9 @@ import { testsaslauthd } from "./testsaslauthd.js";
 import { compress } from 'hono/compress';
 import { config } from "./env.js";
 import { trackService } from "./service/track.service.js";
-import { enforceAdmin } from "./helpers.js";
+import { enforceAdmin, enforceUser } from "./helpers.js";
 import { verify } from "./verify.js";
+import * as fs from 'fs';
 
 let app = new Hono();
 
@@ -76,7 +77,7 @@ app.post("/logout", async (c: Context) => { // logout TODO rm cookie
     }));
 });
 
-app.post("/search/artistalbum", async (c: Context) => {  // search
+app.post("/search/artistalbum", enforceUser, async (c: Context) => {  // search
     const session: Session = c.get("session");
     const { artist, album, path } = await c.req.parseBody();
     const searchResults = await trackService.searchTracks(artist as string, album as string, path as string);
@@ -89,6 +90,63 @@ app.post("/search/artistalbum", async (c: Context) => {  // search
         },
         searchResults
     }));
+});
+
+
+app.get('/play/:id', enforceUser, async (c) => {
+    const audioId = c.req.param('id');
+    const track = await trackService.getTrackById(audioId);
+    if (!track) {
+        return c.html(render("error", {
+            message: `Not Found: ${audioId}`,
+        }), 404);
+    }
+    const filePath = track.path;
+    try {
+        const fileSize = track.sizeBytes!;
+        const contentType = track.mimeType || 'application/octet-stream';
+
+        c.header('Accept-Ranges', 'bytes');
+        c.header('Content-Type', contentType);
+
+        const rangeHeader = c.req.header('Range');
+
+        if (rangeHeader) {
+            const parts = rangeHeader.replace(/bytes=/, '').split('-');
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+
+            // Validate range
+            if (isNaN(start) || start < 0 || start >= fileSize || (end && end < start)) {
+                // Bad request or invalid range
+                c.header('Content-Range', `bytes */${fileSize}`);
+                return c.text('Range Not Satisfiable', 416); // HTTP 416 Range Not Satisfiable
+            }
+
+            const contentLength = (end - start) + 1;
+            const fileStream = fs.createReadStream(filePath, { start, end });
+
+            // Set headers for partial content
+            c.status(206); // HTTP 206 Partial Content
+            c.header('Content-Length', contentLength.toString());
+            c.header('Content-Range', `bytes ${start}-${end}/${fileSize}`);
+
+            // Return the stream directly. Hono can handle Node.js ReadableStreams.
+            return c.body(fileStream as unknown as ReadableStream);
+
+        } else {
+            // No Range header, serve the entire file
+            c.header('Content-Length', fileSize.toString());
+            const fileStream = fs.createReadStream(filePath);
+            return c.body(fileStream as unknown as ReadableStream);
+        }
+    } catch (error: any) {
+        if (error.code === 'ENOENT') {
+            return c.text('Audio file not found.', 404);
+        }
+        console.error(`Error serving audio file ${filePath}:`, error);
+        return c.text('An error occurred while serving the file.', 500);
+    }
 });
 
 app.get("/p/admin", enforceAdmin, async (c: Context) => { // admin page

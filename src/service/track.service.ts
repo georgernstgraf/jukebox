@@ -138,7 +138,7 @@ export class TrackService {
         // correct inode and size are in track
 
         const shortName = track.path.split("/").slice(-3).join("/");
-        console.log(`force (${force}) changed on disk (${changedOnDisk}): ${shortName})`);
+        console.log(`force (${force}) changed on disk (${changedOnDisk}): ${shortName}`);
 
         const buffer = await fs.readFile(track.path);
 
@@ -169,6 +169,10 @@ export class TrackService {
         return await this.repo.getAllPaths();
     }
 
+    async getTrackById(id: string) {
+        return await this.repo.getById(id);
+    }
+
     async searchTracks(artist: string, album: string, path: string) {
         if (!artist && !album && !path) {
             return [];
@@ -196,6 +200,7 @@ export class TrackService {
         await addFiles(musicDir);
         return fileSet;
     }
+
     static async changedOnDisk_updateInoAndSize(track: Track): Promise<boolean> {         // stats cannot be done: bail out and delete
         const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
         if (!trackStat?.isFile()) {

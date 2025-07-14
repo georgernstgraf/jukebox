@@ -46,3 +46,9 @@ export async function enforceAdmin(c: Context, next: Next) {
     }
     await next();
 }
+export async function enforceUser(c: Context, next: Next) {
+    if (!c.get("session").username) {
+        return c.text('Forbidden', 403);
+    }
+    await next();
+}
