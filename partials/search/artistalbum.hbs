@@ -27,31 +27,30 @@ searchResults--}}
         </label>
         <button type="submit">Search</button>
     </form>
-    <p>Path overrules Artist / Album and is <strong>expensive</strong></p>
+    <p>Path overrules Artist / Album</p>
     {{#if searchResults}}
     <div class="search-results">
         <h3>Search Results</h3>
-        <h4>Table: </h4>
         <table>
             <thead>
                 <tr>
-                    <th class="fixed-width-col-sm">Artist</th>
-                    <th class="fixed-width-col-sm">Album</th>
-                    <th class="fixed-width-col-sm">Title</th>
-                    <th class="fixed-width-col-lg">Path</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each searchResults as |track|}}
-                <tr>
-                    <td class="fixed-width-col-sm">{{track.artist}}</td>
-                    <td class="fixed-width-col-sm">{{track.album}}</td>
-                    <td class="fixed-width-col-sm">{{track.title}}</td>
-                    <td class="fixed-width-col-lg">
+                <tr title="{{track.path}}">
+                    <td>
                         <a href="{{../config.mountpoint}}/play/{{track.id}}">
-                            {{track.path}}
+                            &#9654;
                         </a>
                     </td>
+                    {{#if track.hasId3}}
+                    <td>{{track.artist}}</td>
+                    <td>{{track.album}}</td>
+                    <td>{{track.title}}</td>
+                    {{else}}
+                    <td colspan="3">{{track.path}}</td>
+                    {{/if}}
                 </tr>
                 {{/each}}
             </tbody>
