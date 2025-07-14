@@ -116,7 +116,7 @@ export class TrackService {
         const toDelete = inDB.difference(onDisk);
         console.log(`To Delete first few of ${toDelete.size} files: ${Array.from(toDelete).toSorted().slice(0, 7)}`);
         const reallyDeleted = await this.repo.deletePaths(toDelete);
-        emitter.emit('message', `Gave ${toDelete.size} files to delete, actually deleted ${reallyDeleted} files from the database`);
+        emitter.emit('message', `and ${toDelete.size}to delete from database`);
         return true;
     }
     // make the db record as complete as possible
