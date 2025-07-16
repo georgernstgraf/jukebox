@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 import { trackService, forceType } from "./service/track.service.js";
 
 function runtimeSecs(from: Date, to: Date): number {
-    return (to.getTime() - from.getTime()) / 1000;
+    return Math.round((to.getTime() - from.getTime()) / 1000);
 }
 
 class Verify {
