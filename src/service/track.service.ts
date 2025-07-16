@@ -29,6 +29,8 @@ export type jukeTags = {
     trackNo?: number;
 };
 
+export type forceType = "basic" | "stats" | "all";
+
 export class TrackService {
     constructor(private readonly repo: PrismaTrackRepository) {
     }
@@ -42,8 +44,8 @@ export class TrackService {
         return { total, audio, unverified };
     }
 
-    async getUnverified(take: number = 108) {
-        return await this.repo.findUnverifiedIds(take);
+    async getUnverified() {
+        return await this.repo.findUnverifiedIds();
     }
 
     async safeAddMultiplePaths(paths: Set<string>): Promise<number> {
@@ -59,27 +61,6 @@ export class TrackService {
 
     async setAllInodesNull() {
         return await this.repo.setAllInodesNull();
-    }
-    async verifyAllTracks(force: boolean, signal: AbortSignal, emitter: EventEmitter) {
-        if (!await this.SyncFromMusicDir(signal, emitter)) {
-            emitter.emit('cancelled');
-            return;
-        }
-        const allIds = await this.repo.findAllIds();
-        for (const id of allIds) {
-            if (signal.aborted) {
-                emitter.emit('cancelled');
-                return;
-            }
-            try {
-                await this.verifyTrack(id, force);
-                emitter.emit('progress', 1);
-            } catch (e) {
-                emitter.emit('message', (e as Error).message);
-            }
-        }
-        emitter.emit('message', `checked ${allIds.length} tracks, forced: ${force}`);
-        emitter.emit('completed');
     }
 
     async SyncFromMusicDir(
@@ -116,16 +97,41 @@ export class TrackService {
         emitter.emit('message', `and ${toDelete.size} to delete from database`);
         return true;
     }
+
+    async verifyAllTracks(force: forceType, signal: AbortSignal, emitter: EventEmitter) {
+        if (!await this.SyncFromMusicDir(signal, emitter)) {
+            emitter.emit('cancelled');
+            return;
+        }
+        const verifyIds = (force === "basic") ? await this.repo.findUnverifiedIds() : await this.repo.findAllIds();
+        for (const id of verifyIds) {
+            if (signal.aborted) {
+                emitter.emit('cancelled');
+                return;
+            }
+            try {
+                await this.verifyTrack(id, force === "all");
+                emitter.emit('progress', 1);
+            } catch (e) {
+                emitter.emit('message', (e as Error).message);
+            }
+        }
+        emitter.emit('message', `checked ${verifyIds.length} tracks, forced: ${force}`);
+        emitter.emit('completed');
+    }
+
     // make the db record as complete as possible
     async verifyTrack(id: string, force = false) {
-        // I may throw here, it will go to emitter.message
+        // no force will do the disk stats, and only if changed continue to
+        // force the sha256, mimeType, ext and tags
         const track = await this.repo.getById(id);
         if (!track) {
+            // I may throw here, it will go to emitter.message
             throw new Error(`Track with id ${id} not found`);
         }
         let changedOnDisk;
         try {
-            changedOnDisk = await TrackService.changedOnDisk_updateInoAndSize(track);
+            changedOnDisk = await TrackService.hasChangedOnDisk_thenUpdateInoAndSize(track);
         } catch (e) {
             throw new Error(`Error checking if track ${track.path} changed on disk: ${(e as Error).message}`);
         }
@@ -202,7 +208,7 @@ export class TrackService {
         return fileSet;
     }
 
-    static async changedOnDisk_updateInoAndSize(track: Track): Promise<boolean> {         // stats cannot be done: bail out and delete
+    static async hasChangedOnDisk_thenUpdateInoAndSize(track: Track): Promise<boolean> {         // stats cannot be done: bail out and delete
         const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
         if (!trackStat?.isFile()) {
             throw new Error(

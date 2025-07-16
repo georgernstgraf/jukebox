@@ -7,7 +7,7 @@ import { render } from "./hbs.js";
 import { testsaslauthd } from "./testsaslauthd.js";
 import { compress } from 'hono/compress';
 import { config } from "./env.js";
-import { trackService } from "./service/track.service.js";
+import { trackService, forceType } from "./service/track.service.js";
 import { enforceAdmin, enforceUser } from "./helpers.js";
 import { verify } from "./verify.js";
 import * as fs from 'fs';
@@ -173,8 +173,8 @@ app.get("/p/admin", enforceAdmin, async (c: Context) => { // admin page
     }));
 });
 app.get("/p/admin/startverify", enforceAdmin, async (c: Context) => { // start verify
-    const force = c.req.query("force") === "true";
-    verify.start(force);
+    const force = c.req.query("force");
+    verify.start(force as forceType);
     const session: Session = c.get("session");
     const stats = await trackService.trackStats();
     return c.html(render("admin", {
