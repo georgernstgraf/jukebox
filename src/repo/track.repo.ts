@@ -1,5 +1,6 @@
 import { Track } from "@prisma/client";
 import { prisma } from "../prisma.js";
+import { config } from "../env.js";
 
 export class PrismaTrackRepository /* implements ITrackRepository */ {
     async create(path: string) {
@@ -100,6 +101,7 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
         return await prisma.track.findMany({
             where,
             orderBy: { path: "asc" },
+            take: config.search_max_results,
         });
     }
 }

@@ -44,14 +44,17 @@ function initAudios() {
                 nextAudio.play();
             }
         });
-    });
-    audios.forEach((audio) => {
         audio.addEventListener('play', () => {
             audios.forEach((otherAudio) => {
                 if (otherAudio !== audio) {
                     otherAudio.pause();
                 }
             });
+        });
+        audio.parentElement.addEventListener('click', (event) => {
+            console.log('Parent clicked for audio:', audio);
+            event.stopPropagation(); // Prevent the click from propagating further
+            audio.play();
         });
     });
 }

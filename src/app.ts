@@ -82,6 +82,7 @@ app.post("/search/results", enforceUser, async (c: Context) => {  // search
     const session: Session = c.get("session");
     const { artist, album, path } = await c.req.parseBody();
     const searchResults = await trackService.searchTracks(artist as string, album as string, path as string);
+    const maximumReached = searchResults.length >= config.search_max_results;
     return c.html(render("search/results", {
         config,
         search: {
@@ -89,7 +90,8 @@ app.post("/search/results", enforceUser, async (c: Context) => {  // search
             album: album as string,
             path: path as string
         },
-        searchResults
+        ...(searchResults.length > 0 && { searchResults }),
+        ...(maximumReached && { maximumReached }),
     }));
 });
 

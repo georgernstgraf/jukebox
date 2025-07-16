@@ -1,6 +1,9 @@
 <div class="search-results">
     {{#if searchResults}}
-    <h3>Results</h3>
+    <h3>{{searchResults.length}} results</h3>
+    {{#if maximumReached}}
+    <p>Note: Only the first {{config.search_max_results}} results are shown. Narrow your search</p>
+    {{/if}}
     <ul class="results">
         {{#each searchResults as |track|}}
         <li title="{{track.path}}">
