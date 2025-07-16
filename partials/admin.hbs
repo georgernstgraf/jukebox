@@ -1,5 +1,8 @@
-<div class="admin">
-    <h2>My admin Box</h2>
+<div class="admin"
+     x-data="{ open: true }"
+     @toggle-admin.window="open = !open"
+     x-show="open">
+    <h2>admin</h2>
     <div class="d-flex">
         <ul>
             <li>{{stats.total}} files in Database</li>

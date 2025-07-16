@@ -1,4 +1,11 @@
 <nav>
-    navbar
+    <h2>Schurlix' Jukebox</h2>
+    {{#if session.username}}
+    <h1>Hi {{session.username}}!</h1>
+    {{/if}}
+    {{#if session.isAdmin}}
+    <button x-data
+            @click="$dispatch('toggle-admin'); console.log('Admin box toggled')">Toggle Admin Box</button>
+    {{/if}}
     {{> profile}}
 </nav>

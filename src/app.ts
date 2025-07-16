@@ -1,3 +1,4 @@
+import { Readable } from 'node:stream';
 import { Context, Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { serveStatic } from '@hono/node-server/serve-static';
@@ -77,11 +78,11 @@ app.post("/logout", async (c: Context) => { // logout TODO rm cookie
     }));
 });
 
-app.post("/search/artistalbum", enforceUser, async (c: Context) => {  // search
+app.post("/search/results", enforceUser, async (c: Context) => {  // search
     const session: Session = c.get("session");
     const { artist, album, path } = await c.req.parseBody();
     const searchResults = await trackService.searchTracks(artist as string, album as string, path as string);
-    return c.html(render("search/artistalbum", {
+    return c.html(render("search/results", {
         config,
         search: {
             artist: artist as string,
@@ -132,13 +133,13 @@ app.get('/play/:id', enforceUser, async (c) => {
             c.header('Content-Range', `bytes ${start}-${end}/${fileSize}`);
 
             // Return the stream directly. Hono can handle Node.js ReadableStreams.
-            return c.body(fileStream as unknown as ReadableStream);
+            return c.body(Readable.toWeb(fileStream) as unknown as ReadableStream);
 
         } else {
             // No Range header, serve the entire file
             c.header('Content-Length', fileSize.toString());
             const fileStream = fs.createReadStream(filePath);
-            return c.body(fileStream as unknown as ReadableStream);
+            return c.body(Readable.toWeb(fileStream) as unknown as ReadableStream);
         }
     } catch (error: any) {
         if (error.code === 'ENOENT') {
@@ -214,4 +215,8 @@ serve({
     hostname: config.host,
 });
 console.log(`Server running at http://${config.host}:${config.port}${config.mountpoint}`);
-verify.start();
+if (!config.DONT_SYNC_ON_STARTUP) {
+    verify.start();
+} else {
+    console.log("Skipping initial sync due to DONT_SYNC_ON_STARTUP=true");
+}

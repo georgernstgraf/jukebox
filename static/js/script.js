@@ -33,3 +33,25 @@ document.body.addEventListener('htmx:sendError', function (event) {
     console.error('Georg htmx:sendError: TODO toast some event details', event);
     showToast('Network error: Could not reach the server.', 'error');
 });
+
+function initAudios() {
+    console.log('initAudios');
+    const audios = Array.from(document.querySelectorAll('audio'));
+    audios.forEach((audio, idx) => {
+        audio.addEventListener('ended', () => {
+            const nextAudio = audios[idx + 1];
+            if (nextAudio) {
+                nextAudio.play();
+            }
+        });
+    });
+    audios.forEach((audio) => {
+        audio.addEventListener('play', () => {
+            audios.forEach((otherAudio) => {
+                if (otherAudio !== audio) {
+                    otherAudio.pause();
+                }
+            });
+        });
+    });
+}

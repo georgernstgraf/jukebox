@@ -178,7 +178,11 @@ export class TrackService {
         if (!artist && !album && !path) {
             return [];
         }
-        return await this.repo.searchTracks(artist, album, path);
+        const results = await this.repo.searchTracks(artist, album, path);
+        results.forEach((track) => {
+            track.path = track.path.substring(config.musicDir.length + 1);
+        });
+        return results;
     }
 
     async getDBFiles(): Promise<Set<string>> {

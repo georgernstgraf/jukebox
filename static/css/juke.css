@@ -22,8 +22,22 @@ ul {
     list-style-type: none;
 }
 
+ul.results {
+    list-style-type: none;
+    width: 100%;
+    border: 1px solid lightblue;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
 li {
     text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+li>* {
+    display: inline;
 }
 
 h3 {
@@ -34,7 +48,10 @@ form {
     color: #ccc;
     border-color: #f00;
     white-space: normal;
-    line-height: 3;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 1em;
 }
 
 a {
@@ -47,8 +64,10 @@ table {
     /*table-layout: fixed;*/
 }
 
-td>a:first-child {
-    text-decoration: none;
+li>audio {
+    margin-right: 1em;
+    width: 30em;
+    height: 2em;
 }
 
 a.visited {
@@ -92,7 +111,9 @@ input {
 
 .d-flex {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
+    align-items: baseline;
+    gap: 1em;
 }
 
 .fixed-width-col-sm {

@@ -1,8 +1,5 @@
 {{#if session.isAdmin}}
-<h2>Willkommen, Admin {{session.username}}!</h2>
 {{> admin }}
-{{else}}
-<h2>Willkommen {{session.username}}!</h2>
 {{/if}}
 {{! following is for both}}
-{{> search/artistalbum }}
+{{> search/form }}

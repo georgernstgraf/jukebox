@@ -16,4 +16,5 @@ export const config = {
     saslauthdLieTrue: process.env.SASLAUTHD_LIETRUE === "yes" || false,
     dbTimeout: process.env.DB_TIMEOUT ? process.env.DB_TIMEOUT : "21000",
     musicDir: process.env.MUSIC_DIR || "/home/www/Music",
+    DONT_SYNC_ON_STARTUP: process.env.DONT_SYNC_ON_STARTUP === "true" || false,
 };

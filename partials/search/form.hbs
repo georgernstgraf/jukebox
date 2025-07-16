@@ -1,0 +1,35 @@
+{{!--config,
+search
+searchResults--}}
+
+<div class="search">
+    <div class="d-flex">
+        <h2>Search</h2>
+        <p>(Path overrules Artist / Album)</p>
+    </div>
+    <form hx-post="{{config.mountpoint}}/search/results"
+          hx-target=".search-results"
+          hx-swap="outerHTML">
+        <label>Artist:
+            <input type="text"
+                   name="artist"
+                   placeholder="Enter artist name"
+                   value="{{search.artist}}">
+        </label>
+        <label>Album:
+            <input type="text"
+                   name="album"
+                   placeholder="Enter album name"
+                   value="{{search.album}}">
+        </label>
+        <label>Path:
+            <input type="text"
+                   name="path"
+                   placeholder="search for path (expensive)"
+                   value="{{search.path}}">
+        </label>
+        <button title=""
+                type="submit">Search</button>
+    </form>
+    {{> search/results }}
+</div>

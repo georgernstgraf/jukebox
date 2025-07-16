@@ -1,0 +1,28 @@
+<div class="search-results">
+    {{#if searchResults}}
+    <h3>Results</h3>
+    <ul class="results">
+        {{#each searchResults as |track|}}
+        <li title="{{track.path}}">
+            <audio src="{{../config.mountpoint}}/play/{{track.id}}"
+                   controls
+                   preload="none">
+                &#9654;
+            </audio>
+            {{#if track.hasId3}}
+            <p>{{track.artist}} / </p>
+            <p>{{track.album}} / </p>
+            <p>{{track.title}}</p>
+            {{else}}
+            <p>{{track.path}}</p>
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+    <script>
+        initAudios();
+    </script>
+    {{else}}
+    <p>No results found.</p>
+    {{/if}}
+</div>

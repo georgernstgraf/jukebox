@@ -2,6 +2,7 @@ import { access, readFile, stat } from "fs/promises";
 import { constants, Stats } from "fs";
 import { createHash } from "crypto";
 import { Context, Next } from "hono";
+import { render } from "./hbs.js";
 import * as ft from "file-type";
 import * as mmd from "music-metadata";
 
@@ -42,13 +43,17 @@ export async function fileTags(
 
 export async function enforceAdmin(c: Context, next: Next) {
     if (!c.get("session").isAdmin()) {
-        return c.text('Forbidden', 403);
+        return c.html(render("error", {
+            message: `Login first`,
+        }), 401);
     }
     await next();
 }
 export async function enforceUser(c: Context, next: Next) {
     if (!c.get("session").username) {
-        return c.text('Forbidden', 403);
+        return c.html(render("error", {
+            message: `Login first`,
+        }), 401);
     }
     await next();
 }
