@@ -15,7 +15,7 @@ const prisma = new PrismaClient().$extends({
 });
 try {
     const result = await prisma.$queryRawUnsafe(`PRAGMA busy_timeout = ${config.dbTimeout};`);
-    console.log(`SQLite busy_timeout set to ${config.dbTimeout}ms. (${result})`);
+    console.log(`SQLite busy_timeout set to ${config.dbTimeout}ms.`, result);
 } catch (error) {
     console.error("Error setting busy_timeout:", error);
 }
