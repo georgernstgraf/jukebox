@@ -56,6 +56,7 @@ class Verify {
         };
     }
     start(force: forceType = "basic") {
+        console.log(`verify.start() called with force: ${force}`);
         if (this.controller) {
             console.log("Start called, Verification is already running.");
             return;
