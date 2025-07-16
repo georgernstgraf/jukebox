@@ -70,6 +70,10 @@ li>audio {
     height: 2em;
 }
 
+li>img {
+    margin: auto;
+}
+
 a.visited {
     color: #f77;
 }

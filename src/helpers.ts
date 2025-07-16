@@ -27,10 +27,10 @@ export async function sleep(ms: number): Promise<void> {
 
 export async function bufferMimeType(
     buffer: Buffer,
-): Promise<{ ext: string; mimeType: string; }> {
-    const mime = await ft.fileTypeFromBuffer(buffer);
+): Promise<{ ext?: string; mimeType?: string; }> {
+    let mime = await ft.fileTypeFromBuffer(buffer);
     if (!mime) {
-        throw new Error("Could not determine MIME type from buffer");
+        return {};
     }
     return { ext: mime.ext, mimeType: mime.mime };
 }

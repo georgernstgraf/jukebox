@@ -82,6 +82,16 @@ app.post("/search/results", enforceUser, async (c: Context) => {  // search
     const session: Session = c.get("session");
     const { artist, album, path } = await c.req.parseBody();
     const searchResults = await trackService.searchTracks(artist as string, album as string, path as string);
+    const renderResult = searchResults.map((track) => {
+        const renderResult: typeof track & { audio?: boolean; image?: boolean; } = { ...track };
+        if (track.mimeType?.startsWith("audio/")) {
+            renderResult.audio = true; // Mark as audio track
+        }
+        if (track.mimeType?.startsWith("image/")) {
+            renderResult.image = true; // Mark as image track
+        }
+        return renderResult;
+    });
     const maximumReached = searchResults.length >= config.search_max_results;
     return c.html(render("search/results", {
         config,
@@ -90,7 +100,7 @@ app.post("/search/results", enforceUser, async (c: Context) => {  // search
             album: album as string,
             path: path as string
         },
-        ...(searchResults.length > 0 && { searchResults }),
+        ...(searchResults.length > 0 && { searchResults: renderResult }),
         ...(maximumReached && { maximumReached }),
     }));
 });

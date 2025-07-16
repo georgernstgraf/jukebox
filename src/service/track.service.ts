@@ -65,10 +65,6 @@ export class TrackService {
             emitter.emit('cancelled');
             return;
         }
-        //if (!force) {
-        //    emitter.emit('completed');
-        //    return;
-        //}
         const allIds = await this.repo.findAllIds();
         for (const id of allIds) {
             if (signal.aborted) {

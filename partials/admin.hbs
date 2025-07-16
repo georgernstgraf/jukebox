@@ -8,7 +8,7 @@
             <li>{{stats.total}} files in Database</li>
             <li>{{stats.audio}} Audio Files</li>
             <li>{{stats.unverified}} Unverified Files</li>
-            <li>Verification Task is {{#if verify.isRunning}}{{else}}<em>not</em> {{/if}}running.</li>
+            <li>Verification Task is&nbsp;{{#if verify.isRunning}}{{else}}<em>not</em>&nbsp;{{/if}}running.</li>
         </ul>
         <ul>
             <li><button hx-get="{{config.mountpoint}}{{#if verify.isRunning}}/p/admin/cancelverify{{else}}/p/admin/startverify{{/if}}"
