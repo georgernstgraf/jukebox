@@ -145,7 +145,7 @@ export class TrackService {
 
         track.sha256 = await fileSha256(buffer);
 
-        Object.assign(track, await bufferMimeType(buffer)); // ext/mimeType
+        Object.assign(track, await bufferMimeType(buffer, track.path)); // ext/mimeType
 
         // care for tags only if audio file
         if (track.mimeType?.startsWith("audio/")) {

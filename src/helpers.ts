@@ -3,6 +3,7 @@ import { constants, Stats } from "fs";
 import { createHash } from "crypto";
 import { Context, Next } from "hono";
 import { render } from "./hbs.js";
+import { getMimeType, getExtension } from "hono/utils/mime";
 import * as ft from "file-type";
 import * as mmd from "music-metadata";
 
@@ -26,11 +27,19 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 export async function bufferMimeType(
-    buffer: Buffer,
+    buffer: Buffer, path: string
 ): Promise<{ ext?: string; mimeType?: string; }> {
     let mime = await ft.fileTypeFromBuffer(buffer);
     if (!mime) {
-        return {};
+        const mimeType = getMimeType(path);
+        let ext = undefined;
+        if (mimeType) {
+            ext = getExtension(mimeType);
+        }
+        return {
+            ...(mimeType && { mimeType }),
+            ...(ext && { ext })
+        };
     }
     return { ext: mime.ext, mimeType: mime.mime };
 }
