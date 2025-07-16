@@ -10,7 +10,7 @@
             {{#if track.audio}}
             <audio src="{{../config.mountpoint}}/play/{{track.id}}"
                    controls
-                   preload="auto">
+                   preload="metadata">
                 &#9654;
             </audio>
             {{#if track.hasId3}}
