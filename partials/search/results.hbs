@@ -10,9 +10,7 @@
                 &#9654;
             </audio>
             {{#if track.hasId3}}
-            <p>{{track.artist}} /</p>
-            <p> {{track.album}} /</p>
-            <p> {{track.title}}</p>
+            <p>{{track.artist}} / {{track.album}} / {{track.title}}</p>
             {{else}}
             <p>{{track.path}}</p>
             {{/if}}
