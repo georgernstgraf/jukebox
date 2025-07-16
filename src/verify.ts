@@ -2,6 +2,10 @@
 import { EventEmitter } from "events";
 import { trackService, forceType } from "./service/track.service.js";
 
+function runtimeSecs(from: Date, to: Date): number {
+    return (to.getTime() - from.getTime()) / 1000;
+}
+
 class Verify {
     emitter: EventEmitter;
     controller: AbortController | null = null;
@@ -18,7 +22,7 @@ class Verify {
             console.log(`onCompleted`);
             this.state.completed = true;
             this.state.isRunning = false;
-            this.state.runTime = new Date().getTime() - this.startedAt.getTime();
+            this.state.runTime = runtimeSecs(this.startedAt, new Date());
         });
         emitter.on('progress', (result) => {
             this.state.doneCount += result;
@@ -27,7 +31,7 @@ class Verify {
             console.log('onCancelled: Task was cancelled!');
             this.state.cancelled = true;
             this.state.isRunning = false;
-            this.state.runTime = new Date().getTime() - this.startedAt.getTime();
+            this.state.runTime = runtimeSecs(this.startedAt, new Date());
 
         });
         emitter.on('message', (message) => {
@@ -75,7 +79,7 @@ class Verify {
         this.state.isRunning = false;
         this.state.cancelled = true;
         this.state.completed = false;
-        this.state.runTime = (new Date().getTime() - this.startedAt.getTime()) / 1000;
+        this.state.runTime = runtimeSecs(this.startedAt, new Date());
     }
 }
 export const verify = new Verify();
