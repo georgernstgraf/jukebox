@@ -28,6 +28,8 @@ ul.results {
     border: 1px solid lightblue;
     border-radius: 5px;
     box-sizing: border-box;
+    padding-inline-start: 0;
+    padding: 1em;
 }
 
 li {
