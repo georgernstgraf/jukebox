@@ -6,28 +6,28 @@
     {{/if}}
     <ul class="results">
         {{#each searchResults as |track|}}
-        <li title="{{track.path}}">
+        <li title="{{track.path}}">  {{!-- track.audio --}}
             {{#if track.audio}}
-            <audio src="{{../config.mountpoint}}/play/{{track.id}}"
-                   controls
-                   preload="metadata">
-                &#9654;
-            </audio>
-            {{#if track.hasId3}}
-            <p>{{track.artist}} / {{track.album}} / {{track.title}}</p>
-            {{else}}
-            <p>{{track.path}}</p>
-            {{/if}}
-            {{else}}
-            {{#if track.image}}
-            <img src="{{../config.mountpoint}}/play/{{track.id}}"
-                 alt="Image for {{track.path}}"
-                 class="result-image">
-            {{else}}
-            <a href="{{../config.mountpoint}}/play/{{track.id}}"
-               target="jukeboxviewer">{{track.path}}</a>
-            {{/if}}
-            {{/if}}
+                <audio src="{{../config.mountpoint}}/play/{{track.id}}"
+                       controls
+                       preload="metadata">
+                    &#9654;
+                </audio>
+                {{#if track.hasId3}}
+                    <p>{{track.artist}} / {{track.album}} / {{track.title}}</p>
+                {{else}}   {{!-- track.hasId3 --}}
+                    <p>{{track.path}}</p>
+                {{/if}}     {{!-- track.hasId3 --}}
+            {{else}}  {{!-- NO track.audio --}}
+                {{#if track.image}}  
+                    <img src="{{../config.mountpoint}}/play/{{track.id}}"
+                     alt="Image for {{track.path}}"
+                     class="result-image">
+                {{else}}  {{!-- track.image --}}
+                    <a href="{{../config.mountpoint}}/play/{{track.id}}"
+                   target="jukeboxviewer">{{track.path}}</a>
+                {{/if}}  {{!-- track.image --}}
+            {{/if}}  {{!-- track.audio --}}
         </li>
         {{/each}}
     </ul>
