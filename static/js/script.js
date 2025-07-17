@@ -43,12 +43,15 @@ function initAudios() {
             if (nextAudio) {
                 nextAudio.play();
             }
+            audio.parentElement.classList.remove('playing');
         });
         audio.addEventListener('play', () => {
             audios.forEach((otherAudio) => {
                 if (otherAudio !== audio) {
                     otherAudio.pause();
+                    otherAudio.parentElement.classList.remove('playing');
                 }
+                audio.parentElement.classList.add('playing');
             });
         });
         audio.parentElement.addEventListener('click', (event) => {

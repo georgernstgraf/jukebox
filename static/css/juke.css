@@ -36,6 +36,8 @@ li {
     text-align: left;
     display: flex;
     align-items: center;
+    border: 2px solid transparent;
+    border-radius: 5px;
 }
 
 li>* {
@@ -158,5 +160,25 @@ input {
 
     100% {
         transform: rotate(360deg);
+    }
+}
+
+.playing {
+    animation: blink 4s infinite ease-in-out;
+    padding: .5em;
+    margin: 1em 0;
+}
+
+@keyframes blink {
+    0% {
+        border-color: #700;
+    }
+
+    50% {
+        border-color: red;
+    }
+
+    100% {
+        border-color: #700;
     }
 }
