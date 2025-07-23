@@ -1,10 +1,10 @@
 document.body.addEventListener('htmx:beforeRequest', function (evt) {
     console.log('htmx:beforeRequest', evt);
-    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('spinner').classList.remove('d-none');
 });
 document.body.addEventListener('htmx:afterRequest', function (evt) {
     console.log('htmx:afterRequest', evt);
-    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('spinner').classList.add('d-none');
 });
 function showToast(message, type = 'info', duration = 3000) {
     const toast = document.createElement('div');
@@ -43,15 +43,15 @@ function initAudios() {
             if (nextAudio) {
                 nextAudio.play();
             }
-            audio.parentElement.classList.remove('playing');
+            audio.parentElement.classList.remove('active');
         });
         audio.addEventListener('play', () => {
             audios.forEach((otherAudio) => {
                 if (otherAudio !== audio) {
                     otherAudio.pause();
-                    otherAudio.parentElement.classList.remove('playing');
+                    otherAudio.parentElement.classList.remove('active');
                 }
-                audio.parentElement.classList.add('playing');
+                audio.parentElement.classList.add('active');
             });
         });
         audio.parentElement.addEventListener('click', (event) => {

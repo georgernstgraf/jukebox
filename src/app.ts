@@ -6,6 +6,7 @@ import { Session } from "./session.js";
 import { render } from "./hbs.js";
 import { testsaslauthd } from "./testsaslauthd.js";
 import { compress } from 'hono/compress';
+import { stream, streamText, streamSSE } from 'hono/streaming'
 import { config } from "./env.js";
 import { trackService, forceType } from "./service/track.service.js";
 import { enforceAdmin, enforceUser } from "./helpers.js";
@@ -196,6 +197,21 @@ app.get("/p/admin/cancelverify", enforceAdmin, async (c: Context) => { // cancel
     }));
 });
 
+// SSE Endpoint 
+app.get('/sse', async (c) => {
+    let number = 0; 
+    return streamSSE(c, async (stream) => {
+        while (true) {
+            const message = `It is ${new Date().toISOString()}`
+            await stream.writeSSE({
+                data: message,
+                event: 'time-update',
+                id: String(number++),
+            })
+            await stream.sleep(1000)
+        }
+    })
+})
 // Serve static files relative to the mountpoint
 app.use("*", serveStatic({
     root: './static', rewriteRequestPath: (path) => {

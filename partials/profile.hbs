@@ -1,9 +1,10 @@
 <div class="profile">
     {{#if session.username}}
-    <button type="button"
-            hx-post="{{config.mountpoint}}/logout"
-            hx-target="body">log out {{session.username}}</button>
+        <button class="btn btn-secondary"
+                type="button"
+                hx-post="{{config.mountpoint}}/logout"
+                hx-target="body">log out</button>
     {{else}}
-    <p>You are not logged in.</p>
+        <p class="m-0">You are not logged in.</p>
     {{/if}}
 </div>

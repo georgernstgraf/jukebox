@@ -1,21 +1,24 @@
-<div class="login">
-    <h2>Log in</h2>
-    <form method="post"
-          action="{{config.mountpoint}}/login"
-          hx-post="{{config.mountpoint}}/login"
-          hx-target="body"> {{! header needs also be replaced }}
-        <input type="text"
-               name="username"
-               placeholder="Username"
-               autocomplete="username">
-        <input type="password"
-               name="password"
-               placeholder="Password"
-               autocomplete="current-password">
-        <input type="submit"
-               value="Log in">
-    </form>
-    {{#if error}}
-    <p class="error">{{error}}</p>
-    {{/if}}
+<div class="align-items-center d-flex flex-column justify-content-center">
+       <form class="d-flex justify-content-around align-items-center gap-2"
+             method="post"
+             action="{{config.mountpoint}}/login"
+             hx-post="{{config.mountpoint}}/login"
+             hx-target="body"> {{! header needs also be replaced }}
+              <input class="w-50"
+                     type="text"
+                     name="username"
+                     placeholder="Username"
+                     autocomplete="username">
+              <input class="w-50"
+                     type="password"
+                     name="password"
+                     placeholder="Password"
+                     autocomplete="current-password">
+              <input class="w-50"
+                     type="submit"
+                     value="Log in">
+       </form>
+       {{#if error}}
+              <p class="mt-3 p-2 rounded text-bg-danger">{{error}}</p>
+       {{/if}}
 </div>

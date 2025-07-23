@@ -2,34 +2,69 @@
 search
 searchResults--}}
 
-<div class="search">
-    <div class="d-flex">
-        <h2>Search</h2>
-        <p>(Path overrules Artist / Album) ... <a href="{{config.mountpoint}}/jukebox_alles.txt">alles!</a></p>
-    </div>
-    <form hx-post="{{config.mountpoint}}/search/results"
-          hx-target=".search-results"
-          hx-swap="outerHTML">
-        <label>Artist:
-            <input type="text"
-                   name="artist"
-                   placeholder="Enter artist name"
-                   value="{{search.artist}}">
-        </label>
-        <label>Album:
-            <input type="text"
-                   name="album"
-                   placeholder="Enter album name"
-                   value="{{search.album}}">
-        </label>
-        <label>Path:
-            <input type="text"
+<div class="search mt-3">
+    {{!-- default: id3 == false, so show this one! --}}
+    <div class="mb-2"
+         x-data="{ id3: false }"
+         x-show="!id3"
+         @toggle-id3.window="id3 = !id3">
+        <form class="align-items-center d-flex flex-column gap-2"
+              hx-post="{{config.mountpoint}}/search/results"
+              hx-target=".search-results"
+              hx-swap="outerHTML">
+            <input class="text-center fs-1 rounded-3"
+                   type="text"
                    name="path"
-                   placeholder="search for path (expensive)"
+                   placeholder="Path contains"
                    value="{{search.path}}">
-        </label>
-        <button title=""
-                type="submit">Search</button>
-    </form>
+            <div class="form-check form-switch">
+                <label class="form-check-label">id3 search
+                    <input class="form-check-input rounded-3"
+                           x-data
+                           @click="$dispatch('toggle-id3');"
+                           :checked="id3"
+                           type="checkbox"
+                           role="switch"></input>
+                </label>
+            </div>
+            <button class="btn btn-secondary"
+                    title="submit"
+                    type="submit">Search</button>
+        </form>
+    </div>
+    {{!-- default: id3 == false, so DONT show this one! --}}
+    <div class="mb-2"
+         x-data="{ id3: false }"
+         x-show="id3"
+         @toggle-id3.window="id3 = !id3">
+        <form class="align-items-center d-flex flex-column gap-2"
+              hx-post="{{config.mountpoint}}/search/results"
+              hx-target=".search-results"
+              hx-swap="outerHTML">
+            <input class="text-center fs-1 rounded-3"
+                   type="text"
+                   name="artist"
+                   placeholder="Artist contains"
+                   value="{{search.artist}}">
+            <input class="text-center fs-1 rounded-3"
+                   type="text"
+                   name="album"
+                   placeholder="Album contains"
+                   value="{{search.album}}">
+            <div class="form-check form-switch">
+                <label class="form-check-label">id3 search
+                    <input class="form-check-input rounded-3"
+                           x-data
+                           @click="$dispatch('toggle-id3');"
+                           :checked="id3"
+                           type="checkbox"
+                           role="switch"></input>
+                </label>
+            </div>
+            <button class="btn btn-secondary"
+                    title="submit"
+                    type="submit">Search</button>
+        </form>
+    </div>
     {{> search/results }}
 </div>

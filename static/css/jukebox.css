@@ -1,0 +1,18 @@
+.list-group-item.active {
+    --bs-list-group-active-bg: var(--bs-warning-border-subtle);
+    --bs-list-group-active-border-color: var(--bs-warning-border-subtle);
+}
+
+#spinner> :first-child {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -149,20 +149,6 @@ input {
     z-index: 1000;
 }
 
-#spinner> :first-child {
-    animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
 .playing {
     animation: blink 4s infinite ease-in-out;
     padding: .5em;
