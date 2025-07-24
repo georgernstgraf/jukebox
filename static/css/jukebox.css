@@ -1,6 +1,35 @@
 .list-group-item.active {
-    --bs-list-group-active-bg: var(--bs-warning-border-subtle);
-    --bs-list-group-active-border-color: var(--bs-warning-border-subtle);
+    background-color: var(--bs-warning-border-subtle);
+    border-color: var(--bs-warning-border-subtle);
+}
+
+.form-check-input:checked {
+    background-color: var(--bs-warning-border-subtle);
+    border-color: var(--bs-warning-border-subtle);
+}
+
+.jukebox-toast {
+    transition-property: opacity;
+    transition-duration: 2s;
+    transition-timing-function: ease-in-out;
+    opacity: 1;
+    padding: 1em;
+    background: #ccc;
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    border-radius: 1em;
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+.error {
+    color: #f00;
+    font-weight: bold;
 }
 
 #spinner> :first-child {

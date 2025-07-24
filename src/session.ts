@@ -103,13 +103,12 @@ export class Session {
         });
     }
     static async load(
-        id: string, c: Context
+        id: string, c: Context  // id comes from cookie
     ): Promise<Session> {
         return new Promise((resolve, reject) => {
-            console.log(`loadSession ${id}`);  // id comes from cookie
             memjs.get(id, (err, value) => {
                 if (value) {
-                    console.log(`loadSession got '${value.toString("utf8")}'.`);
+                    // console.log(`loadSession ${id} got '${value.toString("utf8")}'.`);
                     try {
                         const session = new Session(c, id);
                         Object.assign(session, JSON.parse(value.toString("utf8")));
@@ -137,7 +136,7 @@ export class Session {
         let sessionIdFromCookie = await getSignedCookie(c, COOKIE_SECRET, SESSION_COOKIE_NAME);
         // ------- BEFORE REQ --------
         // We have sessionId OR NOT
-        console.log(`Handling sessionId from cookie: ${sessionIdFromCookie}`);
+        // console.log(`Handling sessionId from cookie: ${sessionIdFromCookie}`);
         if (sessionIdFromCookie) { // from cookie
             try {
                 session = await Session.load(

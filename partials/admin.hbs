@@ -1,7 +1,5 @@
 <div class="admin"
-     x-data="{ open: false }"
-     @toggle-admin.window="open = !open"
-     x-show="open">
+     x-show="$store.app.showAdmin">
     <h2>admin</h2>
     <div class="d-flex">
         <ul>
@@ -23,14 +21,14 @@
                 {{!--#############--}}
                 {{#if verify.isRunning}}
                 {{else}}
-                <label>
-                    <select id="forceVerify"
-                            name="force">
-                        <option value="basic">Basic</option>
-                        <option value="stats">Stats (1 hour)</option>
-                        <option value="all">All (1 day)</option>
-                    </select>
-                </label>
+                    <label>
+                        <select id="forceVerify"
+                                name="force">
+                            <option value="basic">Basic</option>
+                            <option value="stats">Stats (1 hour)</option>
+                            <option value="all">All (1 day)</option>
+                        </select>
+                    </label>
                 {{/if}}
 
                 {{!--#############--}}

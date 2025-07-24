@@ -1,3 +1,5 @@
+import assert from "node:assert";
+import {config} from "../env.js";
 import { TrackService, trackService } from "../service/track.service.js";
 
 export class TrackBatch {
@@ -17,6 +19,7 @@ export class TrackBatch {
 
     async insert(track: string): Promise<void> {
         this.receivedSofar++;
+        assert(!track.startsWith(config.musicDir));
         this.pendingTracks.add(track);
         if (this.pendingTracks.size >= this.maxBatchSize) {
             await this.commitPending();

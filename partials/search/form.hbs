@@ -12,14 +12,16 @@ searchResults--}}
               hx-post="{{config.mountpoint}}/search/results"
               hx-target=".search-results"
               hx-swap="outerHTML">
-            <input class="text-center fs-1 rounded-3"
+            <input id="iez4So"
+                   class="border border-3 fs-1 rounded-3 text-center border-warning-subtle"
                    type="text"
                    name="path"
                    placeholder="Path contains"
                    value="{{search.path}}">
-            <div class="form-check form-switch">
+            <div class="form-check form-switch fs-4">
                 <label class="form-check-label">id3 search
-                    <input class="form-check-input rounded-3"
+                    <input id="sua2Oo"
+                           class="form-check-input rounded-3"
                            x-data
                            @click="$dispatch('toggle-id3');"
                            :checked="id3"
@@ -41,19 +43,22 @@ searchResults--}}
               hx-post="{{config.mountpoint}}/search/results"
               hx-target=".search-results"
               hx-swap="outerHTML">
-            <input class="text-center fs-1 rounded-3"
+            <input id="Cachu6"
+                   class="border border-3 fs-1 rounded-3 text-center border-warning-subtle"
                    type="text"
                    name="artist"
                    placeholder="Artist contains"
                    value="{{search.artist}}">
-            <input class="text-center fs-1 rounded-3"
+            <input id="ruoR0s"
+                   class="border border-3 fs-1 rounded-3 text-center border-warning-subtle"
                    type="text"
                    name="album"
                    placeholder="Album contains"
                    value="{{search.album}}">
             <div class="form-check form-switch">
                 <label class="form-check-label">id3 search
-                    <input class="form-check-input rounded-3"
+                    <input id="Ri0ohY"
+                           class="form-check-input rounded-3"
                            x-data
                            @click="$dispatch('toggle-id3');"
                            :checked="id3"
