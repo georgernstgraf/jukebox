@@ -200,7 +200,7 @@ export class TrackService {
                 if (file.isDirectory()) {
                     await addFiles(res);
                 } else if (file.isFile()) {
-                    fileSet.add(res);
+                    fileSet.add(res.substring(musicDir.length + 1)); // remove musicDir prefix
                 }
             }
         }
