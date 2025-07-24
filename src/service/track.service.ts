@@ -210,7 +210,13 @@ export class TrackService {
 
     static async hasChangedOnDisk_thenUpdateInoAndSize(track: Track): Promise<boolean> {         // stats cannot be done: bail out and delete
         const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
-        if (!trackStat?.isFile()) {
+        if (!trackStat) {  // rare cases undefined here
+            console.warn(
+                `no stats possible for '${track.path}' .. reporting ok`,
+            );
+            return false;
+        }
+        if (!trackStat.isFile()) {
             throw new Error(
                 `Found a non-file (${track.path}). deleting it`,
             );
