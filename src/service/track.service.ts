@@ -222,7 +222,7 @@ export class TrackService {
         }
 
         track.sizeBytes = trackStat.size;
-        track.inode = trackStat.ino;
+        track.inode = BigInt(trackStat.ino);
 
         return true;
     }

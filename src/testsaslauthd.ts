@@ -3,7 +3,7 @@ import { config } from "./env.js";
 
 export async function testsaslauthd(username: string, password: string) {
     return new Promise<boolean>((res, rej) => {
-        if (config.saslauthdLieTrue) return true;
+        if (config.saslauthdLieTrue) res(true);
 
         const service = "imap";
 

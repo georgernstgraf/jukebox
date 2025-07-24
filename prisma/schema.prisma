@@ -17,7 +17,7 @@ model Track {
     sha256   String?
 
     sizeBytes Int?
-    inode     Int?
+    inode     BigInt?
 
     artist  String?
     album   String?
