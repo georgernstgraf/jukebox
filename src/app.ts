@@ -115,7 +115,7 @@ app.get('/play/:id', enforceUser, async (c) => {
             message: `Not Found: ${audioId}`,
         }), 404);
     }
-    const filePath = track.path;
+    const filePath = `${config.musicDir}/${track.path}`;
     try {
         const fileSize = track.sizeBytes!;
         const contentType = track.mimeType || 'application/octet-stream';
@@ -199,7 +199,7 @@ app.get("/p/admin/cancelverify", enforceAdmin, async (c: Context) => { // cancel
 
 // SSE Endpoint 
 app.get('/sse', async (c) => {
-    let number = 0; 
+    let number = 0;
     return streamSSE(c, async (stream) => {
         while (true) {
             const message = `It is ${new Date().toISOString()}`
