@@ -141,17 +141,18 @@ export class TrackService {
         // correct inode and size are in track
 
         const shortName = track.path.split("/").slice(-3).join("/");
+        const filePath = `${config.musicDir}/${track.path}`;
         console.log(`force (${force}) changed on disk (${changedOnDisk}): ${shortName}`);
 
-        const buffer = await fs.readFile(track.path);
+        const buffer = await fs.readFile(filePath);
 
         assert.equal(track.sizeBytes, buffer.length,
-            `Size mismatch (${track.path})
+            `Size mismatch (${filePath})
                 : stats: ${track.sizeBytes}, but buffer ${buffer.length}`);
 
         track.sha256 = await fileSha256(buffer);
 
-        Object.assign(track, await bufferMimeType(buffer, track.path)); // ext/mimeType
+        Object.assign(track, await bufferMimeType(buffer, filePath)); // ext/mimeType
 
         // care for tags only if audio file
         if (track.mimeType?.startsWith("audio/")) {
@@ -180,11 +181,7 @@ export class TrackService {
         if (!artist && !album && !path) {
             return [];
         }
-        const results = await this.repo.searchTracks(artist, album, path);
-        results.forEach((track) => {
-            track.path = track.path.substring(config.musicDir.length + 1);
-        });
-        return results;
+        return await this.repo.searchTracks(artist, album, path);
     }
 
     async getDBFiles(): Promise<Set<string>> {
@@ -209,7 +206,7 @@ export class TrackService {
     }
 
     static async hasChangedOnDisk_thenUpdateInoAndSize(track: Track): Promise<boolean> {         // stats cannot be done: bail out and delete
-        const trackStat = await fileStat(track.path); //  mtime, size, ino, ...
+        const trackStat = await fileStat(`${config.musicDir}/${track.path}`); //  mtime, size, ino, ...
         if (!trackStat) {  // rare cases undefined here
             console.warn(
                 `no stats possible for '${track.path}' .. reporting ok`,
