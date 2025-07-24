@@ -22,14 +22,19 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
         await prisma.track.delete({ where: { id } });
     }
     async deletePaths(paths: Set<string>): Promise<number> {
-        const result = await prisma.track.deleteMany({
-            where: {
-                path: {
-                    in: Array.from(paths),
+        const mypaths = [...paths]
+        let result = 0;
+        while (mypaths.length > 0) {
+            console.log(`deletePaths in loop, length is ${mypaths.length}`)
+            result += (await prisma.track.deleteMany({
+                where: {
+                    path: {
+                        in: mypaths.splice(0, 16384),
+                    },
                 },
-            },
-        });
-        return result.count;
+            })).count;
+        }
+        return result;
     }
     async findUnverifiedIds() {
         return (await prisma.track.findMany({
