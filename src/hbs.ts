@@ -34,5 +34,5 @@ async function loadTemplates() {
     }
 }
 loadTemplates()
-    .then(() => console.log('Templates loaded successfully', map))
+    .then(() => console.log('Templates loaded successfully:', [...map.keys()]))
     .catch(err => { console.error('Error loading templates:', err); process.exit(1); });

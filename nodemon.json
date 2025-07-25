@@ -1,8 +1,10 @@
 {
     "watch": [
         "src",
-        "partials"
+        "partials",
+        "raw"
     ],
-    "ext": "ts,hbs",
-    "exec": "npx tsc && node --env-file=.env dist/app.js"
+    "ext": "ts,hbs,css",
+    "exec": "npx tsc && npm run devcss && npm run devstart",
+    "verbose": true
 }

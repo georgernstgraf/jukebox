@@ -1,5 +1,3 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.store('app', {
-        showAdmin: false
-    });
+    //  $persist(false).as('showAdmin')
 });

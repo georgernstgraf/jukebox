@@ -110,7 +110,8 @@ export class TrackService {
                 return;
             }
             try {
-                await this.verifyTrack(id, force === "all");
+                const res = await this.verifyTrack(id, force === "all");
+                emitter.emit('message', res);
                 emitter.emit('progress', 1);
             } catch (e) {
                 emitter.emit('message', (e as Error).message);
@@ -121,7 +122,7 @@ export class TrackService {
     }
 
     // make the db record as complete as possible
-    async verifyTrack(id: string, force = false) {
+    async verifyTrack(id: string, force = false): Promise<string> {
         // no force will do the disk stats, and only if changed continue to
         // force the sha256, mimeType, ext and tags
         const track = await this.repo.getById(id);
@@ -136,7 +137,7 @@ export class TrackService {
             throw new Error(`Error checking if track ${track.path} changed on disk: ${(e as Error).message}`);
         }
         if (!changedOnDisk && !force) {
-            return;
+            return `unchanged on disk, no force, skipping further checks ${track.path}`;
         }
         // correct inode and size are in track
 
@@ -164,6 +165,7 @@ export class TrackService {
         track.verifiedAt = new Date();
         await this.repo.update(track);
         await sleep(21);  // give sqlite time to breathe
+        return `Verified ${track.path}`;
     }
 
     async deleteTrack(id: string) {

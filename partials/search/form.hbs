@@ -3,11 +3,18 @@ search
 searchResults--}}
 
 <div class="search mt-3">
-    {{!-- default: id3 == false, so show this one! --}}
+    <div class="form-check form-switch fs-4 text-center">
+        <label class="form-check-label">id3 search
+            <input id="sua2Oo"
+                   class="form-check-input"
+                   x-model="useId3"
+                   type="checkbox"
+                   role="switch"></input>
+        </label>
+    </div>
+
     <div class="mb-2"
-         x-data="{ id3: false }"
-         x-show="!id3"
-         @toggle-id3.window="id3 = !id3">
+         x-show="!useId3">
         <form class="align-items-center d-flex flex-column gap-2"
               hx-post="{{config.mountpoint}}/search/results"
               hx-target=".search-results"
@@ -18,27 +25,13 @@ searchResults--}}
                    name="path"
                    placeholder="Path contains"
                    value="{{search.path}}">
-            <div class="form-check form-switch fs-4">
-                <label class="form-check-label">id3 search
-                    <input id="sua2Oo"
-                           class="form-check-input rounded-3"
-                           x-data
-                           @click="$dispatch('toggle-id3');"
-                           :checked="id3"
-                           type="checkbox"
-                           role="switch"></input>
-                </label>
-            </div>
             <button class="btn btn-secondary"
                     title="submit"
                     type="submit">Search</button>
         </form>
     </div>
-    {{!-- default: id3 == false, so DONT show this one! --}}
     <div class="mb-2"
-         x-data="{ id3: false }"
-         x-show="id3"
-         @toggle-id3.window="id3 = !id3">
+         x-show="useId3">
         <form class="align-items-center d-flex flex-column gap-2"
               hx-post="{{config.mountpoint}}/search/results"
               hx-target=".search-results"
@@ -55,17 +48,6 @@ searchResults--}}
                    name="album"
                    placeholder="Album contains"
                    value="{{search.album}}">
-            <div class="form-check form-switch">
-                <label class="form-check-label">id3 search
-                    <input id="Ri0ohY"
-                           class="form-check-input rounded-3"
-                           x-data
-                           @click="$dispatch('toggle-id3');"
-                           :checked="id3"
-                           type="checkbox"
-                           role="switch"></input>
-                </label>
-            </div>
             <button class="btn btn-secondary"
                     title="submit"
                     type="submit">Search</button>

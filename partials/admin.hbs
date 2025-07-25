@@ -1,28 +1,21 @@
 <div class="admin"
-     x-show="$store.app.showAdmin">
-    <h2>admin</h2>
-    <div class="d-flex">
-        <ul>
+     x-show="showAdmin">
+    <hr class="mt-1">
+    <div class="d-flex justify-content-around gap-2">
+        <ul class="list-unstyled">
             <li>{{stats.total}} files in Database</li>
             <li>{{stats.audio}} Audio Files</li>
             <li>{{stats.unverified}} Unverified Files</li>
             <li>Verification Task is&nbsp;{{#if verify.isRunning}}{{else}}<em>not</em>&nbsp;{{/if}}running.</li>
         </ul>
-        <ul>
-            <li><button hx-get="{{config.mountpoint}}{{#if verify.isRunning}}/p/admin/cancelverify{{else}}/p/admin/startverify{{/if}}"
-                        hx-target=".admin"
-                        hx-swap="outerHTML"
-                        hx-include="#forceVerify">
-                    {{#if verify.isRunning}}cancel
-                    {{else}}start
-                    {{/if}}
-                    Verification
-                </button>
+        <ul class="list-unstyled">
+            <li>
                 {{!--#############--}}
                 {{#if verify.isRunning}}
                 {{else}}
-                    <label>
+                    <label class="w-100">
                         <select id="forceVerify"
+                                class="w-100"
                                 name="force">
                             <option value="basic">Basic</option>
                             <option value="stats">Stats (1 hour)</option>
@@ -33,24 +26,43 @@
 
                 {{!--#############--}}
             </li>
-            <li><button hx-get="{{config.mountpoint}}/p/admin"
+            <li><button class="btn btn-outline-light w-100 py-0"
+                        hx-get="{{config.mountpoint}}{{#if verify.isRunning}}/p/admin/cancelverify{{else}}/p/admin/startverify{{/if}}"
+                        hx-target=".admin"
+                        hx-swap="outerHTML"
+                        hx-include="#forceVerify">
+                    {{#if verify.isRunning}}cancel
+                    {{else}}start
+                    {{/if}}
+                    Verification
+                </button></li>
+            <li><button class="btn btn-outline-light w-100 py-0"
+                        hx-get="{{config.mountpoint}}/p/admin"
                         hx-target=".admin"
                         hx-swap="outerHTML">
                     refresh
                 </button></li>
-            <li><button hx-get="{{config.mountpoint}}/notexistend"
+            <li><button class="btn btn-outline-light w-100 py-0"
+                        hx-get="{{config.mountpoint}}/notexistend"
                         hx-target=".admin"
                         hx-swap="outerHTML">
                     Error Button
                 </button></li>
         </ul>
-        <ul>
+        <ul class="list-unstyled">
             <li>isRunning: {{verify.isRunning}}</li>
             <li>cancelled: {{verify.cancelled}}</li>
             <li>completed: {{verify.completed}}</li>
             <li>doneCount: {{verify.doneCount}}</li>
-            <li>message: {{verify.message}}</li>
-            <li>runTime: {{verify.runTime}}</li>
+            <li>runTime: {{verify.runTime}} secs</li>
         </ul>
     </div>
+    <hr class="mt-0">
+
+    <ul class="list-unstyled fs-7">
+        {{#each verify.messages}}
+            <li>{{this}}</li>
+        {{/each}}
+    </ul>
+    <hr class="">
 </div>

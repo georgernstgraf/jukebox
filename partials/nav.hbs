@@ -1,16 +1,14 @@
-<nav class="navbar justify-content-around gap-2">
+<nav class="navbar justify-content-around gap-2 align-items-start">
     <h1 class="text-capitalize m-0">{{#if session.username}}
             {{session.username}}'s{{/if}}&nbsp;Jukebox</h1>
     {{#if session.isAdmin}}
-        <div class="form-check form-switch">
+        <div class="form-check form-switch fs-4">
             <label class="form-check-label">show Admin
                 <input id="vuuLe5"
                        class="form-check-input"
                        type="checkbox"
                        role="switch"
-                       x-data
-                       x-model="$store.app.showAdmin"
-                       {{!-- @click="$dispatch('toggle-admin'); console.log('Admin box toggled')" --}}></input>
+                       x-model="showAdmin"></input>
             </label>
         </div>
     {{/if}} {{!-- is admin --}}

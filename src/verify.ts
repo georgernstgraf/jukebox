@@ -12,7 +12,7 @@ class Verify {
     startedAt = new Date();
 
     state: {  // report for render, no class
-        isRunning: boolean, cancelled: boolean, doneCount: number, completed: boolean; message: string; runTime: number;
+        isRunning: boolean, cancelled: boolean, doneCount: number, completed: boolean; messages: string[]; runTime: number;
     };
 
     constructor() {
@@ -25,6 +25,7 @@ class Verify {
             this.state.runTime = runtimeSecs(this.startedAt, new Date());
         });
         emitter.on('progress', (result) => {
+            this.state.runTime = runtimeSecs(this.startedAt, new Date());
             this.state.doneCount += result;
         });
         emitter.on('cancelled', () => {
@@ -35,7 +36,8 @@ class Verify {
 
         });
         emitter.on('message', (message) => {
-            this.state.message += this.state.message ? `, ${message}` : message;
+            this.state.runTime = runtimeSecs(this.startedAt, new Date());
+            this.state.messages.push(message);
         });
         this.emitter = emitter;
     }
@@ -51,7 +53,7 @@ class Verify {
             cancelled: false,
             doneCount: 0,
             completed: false,
-            message: '',
+            messages: [],
             runTime: 0,
         };
     }

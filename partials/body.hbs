@@ -1,13 +1,13 @@
-<div class="container"
-     x-data>
-    {{> header}}
-    {{> main}}
-    {{> footer}}
-    <div id="spinner"
-         class="d-none position-absolute top-50 start-50 translate-middle">
-        <img src="{{config.mountpoint}}/img/favicon.png"
-             alt="Loading..."
-             width="50"
-             height="50">
-    </div>
+<div class="container-fluid"
+     x-data="{ showAdmin: $persist(false).as('showAdmin'), useId3: $persist(false).as('useId3') }">
+     {{> header}}
+     {{> main}}
+     {{> footer}}
+     <div id="spinner"
+          class="d-none position-absolute top-50 start-50 translate-middle">
+          <img src="{{config.mountpoint}}/img/favicon.png"
+               alt="Loading..."
+               width="50"
+               height="50">
+     </div>
 </div>
