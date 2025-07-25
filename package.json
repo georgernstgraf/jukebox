@@ -8,7 +8,7 @@
         "start": "npx tsc && npm run css && node --env-file=.env dist/app.js",
         "devstart": "node --env-file=.env dist/app.js",
         "tsc": "npx tsc",
-        "css": "npx purgecss --content 'partials/**/*.hbs' --content 'static/js/*.js' -o static/css --css raw/*.css -v",
+        "css": "npx purgecss --content 'partials/**/*.hbs' --content 'static/js/*.js' -o static/css --css raw/*.css --variables --font-face --keyframes",
         "devcss": "cp raw/* static/css",
         "dev": "npx nodemon"
     },
