@@ -68,14 +68,17 @@ export class TrackService {
         emitter: EventEmitter,
     ): Promise<boolean> {
         const musicDir = config.musicDir;
+        emitter.emit('message', 'Starting sync from music directory');
         const onDisk = await TrackService.getDiskFiles(musicDir);
         console.log(`On Disk first few of ${onDisk.size} files: ${Array.from(onDisk).toSorted().slice(0, 7)}`);
+        emitter.emit('message', `${onDisk.size} files in ${musicDir}`);
         if (signal.aborted) {
             emitter.emit('message', 'Sync cancelled after reading disk files');
             emitter.emit('cancelled');
             return false;
         }
         const inDB = await this.getDBFiles();
+        emitter.emit('message', `${inDB} files in database`);
         console.log(`In DB first few of ${inDB.size} files: ${Array.from(inDB).toSorted().slice(0, 7)}`);
         if (signal.aborted) {
             emitter.emit('message', 'Sync cancelled after reading DB files');
@@ -84,8 +87,9 @@ export class TrackService {
         }
         const toAdd = onDisk.difference(inDB);
         console.log(`To Add first few of ${toAdd.size} files: ${Array.from(toAdd).toSorted().slice(0, 7)}`);
+        emitter.emit('message', `will add ${toAdd} files from ${musicDir} which are not in DB`);
         await this.safeAddMultiplePaths(toAdd);
-        emitter.emit('message', `Found ${toAdd.size} new files to add`);
+        emitter.emit('message', `Done.`);
         if (signal.aborted) {
             emitter.emit('message', 'Sync cancelled after adding new files');
             emitter.emit('cancelled');
@@ -93,8 +97,9 @@ export class TrackService {
         }
         const toDelete = inDB.difference(onDisk);
         console.log(`To Delete first few of ${toDelete.size} files: ${Array.from(toDelete).toSorted().slice(0, 7)}`);
+        emitter.emit('message', `will delete ${toDelete.size} files which are in DB but not on disk`);
         const reallyDeleted = await this.repo.deletePaths(toDelete);
-        emitter.emit('message', `and ${toDelete.size} to delete from database`);
+        emitter.emit('message', `done: deleted ${reallyDeleted} records`);
         return true;
     }
 
