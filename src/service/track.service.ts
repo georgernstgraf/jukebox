@@ -78,7 +78,7 @@ export class TrackService {
             return false;
         }
         const inDB = await this.getDBFiles();
-        emitter.emit('message', `${inDB} files in database`);
+        emitter.emit('message', `${inDB.size} files in database`);
         console.log(`In DB first few of ${inDB.size} files: ${Array.from(inDB).toSorted().slice(0, 7)}`);
         if (signal.aborted) {
             emitter.emit('message', 'Sync cancelled after reading DB files');
@@ -87,7 +87,7 @@ export class TrackService {
         }
         const toAdd = onDisk.difference(inDB);
         console.log(`To Add first few of ${toAdd.size} files: ${Array.from(toAdd).toSorted().slice(0, 7)}`);
-        emitter.emit('message', `will add ${toAdd} files from ${musicDir} which are not in DB`);
+        emitter.emit('message', `will add ${toAdd.size} files from ${musicDir} which are not in DB`);
         await this.safeAddMultiplePaths(toAdd);
         emitter.emit('message', `Done.`);
         if (signal.aborted) {
