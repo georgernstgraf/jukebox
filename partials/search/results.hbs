@@ -11,8 +11,9 @@
                     {{#if track.audio}}
                         <audio class="w-100"
                                src="{{../config.mountpoint}}/play/{{track.id}}"
+                               x-intersect.once="$el.preload = 'metadata'"
                                controls
-                               preload="metadata">
+                               preload="none">
                             &#9654;
                         </audio>
                         {{#if track.hasId3}}
