@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { config } from "./env.js";
+import { config } from "./config.js";
 const prisma = new PrismaClient().$extends({
     name: 'hasId3-extension',
     result: {

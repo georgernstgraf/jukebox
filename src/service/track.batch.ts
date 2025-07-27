@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import {config} from "../env.js";
+import { config } from "../config.js";
 import { TrackService, trackService } from "../service/track.service.js";
 
 export class TrackBatch {

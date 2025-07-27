@@ -1,6 +1,6 @@
 import { Track } from "@prisma/client";
 import { prisma } from "../prisma.js";
-import { config } from "../env.js";
+import { config } from "../config.js";
 
 export class PrismaTrackRepository /* implements ITrackRepository */ {
     async create(path: string) {

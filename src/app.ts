@@ -1,20 +1,22 @@
 import { Readable } from 'node:stream';
 import { Context, Hono } from "hono";
 import { serve } from "@hono/node-server";
+import { stream, streamText, streamSSE, SSEStreamingApi } from 'hono/streaming'
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Session } from "./session.js";
 import { render } from "./hbs.js";
 import { testsaslauthd } from "./testsaslauthd.js";
 import { compress } from 'hono/compress';
-import { stream, streamText, streamSSE, SSEStreamingApi } from 'hono/streaming'
-import { config } from "./env.js";
+import { config } from "./config.js";
 import { trackService, forceType } from "./service/track.service.js";
 import { enforceAdmin, enforceUser, sleep } from "./helpers.js";
-import { verify } from "./verify.js";
+import { Verify } from "./verify.js";
 import * as fs from 'fs';
+import { Streamer } from "./streamer.js"
 
+const streamer = new Streamer();
+const verify = new Verify(streamer);
 let app = new Hono();
-const appStreams = new Set<SSEStreamingApi>();
 // Custom session middleware
 
 app.use((c, next) => Session.middleware(c, next));
@@ -204,66 +206,15 @@ app.get('/sse', async (c) => {
     c.header('Connection', 'keep-alive');
 
     return streamSSE(c, async (stream) => {
-        let count = 0;
-        let isOpen = true;
-
-        const connectionTimeout = setTimeout(() => {
-            console.log('forcefully closing after 1 minute');
-            cleanup();
-        }, 60 * 1000);
-
-        const intervalId = setInterval(sendEvent, 1000);
-
-        function cleanup() {
-            console.log('Cleanup');
-            clearInterval(intervalId);
-            clearTimeout(connectionTimeout);
-            appStreams.delete(stream);
-            stream.close();
-            isOpen = false;
-        }
-
-        async function sendEvent() {  // calls cleanup() in catch
-            try {
-                count++;
-                const message = `message ${count}`;
-                console.log('Sending:', message);
-                await stream.writeSSE({
-                    data: message,
-                    id: `${count}`,
-                    event: 'myEvent',
-                    retry: 1000
-                });
-            } catch (err) {
-                console.error('Error writing to stream:', err);
-                cleanup();
-            }
-        }
-
-        appStreams.add(stream);
-        stream.onAbort(cleanup);
-
-        console.log('Client connected. Starting to send messages.');
-
-        // Initial messages
-        await sendEvent();
-        await sleep(1000);
-        await sendEvent();
-
-        // Regular updates
-
-        // Use a proper keep-alive approach instead of an unresolved promise
-        while (isOpen) {
-            console.log('at begin of while keepalive...');
-            await sleep(3000); // Check every 3 seconds
-            try {
-                await stream.writeSSE({ event: 'heartbeat', data: '' });
-            } catch (err) {
-                console.log('cannot send heartbeat');
-                cleanup();
-            }
-        }
-        console.log('SSE connection closed by client or due to error.');
+        streamer.register(stream);
+        return new Promise<void>((resolve) => {
+            stream.onAbort(() => {
+                console.log('SSE stream aborted');
+                streamer.unregister(stream);
+                stream.close()
+                resolve();
+            });
+        });
     });
 });
 
@@ -298,8 +249,3 @@ serve({
 }, (info) => {
     console.log(`Server (${JSON.stringify(info)}) running at http://${config.host}:${config.port}${config.mountpoint}`);
 });
-if (!config.DONT_SYNC_ON_STARTUP) {
-    verify.start();
-} else {
-    console.log("Skipping initial sync due to DONT_SYNC_ON_STARTUP=true");
-}

@@ -1,5 +1,5 @@
 import net from "node:net";
-import { config } from "./env.js";
+import { config } from "./config.js";
 
 export async function testsaslauthd(username: string, password: string) {
     return new Promise<boolean>((res, rej) => {

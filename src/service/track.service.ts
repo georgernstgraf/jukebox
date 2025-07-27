@@ -10,7 +10,7 @@ import {
     fileTags,
     sleep
 } from "../helpers.js";
-import { config } from "../env.js";
+import { config } from "../config.js";
 import * as fs from 'fs/promises';
 import * as  path from 'path';
 

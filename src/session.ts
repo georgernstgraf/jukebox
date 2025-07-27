@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Client } from "memjs";
 
 import { cookieOpts } from "./cookieopts.js";
-import { SESSION_COOKIE_NAME, COOKIE_SECRET } from "./env.js";
+import { config } from "./config.js";
 
 const memjs = Client.create("localhost:11211");
 
@@ -87,7 +87,7 @@ export class Session {
         });
     }
     async sendCookie() {
-        await setSignedCookie(this.c, SESSION_COOKIE_NAME, this.sessionId, COOKIE_SECRET, cookieOpts);
+        await setSignedCookie(this.c, config.SESSION_COOKIE_NAME, this.sessionId, config.COOKIE_SECRET, cookieOpts);
     }
     async delete(): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -133,7 +133,7 @@ export class Session {
         console.log(
             `Session middleware started: ${c.req.method} ${c.req.path}`,
         );
-        let sessionIdFromCookie = await getSignedCookie(c, COOKIE_SECRET, SESSION_COOKIE_NAME);
+        let sessionIdFromCookie = await getSignedCookie(c, config.COOKIE_SECRET, config.SESSION_COOKIE_NAME);
         // ------- BEFORE REQ --------
         // We have sessionId OR NOT
         // console.log(`Handling sessionId from cookie: ${sessionIdFromCookie}`);
@@ -163,7 +163,7 @@ export class Session {
         }
         if (session.gotLogout) {
             await session.delete();
-            await deleteCookie(c, SESSION_COOKIE_NAME, cookieOpts);
+            await deleteCookie(c, config.SESSION_COOKIE_NAME, cookieOpts);
             console.log(
                 `Session and cookie deleted: ${session.sessionId}`,
             );
@@ -171,7 +171,7 @@ export class Session {
         }
         if (!session.username) {
             if (session.idIsFromCookie) {
-                await deleteCookie(c, SESSION_COOKIE_NAME, cookieOpts);
+                await deleteCookie(c, config.SESSION_COOKIE_NAME, cookieOpts);
             }
             if (session.loadedFromStore) {
                 await session.delete();

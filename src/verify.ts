@@ -1,12 +1,13 @@
 //await trackService.verifyAllTracks();
 import { EventEmitter } from "events";
 import { trackService, forceType } from "./service/track.service.js";
+import { Streamer } from "./streamer.js"
 
 function runtimeSecs(from: Date, to: Date): number {
     return Math.round((to.getTime() - from.getTime()) / 1000);
 }
 
-class Verify {
+export class Verify {
     emitter: EventEmitter;
     controller: AbortController | null = null;
     startedAt = new Date();
@@ -15,7 +16,7 @@ class Verify {
         isRunning: boolean, cancelled: boolean, doneCount: number, completed: boolean; messages: string[]; runTime: number;
     };
 
-    constructor() {
+    constructor(streamer: Streamer) {
         this.state = this.resetState();
         const emitter = new EventEmitter();
         emitter.on('completed', () => {
@@ -85,4 +86,3 @@ class Verify {
         this.state.runTime = runtimeSecs(this.startedAt, new Date());
     }
 }
-export const verify = new Verify();
