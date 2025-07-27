@@ -1,3 +1,6 @@
+GET http://localhost:3000/sse
+Accept: text/event-stream
+
 GET http://localhost:3000/jukebox
 
 ###
