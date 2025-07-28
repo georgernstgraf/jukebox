@@ -1,27 +1,27 @@
-import { stream, streamText, streamSSE, SSEStreamingApi } from 'hono/streaming'
+import { stream, streamText, streamSSE, SSEStreamingApi } from 'hono/streaming';
 import { v4 as uuidv4 } from "uuid";
 
 export class Streamer {
     private appStreams = new Set<SSEStreamingApi>();
     constructor(heartbeatsecs = 7) {
-        setInterval(this.sendHeartbeats.bind(this), heartbeatsecs * 1000)
+        setInterval(this.sendHeartbeats.bind(this), heartbeatsecs * 1000);
     }
     register(stream: SSEStreamingApi) {
         this.appStreams.add(stream);
-        console.log(`register stream, size now: ${this.appStreams.size}`)
+        console.log(`register stream, size now: ${this.appStreams.size}`);
     }
     unregister(stream: SSEStreamingApi) {
         this.appStreams.delete(stream);
-        console.log(`unregister stream, size now: ${this.appStreams.size}`)
+        console.log(`unregister stream, size now: ${this.appStreams.size}`);
     }
     sendHeartbeats() {
-        console.log(`Sending Heartbeats for ${this.appStreams.size} stream(s)`)
+        console.log(`Sending Heartbeats for ${this.appStreams.size} stream(s)`);
         this.appStreams.forEach(s => {
-            s.writeSSE({ event: 'heartbeat', data: '' })
-        })
+            s.writeSSE({ event: 'heartbeat', data: '' });
+        });
     }
 
-    async messageAll(message: string) {
+    async messageAll(message: string, event: string = 'taskprogress'): Promise<void[]> {
         const queue: Promise<void>[] = [];
         console.log(`Sending to all ${this.appStreams.size}: ${message}`);
         const id = `${uuidv4()}`;
@@ -31,9 +31,9 @@ export class Streamer {
                 return;
             }
             queue.push(stream.writeSSE({
-                data: message,
-                id, // Unique ID for each message
-                event: 'myEvent',
+                data: `<li>${message}</li>`,
+                id,
+                event,
                 retry: 1000
             }));
         }

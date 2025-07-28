@@ -2,33 +2,34 @@
 <html lang="en">
 
 <head>
-      <title>Jukebox</title>
-      <meta charset="UTF-8">
-      <meta name="viewport"
-            content="width=device-width, initial-scale=1.0">
-      {{!-- icon & css --}}
-      <link rel="icon"
-            type="image/x-icon"
-            href="{{config.mountpoint}}/img/favicon.ico">
-      <link rel="stylesheet"
-            href="{{config.mountpoint}}/css/bootstrap.css">
-      <link rel="stylesheet"
-            href="{{config.mountpoint}}/css/jukebox.css">
-      {{!-- javascript --}}
-      <script src="{{config.mountpoint}}/js/script-early.js"></script>
-      <script src="{{config.mountpoint}}/js/htmx.js"></script>
-      <script defer
-              src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
-      <script defer
-              src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
-      <script defer
-              src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-      <script defer
-              src="{{config.mountpoint}}/js/script-late.js"></script>
+    <title>Jukebox</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    {{!-- icon & css --}}
+    <link rel="icon"
+          type="image/x-icon"
+          href="{{config.mountpoint}}/img/favicon.ico">
+    <link rel="stylesheet"
+          href="{{config.mountpoint}}/css/bootstrap.css">
+    <link rel="stylesheet"
+          href="{{config.mountpoint}}/css/jukebox.css">
+    {{!-- javascript --}}
+    <script src="{{config.mountpoint}}/js/script-early.js"></script>
+    <script src="{{config.mountpoint}}/js/htmx.js"></script>
+    <script src="{{config.mountpoint}}/js/htmx-ext-sse.js"></script>
+    <script defer
+            src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script defer
+            src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+    <script defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer
+            src="{{config.mountpoint}}/js/script-late.js"></script>
 </head>
 
 <body data-bs-theme="dark">
-      {{> body }}
+    {{> body }}
 </body>
 
 </html>

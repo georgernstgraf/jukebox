@@ -1,7 +1,7 @@
 import { Readable } from 'node:stream';
 import { Context, Hono } from "hono";
 import { serve } from "@hono/node-server";
-import { stream, streamText, streamSSE, SSEStreamingApi } from 'hono/streaming'
+import { stream, streamText, streamSSE, SSEStreamingApi } from 'hono/streaming';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Session } from "./session.js";
 import { render } from "./hbs.js";
@@ -12,7 +12,7 @@ import { trackService, forceType } from "./service/track.service.js";
 import { enforceAdmin, enforceUser, sleep } from "./helpers.js";
 import { Verify } from "./verify.js";
 import * as fs from 'fs';
-import { Streamer } from "./streamer.js"
+import { Streamer } from "./streamer.js";
 
 const streamer = new Streamer();
 const verify = new Verify(streamer);
@@ -175,12 +175,22 @@ app.get("/p/admin", enforceAdmin, async (c: Context) => { // admin page
         verify: verify.getState()
     }));
 });
+app.get("/p/admin-oben", enforceAdmin, async (c: Context) => { // admin page
+    const session: Session = c.get("session");
+    const stats = await trackService.trackStats();
+    return c.html(render("admin/oben", {
+        session: session.renderJSON(),
+        config,
+        stats,
+        verify: verify.getState()
+    }));
+});
 app.get("/p/admin/startverify", enforceAdmin, async (c: Context) => { // start verify
     const force = c.req.query("force");
     verify.start(force as forceType);
     const session: Session = c.get("session");
     const stats = await trackService.trackStats();
-    return c.html(render("admin", {
+    return c.html(render("admin/oben", {
         session: session.renderJSON(),
         config,
         stats,
@@ -191,7 +201,7 @@ app.get("/p/admin/cancelverify", enforceAdmin, async (c: Context) => { // cancel
     verify.cancel();
     const session: Session = c.get("session");
     const stats = await trackService.trackStats();
-    return c.html(render("admin", {
+    return c.html(render("admin/oben", {
         session: session.renderJSON(),
         config,
         stats,
@@ -199,19 +209,15 @@ app.get("/p/admin/cancelverify", enforceAdmin, async (c: Context) => { // cancel
     }));
 });
 
-// SSE Endpoint 
+// SSE Endpoint
 app.get('/sse', async (c) => {
-    c.header('Content-Type', 'text/event-stream');
-    c.header('Cache-Control', 'no-cache');
-    c.header('Connection', 'keep-alive');
-
     return streamSSE(c, async (stream) => {
         streamer.register(stream);
         return new Promise<void>((resolve) => {
             stream.onAbort(() => {
                 console.log('SSE stream aborted');
                 streamer.unregister(stream);
-                stream.close()
+                stream.close();
                 resolve();
             });
         });

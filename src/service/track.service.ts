@@ -19,6 +19,7 @@ export type trackStats = {
     total: number;
     audio: number;
     unverified: number;
+    taggedAudio: number;
 };
 
 export type jukeTags = {
@@ -36,12 +37,13 @@ export class TrackService {
     }
 
     async trackStats(): Promise<trackStats> {
-        const [total, audio, unverified] = await Promise.all([
+        const [total, audio, unverified, taggedAudio] = await Promise.all([
             this.repo.count(),
             this.repo.countAudio(),
             this.repo.countUnverified(),
+            this.repo.countTaggedAudio(),
         ]);
-        return { total, audio, unverified };
+        return { total, audio, unverified, taggedAudio };
     }
 
     async getUnverified() {

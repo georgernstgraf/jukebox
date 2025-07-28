@@ -22,10 +22,10 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
         await prisma.track.delete({ where: { id } });
     }
     async deletePaths(paths: Set<string>): Promise<number> {
-        const mypaths = [...paths]
+        const mypaths = [...paths];
         let result = 0;
         while (mypaths.length > 0) {
-            console.log(`deletePaths in loop, length is ${mypaths.length}`)
+            console.log(`deletePaths in loop, length is ${mypaths.length}`);
             result += (await prisma.track.deleteMany({
                 where: {
                     path: {
@@ -80,6 +80,18 @@ export class PrismaTrackRepository /* implements ITrackRepository */ {
         return await prisma.track.count({
             where: {
                 mimeType: { startsWith: "audio/" },
+            },
+        });
+    }
+    async countTaggedAudio(): Promise<number> {
+        return await prisma.track.count({
+            where: {
+                mimeType: { startsWith: "audio/" },
+                OR: [
+                    { artist: { not: null } },
+                    { album: { not: null } },
+                    { title: { not: null } }
+                ]
             },
         });
     }

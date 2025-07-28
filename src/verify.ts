@@ -1,7 +1,7 @@
 //await trackService.verifyAllTracks();
 import { EventEmitter } from "events";
 import { trackService, forceType } from "./service/track.service.js";
-import { Streamer } from "./streamer.js"
+import { Streamer } from "./streamer.js";
 
 function runtimeSecs(from: Date, to: Date): number {
     return Math.round((to.getTime() - from.getTime()) / 1000);
@@ -9,6 +9,7 @@ function runtimeSecs(from: Date, to: Date): number {
 
 export class Verify {
     emitter: EventEmitter;
+    streamer: Streamer;
     controller: AbortController | null = null;
     startedAt = new Date();
 
@@ -18,9 +19,12 @@ export class Verify {
 
     constructor(streamer: Streamer) {
         this.state = this.resetState();
+        this.streamer = streamer;
         const emitter = new EventEmitter();
+        let lastMessageTime = new Date();
         emitter.on('completed', () => {
             console.log(`onCompleted`);
+            this.streamer.messageAll('completed', 'taskdone');
             this.state.completed = true;
             this.state.isRunning = false;
             this.state.runTime = runtimeSecs(this.startedAt, new Date());
@@ -31,12 +35,14 @@ export class Verify {
         });
         emitter.on('cancelled', () => {
             console.log('onCancelled: Task was cancelled!');
+            this.streamer.messageAll('cancelled');
             this.state.cancelled = true;
             this.state.isRunning = false;
             this.state.runTime = runtimeSecs(this.startedAt, new Date());
 
         });
         emitter.on('message', (message) => {
+            this.streamer.messageAll(message);
             this.state.runTime = runtimeSecs(this.startedAt, new Date());
             this.state.messages.push(message);
         });
