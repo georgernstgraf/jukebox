@@ -15,20 +15,22 @@ document.body.addEventListener('htmx:responseError', function (event) {
 });
 document.body.addEventListener('htmx:sendError', function (event) {
     console.error('Georg htmx:sendError: TODO toast some event details', event);
-    showToast('Network error: Could not reach the server.', 'error');
+    showToast(`Network error: ${event.detail.error}`, 'error');
 });
-function showToast(message, type = 'info', duration = 3000) {
-    const toast = document.createElement('div');
-    toast.className = `jukebox-toast ${type}`;
-    toast.innerHTML = message;
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.classList.add('fade-out');
-        toast.addEventListener('transitionend', () => {
-            document.body.removeChild(toast);
-        }, { once: true });
-    }, duration);
+const toast = document.getElementById('liveToast');
+const toastContent = toast.querySelector('.toast-body');
+const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast);
+function showToast(message, type = 'info') {
+    // text-bg-warning, text-bg-danger
+    if (type !== 'info') { // mainly error
+        toast.classList.remove('text-bg-warning');
+        toast.classList.add('text-bg-danger');
+    } else {
+        toast.classList.remove('text-bg-danger');
+        toast.classList.add('text-bg-warning');
+    }
+    toastContent.innerHTML = message;
+    toastBootstrap.show();
 }
 
 function initAudios() {

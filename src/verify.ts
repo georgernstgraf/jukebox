@@ -29,13 +29,20 @@ export class Verify {
             this.state.isRunning = false;
             this.state.runTime = runtimeSecs(this.startedAt, new Date());
         });
+        emitter.on('started', () => {
+            console.log(`onStarted`);
+            this.streamer.messageAll('started', 'taskstart');
+            this.state.completed = false;
+            this.state.isRunning = true;
+            this.state.runTime = runtimeSecs(this.startedAt, new Date());
+        });
         emitter.on('progress', (result) => {
             this.state.runTime = runtimeSecs(this.startedAt, new Date());
             this.state.doneCount += result;
         });
         emitter.on('cancelled', () => {
             console.log('onCancelled: Task was cancelled!');
-            this.streamer.messageAll('cancelled');
+            this.streamer.messageAll('cancelled', 'taskdone');
             this.state.cancelled = true;
             this.state.isRunning = false;
             this.state.runTime = runtimeSecs(this.startedAt, new Date());

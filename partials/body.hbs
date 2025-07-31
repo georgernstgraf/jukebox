@@ -1,13 +1,26 @@
 <div class="container-fluid"
      x-data="{ showAdmin: $persist(false).as('showAdmin'), useId3: $persist(false).as('useId3') }">
-     {{> header}}
-     {{> main}}
-     {{> footer}}
-     <div id="spinner"
-          class="d-none position-absolute top-50 start-50 translate-middle">
-          <img src="{{config.mountpoint}}/img/favicon.png"
-               alt="Loading..."
-               width="50"
-               height="50">
-     </div>
+    {{> header}}
+    {{> main}}
+    {{> footer}}
+    <div id="spinner"
+         class="d-none position-absolute top-50 start-50 translate-middle">
+        <img src="{{config.mountpoint}}/img/favicon.png"
+             alt="Loading..."
+             width="50"
+             height="50">
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast"
+             class="toast position-relative"
+             data-bs-delay="5000"
+             role="alert">
+            <button type="button"
+                    class="btn-close position-absolute top-0 end-0 m-2"
+                    data-bs-dismiss="toast"></button>
+            <div class="toast-body mt-4">
+                Hello, world! This is a toast message.
+            </div>
+        </div>
+    </div>
 </div>

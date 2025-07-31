@@ -26,9 +26,13 @@
             src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer
             src="{{config.mountpoint}}/js/script-late.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+            crossorigin="anonymous"></script>
 </head>
 
 <body data-bs-theme="dark">
+    {{!--body is special. All other partials start with their name--}}
     {{> body }}
 </body>
 
