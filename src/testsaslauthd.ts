@@ -46,8 +46,8 @@ export async function testsaslauthd(username: string, password: string) {
         });
 
         socket.on("error", (err) => {
-            //console.error("Socket error - reject:", err);
-            rej(err);
+            console.error("Socket error - reject:", err);
+            res(false);
         });
         socket.on("end", () => {
             //console.log("Connection closed");

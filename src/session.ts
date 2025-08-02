@@ -20,6 +20,7 @@ export class Session {
     #username: string = "";
     #isAdmin: boolean = false; // TODO: get from DB
     // need those guys in the after step
+    _admins = ["georg", "graf georg"];
     gotLogin = false;
     gotLogout = false;
     needsSave = false;
@@ -39,7 +40,7 @@ export class Session {
         return this.#username;
     }
     set username(username: string) {
-        if (username === "georg") {    // TODO: get from DB
+        if (this._admins.includes(username.toLowerCase())) {    // TODO: get from DB
             this.#isAdmin = true;
         }
         this.#username = username;
@@ -70,20 +71,25 @@ export class Session {
         const id = this.sessionId;
         const value = JSON.stringify(this);
         return new Promise((resolve, reject) => {
-            memjs.set(
-                id,
-                Buffer.from(value),
-                {},
-                function (err, val) {
-                    if (err) {
-                        console.error(`Error saving ${id} to Memcached:`, err);
-                        return reject(err);
-                    } else {
-                        console.log(`SUCCESS saving ${id} to Memcached:`, val);
-                        return resolve();
-                    }
-                },
-            );
+            try {
+                memjs.set(
+                    id,
+                    Buffer.from(value),
+                    {},
+                    function (err, val) {
+                        if (err) {
+                            console.error(`Error saving ${id} to Memcached:`, err);
+                            return reject(err);
+                        } else {
+                            console.log(`SUCCESS saving ${id} to Memcached:`, val);
+                            return resolve();
+                        }
+                    },
+                );
+            } catch (e) {
+                console.error(`Error saving session ${id}:`, e);
+                return reject(e);
+            }
         });
     }
     async sendCookie() {
@@ -91,37 +97,47 @@ export class Session {
     }
     async delete(): Promise<void> {
         return new Promise((resolve, reject) => {
-            memjs.delete(this.sessionId, (err, val) => {
-                if (err) {
-                    console.error(`Error deleting session ${this.sessionId}:`, err);
-                    return reject(err);
-                } else {
-                    console.log(`SUCCESS deleting session ${this.sessionId}:`, val);
-                    return resolve();
-                }
-            });
+            try {
+                memjs.delete(this.sessionId, (err, val) => {
+                    if (err) {
+                        console.error(`Error deleting session ${this.sessionId}:`, err);
+                        return reject(err);
+                    } else {
+                        console.log(`SUCCESS deleting session ${this.sessionId}:`, val);
+                        return resolve();
+                    }
+                });
+            } catch (e) {
+                console.error(`Error deleting session ${this.sessionId}:`, e);
+                return reject(e);
+            }
         });
     }
     static async load(
         id: string, c: Context  // id comes from cookie
     ): Promise<Session> {
         return new Promise((resolve, reject) => {
-            memjs.get(id, (err, value) => {
-                if (value) {
-                    // console.log(`loadSession ${id} got '${value.toString("utf8")}'.`);
-                    try {
-                        const session = new Session(c, id);
-                        Object.assign(session, JSON.parse(value.toString("utf8")));
-                        session.loadedFromStore = true;
-                        return resolve(session);
-                    } catch (e) {
-                        return reject(e);
+            try {
+                memjs.get(id, (err, value) => {
+                    if (value) {
+                        // console.log(`loadSession ${id} got '${value.toString("utf8")}'.`);
+                        try {
+                            const session = new Session(c, id);
+                            Object.assign(session, JSON.parse(value.toString("utf8")));
+                            session.loadedFromStore = true;
+                            return resolve(session);
+                        } catch (e) {
+                            return reject(e);
+                        }
+                    } else {
+                        console.log(`loadSession ERR ${err}`);
+                        return reject(err);
                     }
-                } else {
-                    console.log(`loadSession ERR ${err}`);
-                    return reject(err);
-                }
-            });
+                });
+            } catch (e) {
+                console.error(`Error loading session ${id}:`, e);
+                return reject(e);
+            }
         });
     }
 

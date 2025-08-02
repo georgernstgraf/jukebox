@@ -11,4 +11,5 @@ export const config = {
     dbTimeout: process.env.DB_TIMEOUT ? process.env.DB_TIMEOUT : "21000",
     musicDir: process.env.MUSIC_DIR || "/home/www/Music",
     search_max_results: Number(process.env.SEARCH_MAX_RESULTS) || 108,
+    spgpassurl: process.env.SPGPASS_URL || '',
 };

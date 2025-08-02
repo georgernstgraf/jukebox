@@ -13,6 +13,7 @@ import { enforceAdmin, enforceUser, sleep } from "./helpers.js";
 import { Verify } from "./verify.js";
 import * as fs from 'fs';
 import { Streamer } from "./streamer.js";
+import { spgpasswd } from "./spgpasswd.js";
 
 const streamer = new Streamer();
 const verify = new Verify(streamer);
@@ -67,6 +68,28 @@ app.post("/login", async (c: Context) => {  // login
             verify: verify.getState()
         }));
     }
+
+    let spguser = null;
+    try {
+        spguser = await spgpasswd({ user: username, passwd: password });
+        session.login(spguser);
+        let stats = null;
+        if (session.isAdmin()) {
+            stats = await trackService.trackStats();
+        }
+        return c.html(render("body", {
+            session: session.renderJSON(), config,
+            ...(stats && { stats }),
+            verify: verify.getState()
+        }));
+    } catch (e) {
+        let error = e;
+        if (e instanceof Error) {
+            error = e.message;
+        }
+        console.error(`Error authenticating with spgpasswd:`, error);
+    }
+
     return c.html(render("body", {
         error: "Invalid username or password.",
         config

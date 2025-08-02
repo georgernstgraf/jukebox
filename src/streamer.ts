@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export class Streamer {
     private appStreams = new Set<SSEStreamingApi>();
-    constructor(heartbeatsecs = 7) {
+    constructor(heartbeatsecs = 54) {
         setInterval(this.sendHeartbeats.bind(this), heartbeatsecs * 1000);
     }
     register(stream: SSEStreamingApi) {
