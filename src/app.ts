@@ -8,7 +8,7 @@ import { render } from "./hbs.js";
 import { testsaslauthd } from "./testsaslauthd.js";
 import { compress } from 'hono/compress';
 import { config } from "./config.js";
-import { trackService, forceType } from "./service/track.service.js";
+import { trackService, forceType, TrackService } from "./service/track.service.js";
 import { enforceAdmin, enforceUser, sleep } from "./helpers.js";
 import { Verify } from "./verify.js";
 import * as fs from 'fs';
@@ -175,7 +175,9 @@ app.get('/play/:id', enforceUser, async (c) => {
 
         } else {
             // No Range header, serve the entire file
+            const dlName = TrackService.getDownloadName(track);
             c.header('Content-Length', fileSize.toString());
+            c.header('Content-Disposition', `attachment; filename="${dlName}"; filename*=UTF-8''${dlName}`);
             const fileStream = fs.createReadStream(filePath);
             return c.body(Readable.toWeb(fileStream) as unknown as ReadableStream);
         }

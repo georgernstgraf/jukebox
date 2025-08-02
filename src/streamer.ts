@@ -25,19 +25,18 @@ export class Streamer {
         const queue: Promise<void>[] = [];
         console.log(`Sending to all ${this.appStreams.size}: ${message}`);
         const id = `${uuidv4()}`;
+        const timestamp = new Date().toLocaleTimeString();
         this.appStreams.forEach(stream => {
             if (stream.closed || stream.aborted) {
                 console.log("WARN!! cannot send message stream closed or aborted");
                 return;
             }
             queue.push(stream.writeSSE({
-                data: `<li>${message}</li>`,
+                data: `<li class="text-nowrap">${timestamp} - ${message}</li>`,
                 id,
                 event,
-                retry: 1000
             }));
-        }
-        );
+        });
         return await Promise.all(queue);
     }
 

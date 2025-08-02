@@ -14,6 +14,7 @@ import { config } from "../config.js";
 import * as fs from 'fs/promises';
 import * as  path from 'path';
 
+const downloadEscapeChars = new RegExp("[/]", "g");
 
 export type trackStats = {
     total: number;
@@ -253,7 +254,14 @@ export class TrackService {
             ...(tags.year && { year: Number(tags.year) }),
             ...(tags.track && { trackNo: Number(tags.track) }),
         };
+    }
 
+    static getDownloadName(track: Track): string {
+        return track.path
+            .split("/")
+            .slice(track.path.length - 3)
+            .join("/")
+            .replaceAll(downloadEscapeChars, "_");
     }
 }
 export const trackService = new TrackService(trackRepo);
