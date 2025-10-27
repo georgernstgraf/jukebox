@@ -1,6 +1,14 @@
 # jukebox
 
-for any mp3 collection
+Web-Based jukebox for a local Music Directory
+
+## Tech-Stack
+
+- typescript / node / prisma
+- handlebars templating engine on the backend
+- custom-written saslauthd authentication
+- bootstrap in combo with purgecss (works nicely!!)
+- handling of browser sessions (custom!)
 
 ## musings on session and cookie in the middleware
 
